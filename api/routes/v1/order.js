@@ -6,8 +6,8 @@
  * email: <ivan.sabido@ksquareinc.com>
  */
 
-const OrderController = require('../../controllers/order')
-const orderControllr = new OrderController()
+const orderController = require('../../controllers/order')
+
 module.exports = app => {
-  app.get('/v1/orders', orderControllr.getOrders)
+  app.get('/v1/orders', orderController.getOrders)
 }

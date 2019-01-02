@@ -10,11 +10,13 @@
 const debug = require('debug')('chef:orders:controller:ping')
 const chalk = require('chalk')
 
-class PingController {
-  async pong (req, res, next) {
-    debug(`Ping: ${chalk.green('checking api health')}`)
-    res.send({ message: 'pong' })
-  }
+const pong = async (req, res) => {
+  debug(`Ping: ${chalk.green('checking api health')}`)
+  res.send({
+    message: 'pong'
+  })
 }
 
-module.exports = new PingController()
+module.exports = {
+  pong
+}
