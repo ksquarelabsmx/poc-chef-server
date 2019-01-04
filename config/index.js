@@ -9,7 +9,7 @@
 const debug = require('debug')('chef:orders:api:configuration');
 const chalk = require('chalk');
 
-let conf = null;
+let config = null;
 debug(`Configuration API-Chef-Orders: ${chalk.magenta('getting configurations...')}`);
 
 const configurations = {
@@ -38,13 +38,15 @@ const environment = process.env.NODE_ENV || 'development';
 
 switch (environment) {
   case 'production':
-    conf = configurations['production']
+    config = configurations['production']
     break
   case 'development':
-    conf = configurations['development']
+    config = configurations['development']
     break
   default:
-    conf = configurations['testing']
+    config = configurations['testing']
 }
 
-module.exports = conf
+module.exports = {
+  config
+};

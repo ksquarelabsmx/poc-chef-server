@@ -17,7 +17,10 @@ const debug = require('debug')('chef:orders:server');
 /**
  * server configuration
  */
-const config = require('../config/');
+const {
+  config
+} = require('../config');
+
 const server = http.Server(app);
 
 // server listening
