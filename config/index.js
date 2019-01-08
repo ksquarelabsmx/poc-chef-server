@@ -5,30 +5,38 @@
  * email: <ivan.sabido@ksquareinc.com>
  * description: Archivo de configuración del proyecto.
  */
+// load .env file
+require('dotenv').config();
 
 const debug = require('debug')('chef:orders:api:configuration');
 const chalk = require('chalk');
 
-let conf = null;
+let config = null;
 debug(`Configuration API-Chef-Orders: ${chalk.magenta('getting configurations...')}`);
 
 const configurations = {
   production: {
     server: {
       name: 'production',
-      port: process.env.PORT || 8080
+      port: process.env.PORT
     }
   },
   testing: {
     server: {
       name: 'testing',
-      port: process.env.PORT || 3000
+      port: process.env.PORT
     }
   },
   development: {
     server: {
       name: 'development',
-      port: process.env.PORT || 3000
+      port: process.env.PORT,
+    },
+    auth: {
+      username: process.env.AUTH_ADMIN_USERNAME,
+      password: process.env.AUTH_ADMIN_USERNAME,
+      email: process.env.AUTH_ADMIN_EMAIL,
+      jwt_secret: process.env.AUTH_JWT_SECRET
     }
   }
 }
@@ -38,13 +46,15 @@ const environment = process.env.NODE_ENV || 'development';
 
 switch (environment) {
   case 'production':
-    conf = configurations['production']
+    config = configurations['production']
     break
   case 'development':
-    conf = configurations['development']
+    config = configurations['development']
     break
   default:
-    conf = configurations['testing']
+    config = configurations['testing']
 }
 
-module.exports = conf
+module.exports = {
+  config
+};

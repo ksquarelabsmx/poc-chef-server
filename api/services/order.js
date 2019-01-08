@@ -8,39 +8,24 @@
 
 const ordersMocks = require('../utils/mocks/order');
 
-class OrderService {
-    constructor() {
-
-    }
-
-    getOrders() {
-        return Promise.resolve(ordersMocks);
-    }
-
-    getOrder({
-        orderId
-    }) {
-        return Promise.resolve(ordersMocks[0]);
-    }
-
-    createOrder({
-        order
-    }) {
-        return Promise.resolve(ordersMocks[0]);
-    }
-
-    updateOrder({
-        orderId,
-        order
-    }) {
-        return Promise.resolve(ordersMocks[0]);
-    }
-
-    deleteOrder({
-        orderId
-    }) {
-        return Promise.resolve(ordersMocks[0]);
-    }
+const getOrders = async () => {
+  return Promise.resolve(ordersMocks);
 }
 
-module.exports = OrderService;
+const getOrder = async ({
+  orderId
+}) => {
+  return Promise.resolve(ordersMocks[0]);
+}
+
+const createOrder = async ({
+  order
+}) => {
+  return Promise.resolve(ordersMocks[0]);
+}
+
+module.exports = {
+  getOrders,
+  getOrder,
+  createOrder
+};
