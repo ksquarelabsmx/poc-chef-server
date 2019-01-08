@@ -12,8 +12,9 @@ const chalk = require('chalk');
 const orderService = require('../services/order');
 const response = require('../utils/response');
 const uri = require('../utils/uri');
+const boom = require('boom');
 
-const getOrders = async (req, res) => {
+const getOrders = async (req, res, next) => {
   try {
     debug(`OrderController: ${chalk.green('getting orders')}`);
     let source = uri.getURI(req.protocol, req.originalUrl, req.get('host'));
@@ -21,7 +22,7 @@ const getOrders = async (req, res) => {
     res.send(response.success(orders, 200, source))
   } catch (err) {
     debug(`getOrders Controller Error: ${chalk.red(err.message)}`);
-    res.status(400).send(response.error('Internal Problem', 400, uri, err.message));
+    next(err)
   }
 }
 
