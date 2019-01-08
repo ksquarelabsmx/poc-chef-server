@@ -29,9 +29,16 @@ const getEvents = async (req, res, next) => {
 const updateEvent = async (req, res, next) => {
   try {
     debug(`EventController: ${chalk.green('getting events')}`);
+    const {
+      body: event
+    } = req;
+    const id = req.params.eventId;
     let source = uri.getURI(req.protocol, req.originalUrl, req.get('host'));
-    let events = await eventService.getEvents();
-    res.send(response.success(events, 200, source))
+    let resp = await eventService.updateEvent({
+      event,
+      id
+    });
+    res.send(response.success(resp, 200, source))
   } catch (err) {
     debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
     next(err)
@@ -45,10 +52,10 @@ const createEvent = async (req, res, next) => {
       body: event
     } = req;
     let source = uri.getURI(req.protocol, req.originalUrl, req.get('host'));
-    let events = await eventService.createEvent({
+    let resp = await eventService.createEvent({
       event
     });
-    res.send(response.success(events, 200, source))
+    res.send(response.success(resp, 200, source))
   } catch (err) {
     debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
     next(err)

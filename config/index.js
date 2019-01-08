@@ -5,7 +5,7 @@
  * email: <ivan.sabido@ksquareinc.com>
  * description: Archivo de configuración del proyecto.
  */
-
+require('dotenv').config();
 const debug = require('debug')('chef:orders:api:configuration');
 const chalk = require('chalk');
 
@@ -16,19 +16,25 @@ const configurations = {
   production: {
     server: {
       name: 'production',
-      port: process.env.PORT || 8080
+      port: process.env.PORT
     }
   },
   testing: {
     server: {
       name: 'testing',
-      port: process.env.PORT || 3000
+      port: process.env.PORT
     }
   },
   development: {
     server: {
       name: 'development',
-      port: process.env.PORT || 3000
+      port: process.env.PORT,
+    },
+    auth: {
+      username: process.env.AUTH_ADMIN_USERNAME,
+      password: process.env.AUTH_ADMIN_USERNAME,
+      email: process.env.AUTH_ADMIN_EMAIL,
+      jwt_secret: process.env.AUTH_JWT_SECRET
     }
   }
 }

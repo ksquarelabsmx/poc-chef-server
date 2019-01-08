@@ -6,7 +6,8 @@
  * email: <ivan.sabido@ksquareinc.com>
  */
 
-const eventController = require('../../controllers/event')
+const eventController = require('../../controllers/event');
+
 const validation = require('../../middlewares/validationHandler');
 const {
   eventIdSchema,
@@ -16,13 +17,14 @@ const {
 module.exports = app => {
   app.get('/v1/events', eventController.getEvents);
 
+  // TODO: create controller and service
   app.get('/v1/events/:eventId', validation({
     eventId: eventIdSchema
   }, 'params'), eventController.getEvents);
 
   app.put('/v1/events/:eventId', validation({
     eventId: eventIdSchema
-  }, 'params'), validation(createEventSchema), eventController.getEvents);
+  }, 'params'), validation(createEventSchema), eventController.updateEvent);
 
   app.post('/v1/events', validation(createEventSchema), eventController.createEvent);
 
