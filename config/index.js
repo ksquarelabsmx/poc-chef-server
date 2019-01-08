@@ -5,7 +5,9 @@
  * email: <ivan.sabido@ksquareinc.com>
  * description: Archivo de configuración del proyecto.
  */
+// load .env file
 require('dotenv').config();
+
 const debug = require('debug')('chef:orders:api:configuration');
 const chalk = require('chalk');
 
