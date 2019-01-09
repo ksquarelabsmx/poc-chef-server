@@ -4,8 +4,8 @@
   "description": "chef api",
   "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=production node ./api/server.js",
-    "start-dev": "DEBUG=chef:* NODE_ENV=development nodemon ./api/server.js",
+    "start": "NODE_ENV=production & node ./api/server.js",
+    "start-dev": "DEBUG=chef:* NODE_ENV=development & nodemon ./api/server.js",
     "test": "node ./node_modules/jest/bin/jest"
   },
   "repository": {

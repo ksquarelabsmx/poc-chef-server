@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 /**
  * author: ivan sabido
@@ -6,8 +6,10 @@
  * email: <ivan.sabido@ksquareinc.com>
  */
 
-const orderController = require('../../controllers/order')
+const orderController = require("../../controllers/order");
 
 module.exports = app => {
-  app.get('/v1/orders', orderController.getOrders)
-}
+  app.get("/v1/orders", orderController.getOrders);
+
+  app.patch("/v1/orders/actions", orderController.handleAction);
+};
