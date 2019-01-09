@@ -35,6 +35,17 @@ const handleAction = async (req, res, next) => {
       case "mark_as_paid": {
         const results = await orderService.markManyAsPaid(req.body.ids);
         res.send(response.success(results, 200, source));
+        break;
+      }
+      default: {
+        res.send(
+          response.error(
+            "Bad request",
+            400,
+            "http://localhost:3000/v1/orders/actions",
+            "That action does not exists"
+          )
+        );
       }
     }
   } catch (err) {
