@@ -34,9 +34,9 @@ const markOneAsFinished = req => {
     if (event) {
       const i = dataSource.events.indexOf(event);
       dataSource.events[i].finished = true;
-      resolve(dataSource.events[i]);
+      return resolve(dataSource.events[i]);
     }
-    reject("That event Id did not match any event");
+    return reject("That event Id did not match any event");
   });
 };
 
