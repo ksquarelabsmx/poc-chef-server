@@ -15,6 +15,17 @@ const eventService = require("../services/event");
 const response = require("../utils/response");
 const uri = require("../utils/uri");
 
+const eventStrategy = (eventService, query = "") => {
+  switch (query) {
+    case "current":
+      return eventService.getCurrentEvents();
+    case "past":
+      return eventService.getPastEvents();
+    default:
+      return eventService.getEvents();
+  }
+};
+
 const getEvent = async (req, res, next) => {
   try {
     let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
@@ -37,17 +48,6 @@ const getEvents = async (req, res, next) => {
   } catch (err) {
     debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
     next(err);
-  }
-};
-
-const eventStrategy = (eventService, query = "") => {
-  switch (query) {
-    case "current":
-      return eventService.getCurrentEvents();
-    case "past":
-      return eventService.getPastEvents();
-    default:
-      return eventService.getEvents();
   }
 };
 
