@@ -12,13 +12,23 @@ module.exports = async function (config) {
 
   // Setting up Models
   const sequelize = setupDatabase(config)
-  const EventtModel = setupEventModel(config)
+  const EventModel = setupEventModel(config)
   const OrderModel = setupOrderModel(config)
   const UserModel = setupUserModel(config)
 
   // Relations
-  // AgentModel.hasMany(MetricModel)
-  // MetricModel.belongsTo(AgentModel)
+  UserModel.hasMany(OrderModel, {
+    onDelete: 'CASCADE'
+  });
+  EventModel.hasMany(OrderModel, {
+    onDelete: 'CASCADE'
+  });
+  OrderModel.belongsTo(UserModel, {
+    onDelete: 'CASCADE'
+  });
+  OrderModel.belongsTo(EventModel, {
+    onDelete: 'CASCADE'
+  });
 
   await sequelize.authenticate()
 
@@ -28,8 +38,9 @@ module.exports = async function (config) {
     })
   }
 
+
   // Functions
-  const Event = setupEvent(EventtModel)
+  const Event = setupEvent(EventModel)
   const Order = setupOrder(OrderModel)
   const User = setupUser(UserModel)
 
