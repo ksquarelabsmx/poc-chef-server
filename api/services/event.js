@@ -18,6 +18,20 @@ const getEvents = async () => {
   return Promise.resolve(dataSource.events);
 };
 
+const getCurrentEvents = async req => {
+  const events = dataSource.events.filter(event => {
+    return event.finished === false;
+  });
+  return Promise.resolve(events);
+};
+
+const getPastEvents = async req => {
+  const events = dataSource.events.filter(event => {
+    return event.finished === true;
+  });
+  return Promise.resolve(events);
+};
+
 const getEvent = async req => {
   const eventId = req.params.eventId;
   const event = dataSource.events.find(event => event.id === eventId);
@@ -104,6 +118,8 @@ const checkAndCreateEventId = () => {};
 module.exports = {
   getEvents,
   getEvent,
+  getPastEvents,
+  getCurrentEvents,
   createEvent,
   updateEvent,
   markOneAsFinished

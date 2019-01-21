@@ -30,8 +30,20 @@ const getEvent = async (req, res, next) => {
 const getEvents = async (req, res, next) => {
   try {
     debug(`EventController: ${chalk.green("getting events")}`);
-    let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    let events = await eventService.getEvents();
+    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    const query = req.query.type;
+    let events = null;
+    switch (query) {
+      case "current":
+        events = await eventService.getCurrentEvents();
+        break;
+      case "past":
+        events = await eventService.getPastEvents();
+        break;
+      default:
+        events = await eventService.getEvents();
+        break;
+    }
     res.send(response.success(events, 200, source));
   } catch (err) {
     debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
