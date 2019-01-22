@@ -5,7 +5,7 @@ const inquirer = require('inquirer')
 const chalk = require('chalk')
 const minimist = require('minimist')
 const models = require('../api/models')
-
+const uuidv4 = require("uuid/v4");
 const args = minimist(process.argv)
 const prompt = inquirer.createPromptModule()
 const {
@@ -34,6 +34,29 @@ async function setup() {
         await models.sequelize.sync({
           force: true
         }).catch(handleFatalError);
+
+        // adding default user
+        const cond = {
+          where: {
+            name: 'admin',
+            email: 'admin@ksquareinc.com'
+          }
+        }
+        const existingEvent = await models.User.findOne(cond)
+
+        if (existingEvent) {
+          console.log(`${chalk.yellow('User exists :S, finishing...')}`)
+        }
+        console.log(`${chalk.yellow('Creating admin user...')}`)
+        const user = {
+          id: uuidv4(),
+          name: "admin",
+          email: "admin@ksquareinc.com",
+          lastName: "ksquare",
+          password: "12345678"
+        }
+        const result = await models.User.create(user).catch(handleFatalError)
+        console.log(`${chalk.green('User created:')} ${result}`)
       }
     }
 
