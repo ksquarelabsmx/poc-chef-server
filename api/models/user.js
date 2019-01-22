@@ -1,5 +1,6 @@
 'use strict'
-
+const Promise = require('bluebird');
+const bcrypt = Promise.promisifyAll(require('bcrypt'));
 module.exports = (sequelize, DataTypes) => {
 
   let model = sequelize.define('User', {
@@ -25,5 +26,31 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
   });
+  model.beforeSave(async (user, options) => {
+    if (user.changed('password')) {
+      let hash;
+      try {
+        hash = await bcrypt.hash(user.password, 12)
+        user.password = hash;
+      } catch (err) {
+        throw err;
+      }
+    }
+  });
+  Model.prototype.comparePassword = async function (pw) {
+    let pass;
+    try {
+      if (!this.password) throw Error('password not set');
+
+      pass = await bcrypt.compare(pw, this.password);
+
+      if (!pass) throw Error("Invalid password.");
+
+      return this;
+    } catch (err) {
+      throw err;
+    }
+
+  }
   return model;
 }

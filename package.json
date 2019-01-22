@@ -31,6 +31,7 @@
   "dependencies": {
     "bcrypt": "^3.0.3",
     "bcrypt-promise": "^2.0.0",
+    "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
     "boom": "^7.3.0",
     "chalk": "^2.4.1",

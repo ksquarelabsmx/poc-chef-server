@@ -1,8 +1,5 @@
 'use strict'
 
-const bcrypt = require('bcrypt');
-const bcrypt_p = require('bcrypt-promise');
-
 module.exports = (sequelize, DataTypes) => {
 
   let model = sequelize.define('Event', {
