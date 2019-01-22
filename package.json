@@ -4,8 +4,9 @@
   "description": "chef api",
   "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=production & node ./api/server.js",
-    "start-dev": "DEBUG=chef:* NODE_ENV=development & nodemon ./api/server.js",
+    "start": "NODE_ENV=production node ./api/server.js",
+    "setup": "DEBUG=chef:* NODE_ENV=development ./scripts/setup_db.js",
+    "start-dev": "DEBUG=chef:* NODE_ENV=development nodemon ./api/server.js",
     "test": "node ./node_modules/jest/bin/jest"
   },
   "repository": {
@@ -29,21 +30,27 @@
   },
   "dependencies": {
     "bcrypt": "^3.0.3",
+    "bcrypt-promise": "^2.0.0",
     "body-parser": "^1.18.3",
     "boom": "^7.3.0",
     "chalk": "^2.4.1",
+    "compression": "^1.7.3",
     "cors": "^2.8.5",
     "debug": "^4.1.1",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "express-slash": "^2.0.1",
     "helmet": "^3.15.0",
+    "inquirer": "^6.2.1",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.4.0",
     "moment": "^2.23.0",
     "moment-timezone": "^0.5.23",
     "passport-http": "^0.3.0",
     "passport-jwt": "^4.0.0",
+    "pg": "^7.8.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.42.0",
     "uuid": "^3.3.2"
   }
 }
