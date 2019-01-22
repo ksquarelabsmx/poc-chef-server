@@ -20,10 +20,15 @@ function getTimeFromMins(mins) {
 function getTimeFromEpoch(epoch) {
   var day = moment.unix(epoch);
   day = day.startOf("day");
-  return day.format("Do, MMMM, YYYY");
+  return day;
+}
+
+function getStringDate(day) {
+  return day.format("DD-MM-YYYY");
 }
 
 module.exports = {
   getTimeFromEpoch,
-  getTimeFromMins
+  getTimeFromMins,
+  getStringDate
 };
