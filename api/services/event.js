@@ -85,12 +85,10 @@ const createEvent = async ({ event }) => {
 };
 
 const updateEvent = async ({ event, id }) => {
-  const existingEvent = dataSource.events.find(e => {
-    return e.id == id;
-  });
+  const existingEvent = dataSource.events.find(e => e.id === id);
   if (existingEvent) {
-    if (existingEvent.finished === false) {
-      const i = dataSource.events.indexOf(existingEvent);
+    if (!existingEvent.finished) {
+      const index = dataSource.events.indexOf(existingEvent);
       const current_date = new Date().getTime();
       const start_date = Number(event.start_date);
       const expiration_date = Number(event.expiration_date);
@@ -103,7 +101,7 @@ const updateEvent = async ({ event, id }) => {
       const updatedEvent = {
         id: existingEvent.id,
         event_name: event.event_name,
-        start_date: start_date,
+        start_date,
         expiration_date: expiration_date,
         start_hour: Number(event.start_hour),
         end_hour: Number(event.end_hour),
@@ -116,8 +114,7 @@ const updateEvent = async ({ event, id }) => {
         finished: existingEvent.finished,
         total: Number(existingEvent.total)
       };
-      const result = await dataSource.editEvent(updatedEvent, i);
-      console.log(result);
+      const result = await dataSource.editEvent(updatedEvent, index);
       return Promise.resolve(result);
     }
     return Promise.reject(new Error("The chosen event has already ended"));

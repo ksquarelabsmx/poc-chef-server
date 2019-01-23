@@ -67,13 +67,13 @@ const orders = [
 
 const addEvent = event => {
   events.push(event);
-  const i = events.indexOf(event);
-  return events[i];
+  const index = events.indexOf(event);
+  return events[index];
 };
 
-const editEvent = (event, i) => {
-  events[i] = event;
-  return events[i];
+const editEvent = (event, index) => {
+  events[index] = event;
+  return events[index];
 };
 
 module.exports = {
