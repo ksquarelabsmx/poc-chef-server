@@ -69,7 +69,7 @@ const createEvent = async ({ event }) => {
   const newEvent = {
     id: event.id,
     event_name: event.event_name,
-    start_date: start_date,
+    start_date,
     expiration_date: expiration_date,
     start_hour: event.start_hour,
     end_hour: event.end_hour,
