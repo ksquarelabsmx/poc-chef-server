@@ -55,13 +55,9 @@ const markOneAsFinished = req => {
 };
 
 const createEvent = async ({ event }) => {
-  let event_name = event.event_name;
-  let current_date = moment().tz("America/Merida");
-  let start_date = getTimeFromEpoch(event.start_date);
-  let expiration_date = getTimeFromEpoch(event.expiration_date);
-  let start_hour = getTimeFromMins(event.start_hour);
-  let end_hour = getTimeFromMins(event.end_hour);
-
+  const current_date = new Date().getTime();
+  const start_date = Number(event.start_date);
+  const expiration_date = Number(event.expiration_date);
   if (start_date < current_date) {
     throw boom.badRequest("start date must not be less than current date.");
   }
@@ -70,13 +66,13 @@ const createEvent = async ({ event }) => {
   }
   event.id = uuidv4();
 
-  let newEvent = {
+  const newEvent = {
     id: event.id,
-    event_name: event_name,
+    event_name: event.event_name,
     start_date: start_date,
     expiration_date: expiration_date,
-    start_hour: start_hour,
-    end_hour: end_hour,
+    start_hour: event.start_hour,
+    end_hour: event.end_hour,
     poc_chuc_torta_unit_price: Number(event.poc_chuc_torta_unitary_price),
     poc_chuc_torta_amount: 0,
     shrimp_torta_unit_price: Number(event.shrimp_torta_unitary_price),
@@ -89,28 +85,44 @@ const createEvent = async ({ event }) => {
 };
 
 const updateEvent = async ({ event, id }) => {
-  // current date
-  let current_date = moment().tz("America/Merida");
-  console.log(`current date: ${current_date}`);
-  // convert epoch to date
-  let start_date = getTimeFromEpoch(event.start_date);
-  let expiration_date = getTimeFromEpoch(event.end_date);
-  // convert hour to time
-  let start_hour = getTimeFromMins(event.start_hour);
-  let end_hour = getTimeFromMins(event.end_hour);
-
-  start_date.hour(start_hour.hour()).minute(start_hour.minute());
-  expiration_date.hour(end_hour.hour()).minute(end_hour.minute());
-  console.log(`start date: ${start_date}`);
-  if (start_date < current_date) {
-    throw boom.badRequest("start date must not be less than current date.");
+  const existingEvent = dataSource.events.find(e => {
+    return e.id == id;
+  });
+  if (existingEvent) {
+    if (existingEvent.finished === false) {
+      const i = dataSource.events.indexOf(existingEvent);
+      const current_date = new Date().getTime();
+      const start_date = Number(event.start_date);
+      const expiration_date = Number(event.expiration_date);
+      if (start_date < current_date) {
+        throw boom.badRequest("start date must not be less than current date.");
+      }
+      if (start_date >= expiration_date) {
+        throw boom.badRequest("start date must be less than end date.");
+      }
+      const updatedEvent = {
+        id: existingEvent.id,
+        event_name: event.event_name,
+        start_date: start_date,
+        expiration_date: expiration_date,
+        start_hour: Number(event.start_hour),
+        end_hour: Number(event.end_hour),
+        poc_chuc_torta_unitary_price: Number(
+          event.poc_chuc_torta_unitary_price
+        ),
+        shrimp_torta_unitary_price: Number(event.shrimp_torta_unitary_price),
+        poc_chuc_torta_amount: Number(existingEvent.poc_chuc_torta_amount),
+        shrimp_torta_amount: Number(existingEvent.shrimp_torta_amount),
+        finished: existingEvent.finished,
+        total: Number(existingEvent.total)
+      };
+      const result = await dataSource.editEvent(updatedEvent, i);
+      console.log(result);
+      return Promise.resolve(result);
+    }
+    return Promise.reject(new Error("The chosen event has already ended"));
   }
-  // validate that start date is less than end date
-  if (start_date >= end_date) {
-    throw boom.badRequest("start date must be less than end date.");
-  }
-  event.id = id;
-  return Promise.resolve(event);
+  return Promise.reject(new Error("The id does not match any event"));
 };
 
 const checkAndCreateEventId = () => {};

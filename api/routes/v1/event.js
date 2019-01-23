@@ -13,26 +13,28 @@ const {
   createEventSchema
 } = require("../../utils/schemas/event");
 
+const EventRountes = "/v1/events";
+
 module.exports = app => {
-  app.get("/v1/events", eventController.getEvents);
+  app.get(EventRountes, eventController.getEvents);
   app.get(
-    "/v1/events/:eventId",
+    EventRountes + ":eventId",
     validation({ eventId: eventIdSchema }, "params"),
     eventController.getEvent
   );
   app.put(
-    "/v1/events/:eventId",
+    EventRountes + "/:eventId",
     validation({ eventId: eventIdSchema }, "params"),
     validation(createEventSchema),
     eventController.updateEvent
   );
   app.post(
-    "/v1/events",
+    [EventRountes, EventRountes + "/"],
     validation(createEventSchema),
     eventController.createEvent
   );
   app.patch(
-    "/v1/events/:eventId",
+    EventRountes + ":eventId",
     validation(createEventSchema),
     eventController.markEventAsFinished
   );

@@ -3,46 +3,46 @@ const uuidv4 = require("uuid/v4");
 
 const events = [
   {
-    id: uuidv4(),
+    id: "1",
     event_name: "Tortas para la oficina 1",
-    start_date: getTimeFromEpoch(1548000000), // epoch
-    expiration_date: getTimeFromEpoch(1549000000), // epoch
-    start_hour: getTimeFromMins(800),
-    end_hour: getTimeFromMins(1200),
+    start_date: 1548100000000, // epoch
+    expiration_date: 1549100000000, // epoch
+    start_hour: 800,
+    end_hour: 1200,
     poc_chuc_torta_unitary_price: 25,
-    poc_chuc_torta_amount: 10,
+    poc_chuc_torta_amount: 0,
     shrimp_torta_unitary_price: 30,
-    shrimp_torta_amount: 12,
+    shrimp_torta_amount: 0,
     finished: false,
+    total: 0
+  },
+  {
+    id: "2",
+    event_name: "Tortas para la oficina 2",
+    start_date: 1548200000000, // epoch
+    expiration_date: 1549200000000, // epoch
+    start_hour: 800,
+    end_hour: 1200,
+    poc_chuc_torta_unitary_price: 15,
+    poc_chuc_torta_amount: 10,
+    shrimp_torta_unitary_price: 35,
+    shrimp_torta_amount: 12,
+    finished: true,
     total: 22
   },
   {
-    id: uuidv4(),
-    event_name: "Tortas para la oficina 2",
-    start_date: getTimeFromEpoch(1548500000), // epoch
-    expiration_date: getTimeFromEpoch(1549500000), // epoch
-    start_hour: getTimeFromMins(800),
-    end_hour: getTimeFromMins(1200),
-    poc_chuc_torta_unitary_price: 25,
-    poc_chuc_torta_amount: 5,
-    shrimp_torta_unitary_price: 30,
-    shrimp_torta_amount: 5,
-    finished: true,
-    total: 10
-  },
-  {
-    id: uuidv4(),
+    id: "3",
     event_name: "Tortas para la oficina 3",
-    start_date: getTimeFromEpoch(1548500000), // epoch
-    expiration_date: getTimeFromEpoch(1549500000), // epoch
-    start_hour: getTimeFromMins(800),
-    end_hour: getTimeFromMins(1200),
-    poc_chuc_torta_unitary_price: 25,
-    poc_chuc_torta_amount: 15,
-    shrimp_torta_unitary_price: 30,
-    shrimp_torta_amount: 5,
+    start_date: 1548300000000, // epoch
+    expiration_date: 1549300000000, // epoch
+    start_hour: 800,
+    end_hour: 1200,
+    poc_chuc_torta_unitary_price: 10,
+    poc_chuc_torta_amount: 5,
+    shrimp_torta_unitary_price: 10,
+    shrimp_torta_amount: 7,
     finished: false,
-    total: 20
+    total: 12
   }
 ];
 
@@ -67,10 +67,18 @@ const orders = [
 
 const addEvent = event => {
   events.push(event);
+  const i = events.indexOf(event);
+  return events[i];
+};
+
+const editEvent = (event, i) => {
+  events[i] = event;
+  return events[i];
 };
 
 module.exports = {
   orders,
   events,
-  addEvent
+  addEvent,
+  editEvent
 };
