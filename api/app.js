@@ -49,7 +49,7 @@ app.enable('strict routing');
 // configure to only allow requests from certain origins
 app.use(cors());
 
-// secure express app
+// secure express app, this adds some http headers for security.
 app.use(
   helmet({
     dnsPrefetchControl: false,
@@ -61,13 +61,14 @@ app.use(
 // parsing the request bodys
 app.use(
   bodyParser.urlencoded({
-    extended: false
+    extended: true
   })
 );
 app.use(bodyParser.json());
 
 // routes
 routes(app);
+// v1/name/ redirect to v1/name
 app.use(slash());
 app.use(function (req, res, next) {
   const {
@@ -85,11 +86,5 @@ app.use(logErrors);
 app.use(wrapErrors);
 app.use(clientErrorHandler);
 app.use(errorHandler);
-
-// app.use((err, req, res, next) => {
-//   debug(`Error: ${chalk.red(err.message)}`);
-//   let uri = utils.getURI(req.protocol, req.originalUrl, req.get("host"));
-//   res.status(400).send(response.error("Internal Problem", 400, uri, err.message));
-// });
 
 module.exports = app;

@@ -19,6 +19,12 @@ const configurations = {
     server: {
       name: 'production',
       port: process.env.PORT
+    },
+    auth: {
+      username: process.env.AUTH_ADMIN_USERNAME,
+      password: process.env.AUTH_ADMIN_PASSWORD,
+      email: process.env.AUTH_ADMIN_EMAIL,
+      jwt_secret: process.env.AUTH_JWT_SECRET
     }
   },
   testing: {
@@ -34,9 +40,25 @@ const configurations = {
     },
     auth: {
       username: process.env.AUTH_ADMIN_USERNAME,
-      password: process.env.AUTH_ADMIN_USERNAME,
+      password: process.env.AUTH_ADMIN_PASSWORD,
       email: process.env.AUTH_ADMIN_EMAIL,
       jwt_secret: process.env.AUTH_JWT_SECRET
+    },
+    db: {
+      database: process.env.DB_NAME || 'poc_chef',
+      username: process.env.DB_USER || 'ksquare',
+      password: process.env.DB_PASS || 'ksquare',
+      host: process.env.DB_HOST || 'localhost',
+      dialect: 'postgres',
+      logging: s => debug(s),
+      pool: {
+        max: 10,
+        min: 0,
+        idle: 10000
+      },
+      query: {
+        raw: true
+      }
     }
   }
 }
