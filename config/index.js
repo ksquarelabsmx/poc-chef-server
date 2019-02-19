@@ -36,7 +36,7 @@ const configurations = {
   development: {
     server: {
       name: 'development',
-      port: process.env.PORT,
+      port: process.env.PORT || '3000',
     },
     auth: {
       username: process.env.AUTH_ADMIN_USERNAME,

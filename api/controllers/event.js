@@ -30,7 +30,7 @@ const getEvent = async (req, res, next) => {
   try {
     let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
     const id = req.params.eventId;
-    let event = await eventService.getEvent(req);
+    let event = await eventService.getEvent(id);
     res.send(response.success(event, 200, source));
   } catch (err) {
     debug(`getEvents Controller Error: ${chalk.red(err.message)}`);

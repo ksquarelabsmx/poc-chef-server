@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BIGINT,
       allowNull: false
     },
-    end_date: {
+    expiration_date: {
       type: DataTypes.BIGINT,
       allowNull: false
     },

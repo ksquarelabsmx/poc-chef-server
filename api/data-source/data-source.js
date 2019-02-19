@@ -66,7 +66,10 @@ const orders = [
 ];
 
 const addEvent = event => {
+  event.id = uuidv4();
+  event.finished = false;
   events.push(event);
+  return event
 };
 
 module.exports = {

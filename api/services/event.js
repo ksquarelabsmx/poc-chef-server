@@ -6,20 +6,12 @@
  * email: <ivan.sabido@ksquareinc.com>
  */
 
-const dataSource = require("../data-source/data-source");
-const eventMocks = require("../utils/mocks/event");
-const {
-  getTimeFromEpoch,
-  getTimeFromMins,
-  getStringDate
-} = require("../utils/time");
-
 const boom = require("boom");
 const moment = require("moment-timezone");
-const uuidv4 = require("uuid/v4");
-const {
-  createOrUpdate
-} = require('../utils/db/event')
+const dataSource = require("../data-source/data-source");
+const { getTimeFromEpoch, getTimeFromMins } = require("../utils/time");
+const { createOrUpdate } = require("../utils/db/event");
+
 const getEvents = async () => {
   return Promise.resolve(dataSource.events);
 };
@@ -38,9 +30,8 @@ const getPastEvents = async req => {
   return Promise.resolve(events);
 };
 
-const getEvent = async req => {
-  const eventId = req.params.eventId;
-  const event = dataSource.events.find(event => event.id === eventId);
+const getEvent = async id => {
+  const event = dataSource.events.find(event => event.id === id);
   if (event) {
     return Promise.resolve(event);
   }
@@ -60,60 +51,33 @@ const markOneAsFinished = req => {
   });
 };
 
-const createEvent = async ({
-  event
-}) => {
-  let event_name = event.event_name;
-  let current_date = moment().tz("America/Merida").format("DD-MM-YYYY");
+const createEvent = async ({ event }) => {
+  let current_date = moment()
+    .tz("America/Merida")
+    .format("DD-MM-YYYY");
   let start_date = getTimeFromEpoch(event.start_date);
   let expiration_date = getTimeFromEpoch(event.expiration_date);
   let start_hour = getTimeFromMins(event.start_hour);
   let end_hour = getTimeFromMins(event.end_hour);
-
-  if (moment(getStringDate(start_date)).isBefore(current_date)) {
+  if (start_date < current_date)
     throw boom.badRequest("Start date must be a future date.");
-  }
 
-  let start = moment.duration(start_hour)
-  let end = moment.duration(end_hour)
-  expiration_date.add(end)
-  start_date.add(start)
-  if (expiration_date.isBefore(start_date)) {
+  if (expiration_date < start_date)
     throw boom.badRequest("End date must be after start date.");
-  }
-  if (moment(end_hour).isBefore(start_hour)) {
+
+  if (end_hour < start_hour)
     throw boom.badRequest("End hour must be after start hour.");
-  }
-  event.id = uuidv4();
-  let newEvent = await createOrUpdate(event)
-  // let newEvent = {
-  //   id: event.id,
-  //   event_name: event_name,
-  //   start_date: start_date,
-  //   expiration_date: expiration_date,
-  //   start_hour: start_hour,
-  //   end_hour: end_hour,
-  //   poc_chuc_torta_unit_price: Number(event.poc_chuc_torta_unitary_price),
-  //   poc_chuc_torta_amount: 0,
-  //   shrimp_torta_unit_price: Number(event.shrimp_torta_unitary_price),
-  //   shrimp_torta_amount: 0,
-  //   finished: false,
-  //   total: 0
-  // };
-  // dataSource.addEvent(newEvent);
-  return newEvent;
+
+  return dataSource.addEvent(event);
 };
 
-const updateEvent = async ({
-  event,
-  id
-}) => {
+const updateEvent = async ({ event, id }) => {
   // current date
   let current_date = moment().tz("America/Merida");
   console.log(`current date: ${current_date}`);
   // convert epoch to date
   let start_date = getTimeFromEpoch(event.start_date);
-  let expiration_date = getTimeFromEpoch(event.end_date);
+  let expiration_date = getTimeFromEpoch(event.expiration_date);
   // convert hour to time
   let start_hour = getTimeFromMins(event.start_hour);
   let end_hour = getTimeFromMins(event.end_hour);

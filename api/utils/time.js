@@ -19,7 +19,7 @@ function getTimeFromMins(mins) {
 
 function getTimeFromEpoch(epoch) {
   var day = moment.unix(epoch);
-  day = day.startOf("day");
+  day = day.startOf("day").format("DD-MM-YYYY");
   return day;
 }
 

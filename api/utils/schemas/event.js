@@ -24,7 +24,27 @@ const createEventSchema = {
     .min(0)
     .max(1000)
     .required(),
+  poc_chuc_torta_amount: Joi.number()
+    .positive()
+    .min(0)
+    .max(1000)
+    .required(),
   shrimp_torta_unitary_price: Joi.number()
+    .positive()
+    .min(0)
+    .max(1000)
+    .required(),
+  shrimp_torta_unitary_price: Joi.number()
+    .positive()
+    .min(0)
+    .max(1000)
+    .required(),
+  shrimp_torta_amount: Joi.number()
+    .positive()
+    .min(0)
+    .max(1000)
+    .required(),
+  total: Joi.number()
     .positive()
     .min(0)
     .max(1000)
