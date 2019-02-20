@@ -59,14 +59,17 @@ const createEvent = async ({ event }) => {
   let expiration_date = getTimeFromEpoch(event.expiration_date);
   let start_hour = getTimeFromMins(event.start_hour);
   let end_hour = getTimeFromMins(event.end_hour);
-  if (start_date < current_date)
+  if (start_date < current_date) {
     throw boom.badRequest("Start date must be a future date.");
+  }
 
-  if (expiration_date < start_date)
+  if (expiration_date < start_date) {
     throw boom.badRequest("End date must be after start date.");
+  }
 
-  if (end_hour < start_hour)
+  if (end_hour < start_hour) {
     throw boom.badRequest("End hour must be after start hour.");
+  }
 
   return Promise.resolve(dataSource.addEvent(event));
 };
@@ -84,16 +87,22 @@ const updateEvent = async ({ event, id }) => {
   let end_hour = getTimeFromMins(event.end_hour);
 
   // validate that start date is less than end date
-  if (start_date < current_date)
+  if (start_date < current_date) {
     throw boom.badRequest("Start date must be a future date.");
+  }
 
-  if (expiration_date < start_date)
+  if (expiration_date < start_date) {
     throw boom.badRequest("End date must be after start date.");
+  }
 
-  if (end_hour < start_hour)
+  if (end_hour < start_hour) {
     throw boom.badRequest("End hour must be after start hour.");
-
-  return Promise.resolve(dataSource.updateEvent(event, id));
+  }
+  const index = dataSource.events.findIndex(event => event.id === id);
+  if (index !== -1) {
+    return Promise.resolve(dataSource.updateEvent(event, id, index));
+  }
+  return Promise.reject(new Error("That event Id did not match any event"));
 };
 
 const checkAndCreateEventId = () => {};
