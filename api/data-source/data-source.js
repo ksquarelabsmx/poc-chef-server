@@ -69,11 +69,17 @@ const addEvent = event => {
   event.id = uuidv4();
   event.finished = false;
   events.push(event);
-  return event
+  return event;
+};
+
+const updateEvent = (event, id, index) => {
+  events[index] = { id, ...event };
+  return events[index];
 };
 
 module.exports = {
   orders,
   events,
-  addEvent
+  addEvent,
+  updateEvent
 };

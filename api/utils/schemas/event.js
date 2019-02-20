@@ -48,7 +48,8 @@ const createEventSchema = {
     .positive()
     .min(0)
     .max(1000)
-    .required()
+    .required(),
+  finished: Joi.boolean().required()
 };
 
 module.exports = {

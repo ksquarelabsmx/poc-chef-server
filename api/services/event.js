@@ -54,27 +54,31 @@ const markOneAsFinished = req => {
 const createEvent = async ({ event }) => {
   let current_date = moment()
     .tz("America/Merida")
-    .format("DD-MM-YYYY");
+    .format("YYYY-MM-DD");
   let start_date = getTimeFromEpoch(event.start_date);
   let expiration_date = getTimeFromEpoch(event.expiration_date);
   let start_hour = getTimeFromMins(event.start_hour);
   let end_hour = getTimeFromMins(event.end_hour);
-  if (start_date < current_date)
+  if (start_date < current_date) {
     throw boom.badRequest("Start date must be a future date.");
+  }
 
-  if (expiration_date < start_date)
+  if (expiration_date < start_date) {
     throw boom.badRequest("End date must be after start date.");
+  }
 
-  if (end_hour < start_hour)
+  if (end_hour < start_hour) {
     throw boom.badRequest("End hour must be after start hour.");
+  }
 
-  return dataSource.addEvent(event);
+  return Promise.resolve(dataSource.addEvent(event));
 };
 
 const updateEvent = async ({ event, id }) => {
   // current date
-  let current_date = moment().tz("America/Merida");
-  console.log(`current date: ${current_date}`);
+  let current_date = moment()
+    .tz("America/Merida")
+    .format("YYYY-MM-DD");
   // convert epoch to date
   let start_date = getTimeFromEpoch(event.start_date);
   let expiration_date = getTimeFromEpoch(event.expiration_date);
@@ -82,19 +86,23 @@ const updateEvent = async ({ event, id }) => {
   let start_hour = getTimeFromMins(event.start_hour);
   let end_hour = getTimeFromMins(event.end_hour);
 
-  start_date.hour(start_hour.hour()).minute(start_hour.minute());
-  expiration_date.hour(end_hour.hour()).minute(end_hour.minute());
-  console.log(`start date: ${start_date}`);
   // validate that start date is less than end date
-  if (start_date >= end_date) {
-    throw boom.badRequest("start date must be less than end date.");
-  }
   if (start_date < current_date) {
-    throw boom.badRequest("start date must not be less than current date.");
+    throw boom.badRequest("Start date must be a future date.");
   }
 
-  event.id = id;
-  return Promise.resolve(event);
+  if (expiration_date < start_date) {
+    throw boom.badRequest("End date must be after start date.");
+  }
+
+  if (end_hour < start_hour) {
+    throw boom.badRequest("End hour must be after start hour.");
+  }
+  const index = dataSource.events.findIndex(event => event.id === id);
+  if (index !== -1) {
+    return Promise.resolve(dataSource.updateEvent(event, id, index));
+  }
+  return Promise.reject(new Error("That event Id did not match any event"));
 };
 
 const checkAndCreateEventId = () => {};
