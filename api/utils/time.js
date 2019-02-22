@@ -25,6 +25,5 @@ function getTimeFromEpoch(epoch) {
 
 module.exports = {
   getTimeFromEpoch,
-  getTimeFromMins,
-  getStringDate
+  getTimeFromMins
 };
