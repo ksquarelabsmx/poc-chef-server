@@ -38,19 +38,6 @@ const getEvent = async id => {
   return Promise.reject(new Error("That event Id did not match any event"));
 };
 
-const markOneAsFinished = req => {
-  return new Promise((resolve, reject) => {
-    const eventId = req.params.eventId;
-    const event = dataSource.events.find(event => event.id === eventId);
-    if (event) {
-      const i = dataSource.events.indexOf(event);
-      dataSource.events[i].finished = true;
-      return resolve(dataSource.events[i]);
-    }
-    return reject("That event Id did not match any event");
-  });
-};
-
 const createEvent = async ({ event }) => {
   let current_date = moment()
     .tz("America/Merida")

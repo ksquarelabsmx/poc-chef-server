@@ -23,12 +23,7 @@ function getTimeFromEpoch(epoch) {
   return day;
 }
 
-function getStringDate(day) {
-  return day.format("DD-MM-YYYY");
-}
-
 module.exports = {
   getTimeFromEpoch,
-  getTimeFromMins,
-  getStringDate
+  getTimeFromMins
 };

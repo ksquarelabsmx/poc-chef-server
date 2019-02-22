@@ -31,9 +31,4 @@ module.exports = app => {
     validation(createEventSchema),
     eventController.createEvent
   );
-  app.patch(
-    "/v1/events/:eventId",
-    validation(createEventSchema),
-    eventController.markEventAsFinished
-  );
 };
