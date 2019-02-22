@@ -9,7 +9,6 @@
 
 const debug = require("debug")("chef:orders:controller:orders");
 const chalk = require("chalk");
-const boom = require("boom");
 
 const eventService = require("../services/event");
 const response = require("../utils/response");
@@ -81,23 +80,9 @@ const createEvent = async (req, res, next) => {
   }
 };
 
-const markEventAsFinished = async (req, res, next) => {
-  try {
-    debug(`EventController: ${chalk.green("marking event as finished")}`);
-    let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    const resp = eventService.markOneAsFinished(req).then;
-    console.log(resp);
-    res.send(response.success(resp, 200, source));
-  } catch (err) {
-    debug(`markEventAsFinished Controller Error: ${chalk.red(err.message)}`);
-    next(err);
-  }
-};
-
 module.exports = {
   getEvents,
   getEvent,
   createEvent,
-  updateEvent,
-  markEventAsFinished
+  updateEvent
 };
