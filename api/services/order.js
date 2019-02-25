@@ -6,7 +6,7 @@
  * email: <ivan.sabido@ksquareinc.com>
  */
 
-const ordersMocks = require("../utils/mocks/order");
+const ordersMocks = require("../data-source/data-source");
 
 const getOrders = async () => {
   return Promise.resolve(ordersMocks);
