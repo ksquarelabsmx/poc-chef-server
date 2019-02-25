@@ -4,9 +4,11 @@
   "description": "chef api",
   "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=production node ./api/server.js",
+    "build": "tsc",
+    "clean": "rm -rf build",
+    "start": "NODE_ENV=production node build/api/server.js",
     "setup": "DEBUG=chef:* NODE_ENV=development ./scripts/setup_db.js",
-    "start-dev": "DEBUG=chef:* NODE_ENV=development nodemon ./api/server.js",
+    "start-dev": "DEBUG=chef:* NODE_ENV=development nodemon",
     "test": "node ./node_modules/jest/bin/jest"
   },
   "repository": {
@@ -26,7 +28,9 @@
     "nodemon": "^1.18.9",
     "sinon": "^7.2.2",
     "standard": "^12.0.1",
-    "supertest": "^3.3.0"
+    "supertest": "^3.3.0",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.3333"
   },
   "dependencies": {
     "bcrypt": "^3.0.3",
