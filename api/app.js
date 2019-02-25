@@ -18,10 +18,11 @@ const cors = require("cors");
 const chalk = require("chalk");
 const routes = require("./routes/v1");
 const debug = require("debug")("chef:orders:app");
-const boom = require('boom');
-const slash = require('express-slash');
+const boom = require("boom");
+const slash = require("express-slash");
+const morgan = require("morgan");
 
-debug(`app loading...`)
+debug(`app loading...`);
 
 /**
  * Middlewares
@@ -32,7 +33,7 @@ const {
   wrapErrors,
   clientErrorHandler,
   errorHandler
-} = require('./middlewares/errorHandlers')
+} = require("./middlewares/errorHandlers");
 /**
  * project libraries
  */
@@ -44,7 +45,7 @@ const response = require("./utils/response");
  * express application
  */
 const app = express();
-app.enable('strict routing');
+app.enable("strict routing");
 // allow cross origin requests
 // configure to only allow requests from certain origins
 app.use(cors());
@@ -70,15 +71,12 @@ app.use(bodyParser.json());
 routes(app);
 // v1/name/ redirect to v1/name
 app.use(slash());
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   const {
-    output: {
-      statusCode,
-      payload
-    }
+    output: { statusCode, payload }
   } = boom.notFound();
   res.status(statusCode).json(payload);
-})
+});
 
 // handling errors
 

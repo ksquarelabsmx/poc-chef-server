@@ -100,6 +100,5 @@ module.exports = {
   getPastEvents,
   getCurrentEvents,
   createEvent,
-  updateEvent,
-  markOneAsFinished
+  updateEvent
 };
