@@ -2,7 +2,6 @@ const Joi = require('joi');
 const boom = require('boom');
 
 function validate(data, schema) {
-  console.log(data)
   const {
     error
   } = Joi.validate(data, schema)

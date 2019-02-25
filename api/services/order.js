@@ -5,11 +5,11 @@
  * date: 29/12/2018
  * email: <ivan.sabido@ksquareinc.com>
  */
-
-const ordersMocks = require("../utils/mocks/order");
+const boom = require("boom");
+const dataSource = require("../data-source/data-source");
 
 const getOrders = async () => {
-  return Promise.resolve(ordersMocks);
+  return Promise.resolve(dataSource.orders);
 };
 
 const getOrder = async ({ orderId }) => {
@@ -17,7 +17,14 @@ const getOrder = async ({ orderId }) => {
 };
 
 const createOrder = async ({ order }) => {
-  return Promise.resolve(ordersMocks[0]);
+  const event = dataSource.events.find(event => event.id === order.event.id);
+  if (event) {
+    if (!event.finished){
+      return Promise.resolve(dataSource.addOrder(order));
+    }
+    return Promise.reject(new Error("That event has already finished"))
+  }
+  return Promise.reject(new Error("That event Id did not match any event"));
 };
 
 const markManyAsPaid = orderIds => {

@@ -50,10 +50,10 @@ const orders = [
   {
     id: "1",
     total: 45,
-    camaron_tortas_total: 1,
-    camaron_tortas_price: 20,
+    shrimp_tortas_total: 1,
+    shrimp_torta_unitary_price: 25,
     poc_chuc_tortas_total: 1,
-    poc_chuc_tortas_price: 25,
+    poc_chuc_torta_unitary_price: 20,
     event: {
       id: "1",
       created_at: 1000000000
@@ -67,7 +67,6 @@ const orders = [
 
 const addEvent = event => {
   event.id = uuidv4();
-  event.finished = false;
   events.push(event);
   return event;
 };
@@ -77,9 +76,16 @@ const updateEvent = (event, id, index) => {
   return events[index];
 };
 
+const addOrder = order => {
+  order.id = uuidv4();
+  orders.push(order);
+  return order;
+};
+
 module.exports = {
   orders,
   events,
   addEvent,
-  updateEvent
+  updateEvent,
+  addOrder
 };

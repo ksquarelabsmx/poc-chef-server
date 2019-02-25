@@ -12,7 +12,6 @@ const chalk = require("chalk");
 const orderService = require("../services/order");
 const response = require("../utils/response");
 const uri = require("../utils/uri");
-const boom = require("boom");
 
 const getOrders = async (req, res, next) => {
   try {
@@ -22,6 +21,19 @@ const getOrders = async (req, res, next) => {
     res.send(response.success(orders, 200, source));
   } catch (err) {
     debug(`getOrders Controller Error: ${chalk.red(err.message)}`);
+    next(err);
+  }
+};
+
+const createOrder = async (req, res, next) => {
+  try {
+    debug(`EventController: ${chalk.green("creating order")}`);
+    const { body: order } = req;
+    let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    let resp = await orderService.createOrder({ order });
+    res.send(response.success(resp, 200, source));
+  } catch (err) {
+    debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
     next(err);
   }
 };
@@ -56,5 +68,6 @@ const handleAction = async (req, res, next) => {
 
 module.exports = {
   getOrders,
+  createOrder,
   handleAction
 };
