@@ -26,7 +26,4 @@ function getTimeFromEpoch(epoch: number): string {
     .format("YYYY-MM-DD");
 }
 
-module.exports = {
-  getTimeFromEpoch,
-  getTimeFromMins
-};
+export { getTimeFromEpoch, getTimeFromMins };

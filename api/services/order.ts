@@ -1,21 +1,21 @@
-const ordersMocks = require("../data-source/data-source");
+import { ordersMock } from "./../data-source/data-source";
 
 const getOrders = async (): Promise<any> => {
-  return Promise.resolve(ordersMocks);
+  return Promise.resolve(ordersMock.orders);
 };
 
 const getOrder = async ({ orderId }: any): Promise<any> => {
-  return Promise.resolve(ordersMocks[0]);
+  return Promise.resolve(ordersMock.orders[0]);
 };
 
 const createOrder = async ({ order }: any): Promise<any> => {
-  return Promise.resolve(ordersMocks[0]);
+  return Promise.resolve(ordersMock.orders[0]);
 };
 
 const markManyAsPaid = (orderIds: Array<string>): Promise<Array<string>> => {
   return new Promise((resolve, reject) => {
     const initialAmount: number = orderIds.length;
-    const orders: any = [...ordersMocks.orders];
+    const orders: any = [...ordersMock.orders];
 
     let currentAmount: number = initialAmount;
     let paidStatus: Array<string> = [];
@@ -53,13 +53,13 @@ const markManyAsPaid = (orderIds: Array<string>): Promise<Array<string>> => {
         )
       );
 
-    ordersMocks.orders = orders;
+    ordersMock.orders = orders;
 
     return resolve(paidStatus);
   });
 };
 
-module.exports = {
+export const orderService = {
   getOrders,
   getOrder,
   createOrder,

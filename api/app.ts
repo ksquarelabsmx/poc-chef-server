@@ -4,16 +4,16 @@ import * as Debug from "debug";
 import * as helmet from "helmet";
 import * as express from "express";
 import * as bodyParser from "body-parser";
-
 import { Request, Response } from "express";
+
 import {
   logErrors,
   wrapErrors,
   clientErrorHandler,
   errorHandler
 } from "./middlewares/errorHandlers";
+import routes from "./routes/v1";
 
-const routes = require("./routes/v1");
 const debug = Debug("chef:orders:app");
 const slash = require("express-slash");
 

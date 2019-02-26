@@ -1,8 +1,9 @@
 import chalk from "chalk";
 import * as boom from "boom";
 import * as Debug from "debug";
-import { config } from "../../config";
 import { Request, Response, NextFunction } from "express";
+
+import { config } from "../../config";
 
 const debug = Debug("chef:orders:controller:orders");
 

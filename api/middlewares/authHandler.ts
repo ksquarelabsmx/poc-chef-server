@@ -13,6 +13,4 @@ function authorizationHandler(
   next();
 }
 
-module.exports = {
-  authorizationHandler
-};
+export { authorizationHandler };

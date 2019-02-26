@@ -1,9 +1,11 @@
-const ping = require("./ping");
-const order = require("./order");
-const event = require("./event");
+import { pingRoutes } from "./ping";
+import { orderRoutes } from "./order";
+import { eventRoutes } from "./event";
 
-module.exports = (app: any) => {
-  ping(app);
-  order(app);
-  event(app);
+const routes = (app: any) => {
+  pingRoutes(app);
+  orderRoutes(app);
+  eventRoutes(app);
 };
+
+export default routes;

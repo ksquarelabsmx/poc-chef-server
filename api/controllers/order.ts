@@ -2,9 +2,9 @@ import chalk from "chalk";
 import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
-const uri = require("../utils/uri");
-const response = require("../utils/response");
-const orderService = require("../services/order");
+import { uri } from "./../utils/uri";
+import { response } from "./../utils/response";
+import { orderService } from "./../services/order";
 
 const debug = Debug("chef:orders:controller:orders");
 
@@ -25,9 +25,11 @@ const getOrders = async (req: Request, res: Response, next: NextFunction) => {
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`EventController: ${chalk.green("creating order")}`);
+
     const { body: order } = req;
-    let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    let resp = await orderService.createOrder({ order });
+    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    const resp = await orderService.createOrder({ order });
+
     res.send(response.success(resp, 200, source));
   } catch (err) {
     debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
@@ -69,8 +71,5 @@ const handleAction = async (
   }
 };
 
-module.exports = {
-  getOrders,
-  createOrder,
-  handleAction
-};
+const orderController = { getOrders, createOrder, handleAction };
+export { orderController };

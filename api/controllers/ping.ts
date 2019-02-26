@@ -16,6 +16,5 @@ const pong = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-module.exports = {
-  pong
-};
+const pingController = { pong };
+export { pingController };

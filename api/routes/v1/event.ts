@@ -1,11 +1,8 @@
-const eventController = require("../../controllers/event");
-const validation = require("../../middlewares/validationHandler");
-const {
-  eventIdSchema,
-  createEventSchema
-} = require("../../utils/schemas/event");
+import { eventController } from "../../controllers/event";
+import { validation } from "../../middlewares/validationHandler";
+import { eventIdSchema, createEventSchema } from "../../utils/schemas/event";
 
-module.exports = (app: any) => {
+export const eventRoutes = (app: any) => {
   app.get("/v1/events", eventController.getEvents);
   app.get(
     "/v1/events/:eventId",

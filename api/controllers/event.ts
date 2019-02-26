@@ -2,9 +2,9 @@ import chalk from "chalk";
 import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
-const uri = require("../utils/uri");
-const response = require("../utils/response");
-const eventService = require("../services/event");
+import { uri } from "./../utils/uri";
+import { response } from "./../utils/response";
+import { eventService } from "../services/event";
 
 const debug = Debug("chef:orders:controller:orders");
 
@@ -78,9 +78,11 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-module.exports = {
+const eventController = {
   getEvents,
   getEvent,
   createEvent,
   updateEvent
 };
+
+export { eventController };

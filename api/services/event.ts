@@ -2,30 +2,30 @@ import * as boom from "boom";
 import * as moment from "moment-timezone";
 import { Request, Response, NextFunction } from "express";
 
-const dataSource = require("../data-source/data-source");
-const { getTimeFromEpoch, getTimeFromMins } = require("../utils/time");
+import { eventsMock } from "./../data-source/data-source";
+import { getTimeFromEpoch, getTimeFromMins } from "../utils/time";
 
 // TODO: implement interfaces and mappers
 const getEvents = async (): Promise<any> => {
-  return Promise.resolve(dataSource.events);
+  return Promise.resolve(eventsMock.events);
 };
 
 const getCurrentEvents = async (req: Request): Promise<any> => {
-  const events = dataSource.events.filter((event: any) => {
+  const events = eventsMock.events.filter((event: any) => {
     return event.finished === false;
   });
   return Promise.resolve(events);
 };
 
 const getPastEvents = async (req: Request): Promise<any> => {
-  const events = dataSource.events.filter((event: any) => {
+  const events = eventsMock.events.filter((event: any) => {
     return event.finished === true;
   });
   return Promise.resolve(events);
 };
 
 const getEvent = async (id: number): Promise<any> => {
-  const event = dataSource.events.find((event: any) => event.id === id);
+  const event = eventsMock.events.find((event: any) => event.id === id);
   if (event) {
     return Promise.resolve(event);
   }
@@ -55,11 +55,11 @@ const createEvent = async ({ event }: any): Promise<any> => {
     throw boom.badRequest("End hour must be after start hour.");
   }
 
-  return Promise.resolve(dataSource.addEvent(event));
+  return Promise.resolve(eventsMock.addEvent(event));
 };
 
 const updateEvent = async ({ event, id }: any): Promise<any> => {
-  const index = dataSource.events.findIndex((event: any) => event.id === id);
+  const index = eventsMock.events.findIndex((event: any) => event.id === id);
 
   // current date
   const current_date = moment()
@@ -86,12 +86,12 @@ const updateEvent = async ({ event, id }: any): Promise<any> => {
     throw boom.badRequest("End hour must be after start hour.");
   }
   if (index !== -1) {
-    return Promise.resolve(dataSource.updateEvent(event, id, index));
+    return Promise.resolve(eventsMock.updateEvent(event, id, index));
   }
   return Promise.reject(new Error("That event Id did not match any event"));
 };
 
-module.exports = {
+export const eventService = {
   getEvents,
   getEvent,
   getPastEvents,

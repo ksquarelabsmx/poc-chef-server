@@ -1,8 +1,8 @@
-const orderController = require("../../controllers/order");
-const validation = require("../../middlewares/validationHandler");
-const { createOrderSchema } = require("../../utils/schemas/order");
+import { orderController } from "../../controllers/order";
+import { validation } from "../../middlewares/validationHandler";
+import { createOrderSchema } from "../../utils/schemas/order";
 
-module.exports = (app: any) => {
+export const orderRoutes = (app: any) => {
   app.get("/v1/orders", orderController.getOrders);
   app.post(
     "/v1/orders",

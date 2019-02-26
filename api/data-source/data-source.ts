@@ -1,5 +1,5 @@
-const { getTimeFromEpoch, getTimeFromMins } = require("../utils/time");
 import { v4 as uuid } from "uuid";
+import { getTimeFromEpoch, getTimeFromMins } from "../utils/time";
 
 const events = [
   {
@@ -71,7 +71,7 @@ const addEvent = (event: any) => {
   return event;
 };
 
-const updateEvent = (event: any, id: string, index: string) => {
+const updateEvent = (event: any, id: string, index: string | number) => {
   (<any>events)[index] = { id, ...event };
   return (<any>events)[index];
 };
@@ -82,10 +82,5 @@ const addOrder = (order: any) => {
   return order;
 };
 
-module.exports = {
-  orders,
-  events,
-  addEvent,
-  updateEvent,
-  addOrder
-};
+export const ordersMock = { orders, addOrder };
+export const eventsMock = { events, addEvent, updateEvent };

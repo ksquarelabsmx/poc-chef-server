@@ -23,4 +23,4 @@ function error(title: any, status: any, url: any, message: any) {
   };
 }
 
-export { success, error, errors };
+export const response = { success, error, errors };
