@@ -7,9 +7,14 @@
  */
 
 const orderController = require("../../controllers/order");
+const validation = require("../../middlewares/validationHandler");
+const { createOrderSchema } = require("../../utils/schemas/order");
 
 module.exports = app => {
   app.get("/v1/orders", orderController.getOrders);
-
-  app.patch("/v1/orders/actions", orderController.handleAction);
+  app.post(
+    "/v1/orders",
+    validation(createOrderSchema),
+    orderController.createOrder
+  );
 };

@@ -3,7 +3,6 @@ const Joi = require("joi");
 const eventIdSchema = Joi.string().max(36);
 
 const createEventSchema = {
-  // id: eventIdSchema.required(),
   event_name: Joi.string()
     .max(250)
     .required(),

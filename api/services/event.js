@@ -10,7 +10,6 @@ const boom = require("boom");
 const moment = require("moment-timezone");
 const dataSource = require("../data-source/data-source");
 const { getTimeFromEpoch, getTimeFromMins } = require("../utils/time");
-const { createOrUpdate } = require("../utils/db/event");
 
 const getEvents = async () => {
   return Promise.resolve(dataSource.events);
