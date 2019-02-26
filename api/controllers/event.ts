@@ -1,20 +1,14 @@
-"use strinct";
+import chalk from "chalk";
+import * as Debug from "debug";
+import { Request, Response, NextFunction } from "express";
 
-/**
- * author: ivan sabido
- * date: 26/12/2018
- * email: <ivan.sabido@ksquareinc.com>
- * description:
- */
-
-const debug = require("debug")("chef:orders:controller:orders");
-const chalk = require("chalk");
-
-const eventService = require("../services/event");
-const response = require("../utils/response");
 const uri = require("../utils/uri");
+const response = require("../utils/response");
+const eventService = require("../services/event");
 
-const eventStrategy = (eventService, query = "") => {
+const debug = Debug("chef:orders:controller:orders");
+
+const eventStrategy = (eventService: any, query: string = "") => {
   switch (query) {
     case "current":
       return eventService.getCurrentEvents();
@@ -25,11 +19,12 @@ const eventStrategy = (eventService, query = "") => {
   }
 };
 
-const getEvent = async (req, res, next) => {
+const getEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
     const id = req.params.eventId;
-    let event = await eventService.getEvent(id);
+    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    const event = await eventService.getEvent(id);
+
     res.send(response.success(event, 200, source));
   } catch (err) {
     debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
@@ -37,12 +32,14 @@ const getEvent = async (req, res, next) => {
   }
 };
 
-const getEvents = async (req, res, next) => {
+const getEvents = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`EventController: ${chalk.green("getting events")}`);
-    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+
     const query = req.query.type;
+    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
     const events = await eventStrategy(eventService, query);
+
     res.send(response.success(events, 200, source));
   } catch (err) {
     debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
@@ -50,30 +47,31 @@ const getEvents = async (req, res, next) => {
   }
 };
 
-const updateEvent = async (req, res, next) => {
+const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`EventController: ${chalk.green("getting events")}`);
+
     const { body: event } = req;
     const id = req.params.eventId;
-    let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    let resp = await eventService.updateEvent({
-      event,
-      id
-    });
-    res.send(response.success(resp, 200, source));
+    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    const updatedEvent = await eventService.updateEvent({ event, id });
+
+    res.send(response.success(updatedEvent, 200, source));
   } catch (err) {
     debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
     next(err);
   }
 };
 
-const createEvent = async (req, res, next) => {
+const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`EventController: ${chalk.green("creating events")}`);
+
     const { body: event } = req;
-    let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    let resp = await eventService.createEvent({ event });
-    res.send(response.success(resp, 200, source));
+    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    const createdEvent = await eventService.createEvent({ event });
+
+    res.send(response.success(createdEvent, 200, source));
   } catch (err) {
     debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
     next(err);

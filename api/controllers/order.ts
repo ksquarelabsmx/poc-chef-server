@@ -1,24 +1,20 @@
-"use strinct";
+import chalk from "chalk";
+import * as Debug from "debug";
+import { Request, Response, NextFunction } from "express";
 
-/**
- * author: ivan sabido
- * date: 26/12/2018
- * email: <ivan.sabido@ksquareinc.com>
- * description:
- */
-
-const debug = require("debug")("chef:orders:controller:orders");
-const chalk = require("chalk");
-const orderService = require("../services/order");
-const response = require("../utils/response");
 const uri = require("../utils/uri");
-const boom = require("boom");
+const response = require("../utils/response");
+const orderService = require("../services/order");
 
-const getOrders = async (req, res, next) => {
+const debug = Debug("chef:orders:controller:orders");
+
+const getOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`OrderController: ${chalk.green("getting orders")}`);
-    let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    let orders = await orderService.getOrders();
+
+    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    const orders = await orderService.getOrders();
+
     res.send(response.success(orders, 200, source));
   } catch (err) {
     debug(`getOrders Controller Error: ${chalk.red(err.message)}`);
@@ -26,11 +22,17 @@ const getOrders = async (req, res, next) => {
   }
 };
 
-const handleAction = async (req, res, next) => {
+const handleAction = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     debug(`OrderCOntroller: ${chalk.green("paying orders")}`);
-    let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    let action = req.body.action;
+
+    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    const action = req.body.action;
+
     switch (action) {
       case "mark_as_paid": {
         const results = await orderService.markManyAsPaid(req.body.ids);
