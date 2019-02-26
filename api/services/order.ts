@@ -1,4 +1,4 @@
-import { ordersMock } from "./../data-source/data-source";
+import { ordersMock, eventsMock } from "./../data-source/data-source";
 
 const getOrders = async (): Promise<any> => {
   return Promise.resolve(ordersMock.orders);
@@ -9,7 +9,15 @@ const getOrder = async ({ orderId }: any): Promise<any> => {
 };
 
 const createOrder = async ({ order }: any): Promise<any> => {
-  return Promise.resolve(ordersMock.orders[0]);
+  const event = eventsMock.events.find(event => event.id === order.event.id);
+
+  if (event) {
+    if (!event.finished) {
+      return Promise.resolve(ordersMock.addOrder(order));
+    }
+    return Promise.reject(new Error("That event has already finished"));
+  }
+  return Promise.reject(new Error("That event Id did not match any event"));
 };
 
 const markManyAsPaid = (orderIds: Array<string>): Promise<Array<string>> => {
@@ -20,6 +28,7 @@ const markManyAsPaid = (orderIds: Array<string>): Promise<Array<string>> => {
     let currentAmount: number = initialAmount;
     let paidStatus: Array<string> = [];
 
+    // TODO
     /* change forEach by reduce, so we avoid to declare variables with let.
       reduce return 
         ordersStatus {

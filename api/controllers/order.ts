@@ -28,9 +28,9 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 
     const { body: order } = req;
     const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    const resp = await orderService.createOrder({ order });
+    const createOrder = await orderService.createOrder({ order });
 
-    res.send(response.success(resp, 200, source));
+    res.send(response.success(createOrder, 200, source));
   } catch (err) {
     debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
     next(err);
