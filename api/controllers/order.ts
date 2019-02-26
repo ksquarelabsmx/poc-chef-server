@@ -22,6 +22,19 @@ const getOrders = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const createOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    debug(`EventController: ${chalk.green("creating order")}`);
+    const { body: order } = req;
+    let source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    let resp = await orderService.createOrder({ order });
+    res.send(response.success(resp, 200, source));
+  } catch (err) {
+    debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
+    next(err);
+  }
+};
+
 const handleAction = async (
   req: Request,
   res: Response,
@@ -58,5 +71,6 @@ const handleAction = async (
 
 module.exports = {
   getOrders,
+  createOrder,
   handleAction
 };

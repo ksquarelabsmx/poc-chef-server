@@ -1,5 +1,3 @@
-import { number } from "joi";
-
 const ordersMocks = require("../data-source/data-source");
 
 const getOrders = async (): Promise<any> => {
