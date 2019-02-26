@@ -1,6 +1,6 @@
-const moment = require("moment");
+import * as moment from "moment";
 
-function getTimeFromMins(mins) {
+function getTimeFromMins(mins: number): string {
   // do not include the first validation check if you want, for example,
   // getTimeFromMins(1530) to equal getTimeFromMins(90) (i.e. mins rollover)
   if (mins >= 24 * 60 || mins < 0) {
@@ -8,19 +8,22 @@ function getTimeFromMins(mins) {
       "Valid input should be greater than or equal to 0 and less than 1440."
     );
   }
-  var h = (mins / 60) | 0,
-    m = mins % 60 | 0;
+
+  const hours: number = (mins / 60) | 0;
+  const minutes: number = mins % 60 | 0;
+
   return moment
     .utc()
-    .hours(h)
-    .minutes(m)
+    .hours(hours)
+    .minutes(minutes)
     .format("hh:mm:ss");
 }
 
-function getTimeFromEpoch(epoch) {
-  var day = moment.unix(epoch);
-  day = day.startOf("day").format("YYYY-MM-DD");
-  return day;
+function getTimeFromEpoch(epoch: number): string {
+  return moment
+    .unix(epoch)
+    .startOf("day")
+    .format("YYYY-MM-DD");
 }
 
 module.exports = {

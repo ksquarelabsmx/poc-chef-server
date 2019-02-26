@@ -1,11 +1,3 @@
-"use strict";
-
-/**
- * author: ivan sabido
- * date: 25/12/2018
- * email: <ivan.sabido@ksquareinc.com>
- */
-
 function success(data: any, code: any, url: any) {
   return {
     request: new Date().getTime(), // timestamp
