@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import * as Joi from "joi";
 
 const orderIdSchema = Joi.string().max(36);
 
@@ -44,7 +44,4 @@ const createOrderSchema = {
   }).required()
 };
 
-module.exports = {
-  orderIdSchema,
-  createOrderSchema
-};
+export { orderIdSchema, createOrderSchema };

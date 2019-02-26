@@ -53,7 +53,4 @@ const createEventSchema = {
   finished: Joi.boolean().required()
 };
 
-module.exports = {
-  eventIdSchema,
-  createEventSchema
-};
+export { eventIdSchema, createEventSchema };
