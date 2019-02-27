@@ -165,7 +165,7 @@ export const eventRoutes = (app: any) => {
    * }
    *
    * @apiSuccessExample {json} Success
-   * HTTP 1.1 200 Ok
+   * HTTP 1.1 201 Created
    * {
    *  "id": "1"
    *  "event_name": "Tortastic",
@@ -270,7 +270,7 @@ export const eventRoutes = (app: any) => {
    * }
    *
    * @apiSuccessExample {json} Success
-   * HTTP 1.1 200 Ok
+   * HTTP 1.1 201 Created
    * {
    *  "id": "1"
    *  "event_name": "Tortastic",
