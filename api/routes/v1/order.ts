@@ -4,7 +4,7 @@ import { createOrderSchema } from "../../utils/schemas/order";
 
 export const orderRoutes = (app: any) => {
   /**
-   * @api        {get}  /v1/orders
+   * @api        {get}  /v1/orders  Get all orders
    * @apiGroup   Orders
    */
   app.get("/v1/orders", orderController.getOrders);
