@@ -4,12 +4,18 @@
   "description": "chef api",
   "main": "server.js",
   "scripts": {
+    "apidoc": "apidoc -i api/routes/ -o public/apidoc/",
     "build": "tsc",
     "clean": "rm -rf build",
     "start": "NODE_ENV=production node build/api/server.js",
     "setup": "DEBUG=chef:* NODE_ENV=development ./scripts/setup_db.js",
     "start-dev": "DEBUG=chef:* NODE_ENV=development nodemon",
     "test": "node ./node_modules/jest/bin/jest"
+  },
+  "apidoc": {
+    "title": "Poc-Chef API",
+    "version": "1.0.0",
+    "description": "Poc Chef API Docs"
   },
   "repository": {
     "type": "git",
