@@ -1,9 +1,9 @@
-const { getTimeFromEpoch, getTimeFromMins } = require("../utils/time");
-const uuidv4 = require("uuid/v4");
+import { v4 as uuid } from "uuid";
+import { getTimeFromEpoch, getTimeFromMins } from "../utils/time";
 
 const events = [
   {
-    id: uuidv4(),
+    id: uuid(),
     event_name: "Tortas para la oficina 1",
     start_date: getTimeFromEpoch(1548000000), // epoch
     expiration_date: getTimeFromEpoch(1549000000), // epoch
@@ -17,7 +17,7 @@ const events = [
     total: 22
   },
   {
-    id: uuidv4(),
+    id: uuid(),
     event_name: "Tortas para la oficina 2",
     start_date: getTimeFromEpoch(1548500000), // epoch
     expiration_date: getTimeFromEpoch(1549500000), // epoch
@@ -31,7 +31,7 @@ const events = [
     total: 10
   },
   {
-    id: uuidv4(),
+    id: uuid(),
     event_name: "Tortas para la oficina 3",
     start_date: getTimeFromEpoch(1548500000), // epoch
     expiration_date: getTimeFromEpoch(1549500000), // epoch
@@ -65,27 +65,22 @@ const orders = [
   }
 ];
 
-const addEvent = event => {
-  event.id = uuidv4();
+const addEvent = (event: any) => {
+  event.id = uuid();
   events.push(event);
   return event;
 };
 
-const updateEvent = (event, id, index) => {
-  events[index] = { id, ...event };
-  return events[index];
+const updateEvent = (event: any, id: string, index: string | number) => {
+  (<any>events)[index] = { id, ...event };
+  return (<any>events)[index];
 };
 
-const addOrder = order => {
-  order.id = uuidv4();
+const addOrder = (order: any) => {
+  order.id = uuid();
   orders.push(order);
   return order;
 };
 
-module.exports = {
-  orders,
-  events,
-  addEvent,
-  updateEvent,
-  addOrder
-};
+export const ordersMock = { orders, addOrder };
+export const eventsMock = { events, addEvent, updateEvent };
