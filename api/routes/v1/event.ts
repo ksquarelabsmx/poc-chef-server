@@ -11,12 +11,14 @@ export const eventRoutes = (app: any) => {
    *
    * @apiSuccess {Object[]} event                               events collection
    * @apiSuccess {string}   event.id                            event id
-   * @apiSuccess {string}   event.name                          event name
+   * @apiSuccess {string}   event.event_name                    event name
    * @apiSuccess {number}   event.start_date                    event start date epoch
    * @apiSuccess {number}   event.end_date                      event end date epoch
-   * @apiSuccess {number}   event.poc_chuc_torta_unit_price  event Poc Chuc torta price
+   * @apiSuccess {number}   event.start_hour                    event start hour epoch
+   * @apiSuccess {number}   event.end_hour                      event end hour epoch
+   * @apiSuccess {number}   event.poc_chuc_torta_unit_price     event Poc Chuc torta price
    * @apiSuccess {number}   event.poc_chuc_torta_amount         event Poc Chuc torta amount
-   * @apiSuccess {number}   event.shrimp_torta_unit_price    event shrimp torta price
+   * @apiSuccess {number}   event.shrimp_torta_unit_price       event shrimp torta price
    * @apiSuccess {number}   event.shrimp_torta_amount           event shrimp torta amount
    * @apiSuccess {number}   event.total                         event total price
    *
@@ -26,9 +28,11 @@ export const eventRoutes = (app: any) => {
    *  "events": [
    *     {
    *       "id": "1",
-   *       "name": "Tortas para la oficina",
+   *       "event_name": "Tortas para la oficina",
    *       "start_date": 10000,
    *       "end_date": 20000,
+   *       "start_hour": 1000,
+   *       "end_hour": 1200,
    *       "poc_chuc_torta_unit_price": 10,
    *       "poc_chuc_torta_amount": 1,
    *       "shrimp_torta_unit_price": 12
@@ -55,7 +59,7 @@ export const eventRoutes = (app: any) => {
    *
    * @apiSuccess {Object}   event                                   events collection
    * @apiSuccess {string}   event.id                                event id
-   * @apiSuccess {string}   event.name                              event name
+   * @apiSuccess {string}   event.event_name                        event name
    * @apiSuccess {number}   event.start_date                        event start date epoch
    * @apiSuccess {number}   event.end_date                          event end date epoch
    * @apiSuccess {number}   event.poc_chuc_torta_unit_price         event Poc Chuc torta price
@@ -78,9 +82,11 @@ export const eventRoutes = (app: any) => {
    * {
    *   "event": {
    *     "id": "1",
-   *     "name": "Tortas para la oficina",
+   *     "event_name": "Tortas para la oficina",
    *     "start_date": 10000,
    *     "end_date": 20000,
+   *     "start_date": 1000,
+   *     "end_date": 1200,
    *     "poc_chuc_torta_unit_price": 10,
    *     "poc_chuc_torta_amount": 2,
    *     "shrimp_torta_unit_price": 12
@@ -139,17 +145,21 @@ export const eventRoutes = (app: any) => {
    *
    * @apiParam {Object}     event                                   events collection
    * @apiParam {string}     event.id                                event id
-   * @apiParam {string}     event.name                              event name
+   * @apiParam {string}     event.event_name                              event name
    * @apiParam {number}     event.start_date                        event start date epoch
    * @apiParam {number}     event.end_date                          event end date epoch
+   * @apiParam {number}     event.start_hour                        event start hour epoch
+   * @apiParam {number}     event.end_hour                          event end hour epoch
    * @apiParam {number}     event.poc_chuc_torta_unit_price         event Poc Chuc torta price
    * @apiParam {number}     event.shrimp_torta_unit_price           event shrimp torta price
    *
    * @apiSuccess {Object}   event                                   events collection
    * @apiSuccess {string}   event.id                                event id
-   * @apiSuccess {string}   event.name                              event name
+   * @apiSuccess {string}   event.event_name                              event name
    * @apiSuccess {number}   event.start_date                        event start date epoch
    * @apiSuccess {number}   event.end_date                          event end date epoch
+   * @apiSuccess {number}   event.start_hour                        event start hour epoch
+   * @apiSuccess {number}   event.end_hour                          event end hour epoch
    * @apiSuccess {number}   event.poc_chuc_torta_unit_price         event Poc Chuc torta price
    * @apiSuccess {number}   event.shrimp_torta_unit_price           event shrimp torta price
    *
@@ -244,17 +254,21 @@ export const eventRoutes = (app: any) => {
    * @apiGroup Events
    *
    * @apiParam {Object}     event                                   events collection
-   * @apiParam {string}     event.name                              event name
+   * @apiParam {string}     event.event_name                        event name
    * @apiParam {number}     event.start_date                        event start date epoch
    * @apiParam {number}     event.end_date                          event end date epoch
+   * @apiParam {number}     event.start_hour                        event start hour epoch
+   * @apiParam {number}     event.end_hour                          event end hour epoch
    * @apiParam {number}     event.poc_chuc_torta_unit_price         event Poc Chuc torta price
    * @apiParam {number}     event.shrimp_torta_unit_price           event shrimp torta price
    *
    * @apiSuccess {Object}   event                                   events collection
    * @apiSuccess {string}   event.id                                event id
-   * @apiSuccess {string}   event.name                              event name
+   * @apiSuccess {string}   event.event_name                              event name
    * @apiSuccess {number}   event.start_date                        event start date epoch
    * @apiSuccess {number}   event.end_date                          event end date epoch
+   * @apiSuccess {number}   event.start_hour                        event start hour epoch
+   * @apiSuccess {number}   event.end_hour                          event end hour epoch
    * @apiSuccess {number}   event.poc_chuc_torta_unit_price         event Poc Chuc torta price
    * @apiSuccess {number}   event.shrimp_torta_unit_price           event shrimp torta price
    *
