@@ -7,7 +7,7 @@ const eventSchema = {
   event_name: Joi.string().required(),
 
   start_date: Joi.number()
-    .min(moment().unix())
+    .min(moment().unix()) // don't allow start_date in past
     .required(),
 
   expiration_date: Joi.number()
@@ -16,12 +16,12 @@ const eventSchema = {
 
   start_hour: Joi.number()
     .min(0)
-    .max(24 * 60)
+    .max(1440) // time in seconds
     .required(),
 
   end_hour: Joi.number()
     .greater(Joi.ref("start_hour"))
-    .max(24 * 60)
+    .max(1440) // time in seconds
     .required(),
 
   poc_chuc_torta_unitary_price: Joi.number()

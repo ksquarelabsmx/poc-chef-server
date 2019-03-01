@@ -3,46 +3,46 @@ import { getTimeFromEpoch, getTimeFromMins } from "../utils/time";
 
 const events = [
   {
-    id: uuid(),
-    event_name: "Tortas para la oficina 1",
-    start_date: getTimeFromEpoch(1548000000), // epoch
-    expiration_date: getTimeFromEpoch(1549000000), // epoch
-    start_hour: getTimeFromMins(800),
-    end_hour: getTimeFromMins(1200),
-    poc_chuc_torta_unitary_price: 25,
+    id: "1",
+    event_name: "Tortastic",
+    start_date: 1556733826,
+    expiration_date: 1556743826,
+    start_hour: 1000,
+    end_hour: 1200,
+    poc_chuc_torta_unitary_price: 20,
     poc_chuc_torta_amount: 10,
-    shrimp_torta_unitary_price: 30,
+    shrimp_torta_unitary_price: 25,
     shrimp_torta_amount: 12,
     finished: false,
-    total: 22
+    total: 20 * 10 + 25 * 12
   },
   {
-    id: uuid(),
-    event_name: "Tortas para la oficina 2",
-    start_date: getTimeFromEpoch(1548500000), // epoch
-    expiration_date: getTimeFromEpoch(1549500000), // epoch
-    start_hour: getTimeFromMins(800),
-    end_hour: getTimeFromMins(1200),
-    poc_chuc_torta_unitary_price: 25,
-    poc_chuc_torta_amount: 5,
-    shrimp_torta_unitary_price: 30,
-    shrimp_torta_amount: 5,
-    finished: true,
-    total: 10
-  },
-  {
-    id: uuid(),
-    event_name: "Tortas para la oficina 3",
-    start_date: getTimeFromEpoch(1548500000), // epoch
-    expiration_date: getTimeFromEpoch(1549500000), // epoch
-    start_hour: getTimeFromMins(800),
-    end_hour: getTimeFromMins(1200),
-    poc_chuc_torta_unitary_price: 25,
-    poc_chuc_torta_amount: 15,
-    shrimp_torta_unitary_price: 30,
-    shrimp_torta_amount: 5,
+    id: "2",
+    event_name: "Tortastic x2",
+    start_date: 1556783800,
+    expiration_date: 1556883800,
+    start_hour: 8000,
+    end_hour: 1000,
+    poc_chuc_torta_unitary_price: 20,
+    poc_chuc_torta_amount: 20,
+    shrimp_torta_unitary_price: 25,
+    shrimp_torta_amount: 20,
     finished: false,
-    total: 20
+    total: 20 * 20 + 25 * 20
+  },
+  {
+    id: "3",
+    event_name: "Tortastic x3",
+    start_date: 1556733826,
+    expiration_date: 1556743826,
+    start_hour: 1000,
+    end_hour: 1200,
+    poc_chuc_torta_unitary_price: 20,
+    poc_chuc_torta_amount: 50,
+    shrimp_torta_unitary_price: 25,
+    shrimp_torta_amount: 50,
+    finished: true,
+    total: 20 * 50 + 25 * 50
   }
 ];
 
@@ -71,8 +71,8 @@ const addEvent = (event: any) => {
   return newEvent;
 };
 
-const updateEvent = (event: any, id: string, index: string | number) => {
-  (<any>events)[index] = { id, ...event };
+const updateEvent = (event: any, index: string | number) => {
+  (<any>events)[index] = { ...event };
   return (<any>events)[index];
 };
 

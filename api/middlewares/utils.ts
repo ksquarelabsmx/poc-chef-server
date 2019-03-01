@@ -6,28 +6,54 @@ interface IErrorWithStack {
 }
 
 interface IBadRequest {
-  stack?: any;
-  status: number;
-  errors: any;
   message: string;
+  status: number;
+  stack?: any;
+  errors?: any;
+  reason?: string;
 }
 
-export function badRequestFormated(payload: IErrorWithStack): IBadRequest {
+function badRequestStrategy(payload: IErrorWithStack): IBadRequest {
   const { statusCode, error, message, stack } = payload;
 
   // only return this in development and test mode
-  if (stack)
-    return {
-      status: statusCode,
-      message: error,
-      errors: JSON.parse(message),
-      stack
-    };
+  if (stack) {
+    switch (message) {
+      case "Event has already finished":
+        return {
+          status: statusCode,
+          message: error,
+          reason: message,
+          stack
+        };
+      // used to show errors in Request Validation Middleware
+      default:
+        return {
+          status: statusCode,
+          message: error,
+          errors: JSON.parse(message),
+          stack
+        };
+    }
+  }
 
-  // return this in production mode
-  return {
-    status: statusCode,
-    message: error,
-    errors: JSON.parse(message)
-  };
+  switch (message) {
+    case "Event has already finished":
+      return {
+        status: statusCode,
+        message: error,
+        reason: message
+      };
+    // used to show errors in Request Validation Middleware
+    default:
+      return {
+        status: statusCode,
+        message: error,
+        errors: JSON.parse(message)
+      };
+  }
+}
+
+export function badRequestFormated(payload: IErrorWithStack): IBadRequest {
+  return badRequestStrategy(payload);
 }

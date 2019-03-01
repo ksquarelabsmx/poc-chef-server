@@ -53,12 +53,14 @@ const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`EventController: ${chalk.green("getting events")}`);
 
-    const { body: event } = req;
-    const id = req.params.eventId;
-    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    const updatedEvent = await eventService.updateEvent({ event, id });
+    const event: IEvent = eventMapper.toEntity({
+      id: req.params.id,
+      ...req.body
+    });
+    const updatedEvent = await eventService.updateEvent(event);
+    const eventDTO: IEventDTO = eventMapper.toDTO(updatedEvent);
 
-    res.send(response.success(updatedEvent, 200, source));
+    res.status(201).json(eventDTO);
   } catch (err) {
     debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
     next(err);
@@ -70,7 +72,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     debug(`EventController: ${chalk.green("creating events")}`);
 
     const event: IEvent = eventMapper.toEntity(req.body);
-    const createdEvent = await eventService.createEvent({ event });
+    const createdEvent = await eventService.createEvent(event);
     const eventDTO: IEventDTO = eventMapper.toDTO(createdEvent);
 
     res.status(201).json(eventDTO);

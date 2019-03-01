@@ -1,6 +1,7 @@
+import * as boom from "boom";
 import { Request } from "express";
 
-import { IEvent } from "./../interfaces/event";
+import { IEvent, IEventDTO } from "./../interfaces/event";
 import { eventsMock } from "./../data-source/data-source";
 
 // TODO: implement interfaces and mappers
@@ -30,17 +31,25 @@ const getEvent = async (id: number): Promise<any> => {
   return Promise.reject(new Error("That event Id did not match any event"));
 };
 
-const createEvent = async ({ event }: any): Promise<IEvent> => {
+const createEvent = async (event: IEvent): Promise<IEvent> => {
   return Promise.resolve(eventsMock.addEvent(event));
 };
 
-const updateEvent = async ({ event, id }: any): Promise<any> => {
-  const index = eventsMock.events.findIndex((event: any) => event.id === id);
+const updateEvent = async (event: IEvent): Promise<IEvent> => {
+  const { id } = event;
+  const eventFinded = eventsMock.events.find((event: any) => event.id === id);
+  const eventIndex = eventsMock.events.findIndex(
+    (event: any) => event.id === id
+  );
 
-  if (index !== -1) {
-    return Promise.resolve(eventsMock.updateEvent(event, id, index));
+  if (!eventFinded) {
+    return Promise.reject(boom.notFound("Not Found"));
   }
-  return Promise.reject(new Error("That event Id did not match any event"));
+  if (eventFinded.finished) {
+    return Promise.reject(boom.badRequest("Event has already finished"));
+  }
+
+  return Promise.resolve(eventsMock.updateEvent(event, eventIndex));
 };
 
 export const eventService = {

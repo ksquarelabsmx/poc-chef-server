@@ -245,8 +245,8 @@ export const eventRoutes = (app: any) => {
    */
 
   app.put(
-    "/v1/events/:eventId",
-    validation({ eventId: eventIdSchema }, "params"),
+    "/v1/events/:id",
+    validation({ id: eventIdSchema }, "params"),
     validation(eventSchema),
     eventController.updateEvent
   );
