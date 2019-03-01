@@ -7,3 +7,7 @@ DS_STORE
 
 # compiled tsc
 build
+
+# docs services
+public/apidoc
+
