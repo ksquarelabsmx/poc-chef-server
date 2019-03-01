@@ -62,7 +62,7 @@ const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
 
     res.status(201).json(eventDTO);
   } catch (err) {
-    debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
+    debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
     next(err);
   }
 };
