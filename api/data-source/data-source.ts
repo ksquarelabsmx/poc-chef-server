@@ -66,9 +66,9 @@ const orders = [
 ];
 
 const addEvent = (event: any) => {
-  event.id = uuid();
-  events.push(event);
-  return event;
+  const newEvent = { id: uuid(), ...event };
+  events.push(newEvent);
+  return newEvent;
 };
 
 const updateEvent = (event: any, id: string, index: string | number) => {

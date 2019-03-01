@@ -1,56 +1,36 @@
 import * as Joi from "joi";
+import * as moment from "moment";
 
 const eventIdSchema = Joi.string().max(36);
 
-// TODO validate:
-/*
-  expiration_date > start_hour, both in future date,
-  start_hour < end_hourt, both are valid
-*/
-// Note: this validations delete validations in Controllers
+const eventSchema = {
+  event_name: Joi.string().required(),
 
-const createEventSchema = {
-  event_name: Joi.string()
-    .max(250)
+  start_date: Joi.number()
+    .min(moment().unix())
     .required(),
-  start_date: Joi.number().required(),
-  expiration_date: Joi.number().required(),
+
+  expiration_date: Joi.number()
+    .greater(Joi.ref("start_date"))
+    .required(),
+
   start_hour: Joi.number()
-    .positive()
     .min(0)
-    .max(1440)
+    .max(24 * 60)
     .required(),
+
   end_hour: Joi.number()
-    .positive()
-    .min(0)
-    .max(1440)
+    .greater(Joi.ref("start_hour"))
+    .max(24 * 60)
     .required(),
+
   poc_chuc_torta_unitary_price: Joi.number()
     .positive()
-    .min(0)
-    .max(1000)
     .required(),
-  poc_chuc_torta_amount: Joi.number()
-    .positive()
-    .min(0)
-    .max(1000)
-    .required(),
+
   shrimp_torta_unitary_price: Joi.number()
     .positive()
-    .min(0)
-    .max(1000)
-    .required(),
-  shrimp_torta_amount: Joi.number()
-    .positive()
-    .min(0)
-    .max(1000)
-    .required(),
-  total: Joi.number()
-    .positive()
-    .min(0)
-    .max(1000)
-    .required(),
-  finished: Joi.boolean().required()
+    .required()
 };
 
-export { eventIdSchema, createEventSchema };
+export { eventIdSchema, eventSchema };
