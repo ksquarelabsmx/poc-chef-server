@@ -1,26 +1,26 @@
-import { eventsDataSource } from "./../data-source/data-source";
+import { eventsDataSource } from "./../data-source";
 
 // TODO: implement interfaces and mappers
 const getEvents = async (): Promise<any> => {
-  return Promise.resolve(eventsDataSource.events);
+  return Promise.resolve(eventsDataSource.find());
 };
 
 const getCurrentEvents = async (): Promise<any> => {
-  const events = eventsDataSource.events.filter((event: any) => {
+  const events = eventsDataSource.find().filter((event: any) => {
     return event.finished === false;
   });
   return Promise.resolve(events);
 };
 
 const getPastEvents = async (): Promise<any> => {
-  const events = eventsDataSource.events.filter((event: any) => {
+  const events = eventsDataSource.find().filter((event: any) => {
     return event.finished === true;
   });
   return Promise.resolve(events);
 };
 
 const getEvent = async (id: number): Promise<any> => {
-  const event = eventsDataSource.events.find((event: any) => event.id === id);
+  const event = eventsDataSource.find().find((event: any) => event.id === id);
   if (event) {
     return Promise.resolve(event);
   }
@@ -32,7 +32,7 @@ const createEvent = async ({ event }: any): Promise<any> => {
 };
 
 const updateEvent = async ({ event, id }: any): Promise<any> => {
-  const index = eventsDataSource.events.findIndex(
+  const index = eventsDataSource.find().findIndex(
     (event: any) => event.id === id
   );
   if (index !== -1) {

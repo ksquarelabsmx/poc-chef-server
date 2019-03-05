@@ -1,14 +1,11 @@
-import {
-  ordersDataSource,
-  eventsDataSource
-} from "./../data-source/data-source";
+import { ordersDataSource, eventsDataSource } from "./../data-source";
 
 const getOrders = async (): Promise<any> => {
-  return Promise.resolve(ordersDataSource.orders);
+  return Promise.resolve(ordersDataSource.find());
 };
 
 const getOrder = async (orderId: string): Promise<any> => {
-  const order = ordersDataSource.orders.find(
+  const order = ordersDataSource.find().find(
     (order: any) => order.id === orderId
   );
 
@@ -19,7 +16,7 @@ const getOrder = async (orderId: string): Promise<any> => {
 };
 
 const getOrdersByEventId = async (eventId: string): Promise<any> => {
-  const orders = ordersDataSource.orders.filter(
+  const orders = ordersDataSource.find().filter(
     (order: any) => order.event.id === eventId
   );
 
@@ -30,7 +27,7 @@ const getOrdersByEventId = async (eventId: string): Promise<any> => {
 };
 
 const createOrder = async ({ order }: any): Promise<any> => {
-  const event = eventsDataSource.events.find(
+  const event = eventsDataSource.find().find(
     (event: any) => event.id === order.event.id
   );
 
@@ -44,7 +41,7 @@ const createOrder = async ({ order }: any): Promise<any> => {
 };
 
 const updateOrder = async ({ order, id }: any): Promise<any> => {
-  const index = ordersDataSource.orders.findIndex(
+  const index = ordersDataSource.find().findIndex(
     (order: any) => order.id === id
   );
 
@@ -58,17 +55,17 @@ const markManyAsPaid = async (
   orderIds: Array<string>
 ): Promise<Array<string>> => {
   let orderStatus = orderIds.map((orderId: any) => {
-    const index = ordersDataSource.orders.findIndex(
+    const index = ordersDataSource.find().findIndex(
       (order: any) => order.id === orderId
     );
 
     if (index === -1) {
       return `order ${orderId} not found`;
     } else {
-      if (ordersDataSource.orders[index].paid) {
+      if (ordersDataSource.find()[index].paid) {
         return `order ${orderId} was already marked as paid`;
       } else {
-        ordersDataSource.orders[index].paid = true;
+        ordersDataSource.find()[index].paid = true;
         return `order ${orderId} successfully modified`;
       }
     }
@@ -79,17 +76,17 @@ const markManyAsNotPaid = async (
   orderIds: Array<string>
 ): Promise<Array<string>> => {
   let orderStatus = orderIds.map((orderId: string) => {
-    const index = ordersDataSource.orders.findIndex(
+    const index = ordersDataSource.find().findIndex(
       (order: any) => order.id === orderId
     );
 
     if (index === -1) {
       return `order ${orderId} not found`;
     } else {
-      if (!ordersDataSource.orders[index].paid) {
+      if (!ordersDataSource.find()[index].paid) {
         return `order ${orderId} has not been marked as paid`;
       } else {
-        ordersDataSource.orders[index].paid = false;
+        ordersDataSource.find()[index].paid = false;
         return `order ${orderId} successfully modified`;
       }
     }
