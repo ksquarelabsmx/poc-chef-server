@@ -1,76 +1,108 @@
-import { ordersMock, eventsMock } from "./../data-source/data-source";
+import {
+  ordersDataSource,
+  eventsDataSource
+} from "./../data-source/data-source";
 
 const getOrders = async (): Promise<any> => {
-  return Promise.resolve(ordersMock.orders);
+  return Promise.resolve(ordersDataSource.orders);
 };
 
-const getOrder = async ({ orderId }: any): Promise<any> => {
-  return Promise.resolve(ordersMock.orders[0]);
+const getOrder = async (orderId: string): Promise<any> => {
+  const order = ordersDataSource.orders.find(
+    (order: any) => order.id === orderId
+  );
+
+  if (order) {
+    return Promise.resolve(order);
+  }
+  return Promise.reject(new Error("That order Id did not match any order"));
+};
+
+const getOrdersByEventId = async (eventId: string): Promise<any> => {
+  const orders = ordersDataSource.orders.filter(
+    (order: any) => order.event.id === eventId
+  );
+
+  if (orders.length) {
+    return Promise.resolve(orders);
+  }
+  return Promise.reject(new Error("That event Id did not match any order"));
 };
 
 const createOrder = async ({ order }: any): Promise<any> => {
-  const event = eventsMock.events.find(event => event.id === order.event.id);
+  const event = eventsDataSource.events.find(
+    (event: any) => event.id === order.event.id
+  );
 
   if (event) {
     if (!event.finished) {
-      return Promise.resolve(ordersMock.addOrder(order));
+      return Promise.resolve(ordersDataSource.addOrder(order));
     }
     return Promise.reject(new Error("That event has already finished"));
   }
   return Promise.reject(new Error("That event Id did not match any event"));
 };
 
-const markManyAsPaid = (orderIds: Array<string>): Promise<Array<string>> => {
-  return new Promise((resolve, reject) => {
-    const initialAmount: number = orderIds.length;
-    const orders: any = [...ordersMock.orders];
+const updateOrder = async ({ order, id }: any): Promise<any> => {
+  const index = ordersDataSource.orders.findIndex(
+    (order: any) => order.id === id
+  );
 
-    let currentAmount: number = initialAmount;
-    let paidStatus: Array<string> = [];
+  if (index !== -1) {
+    return Promise.resolve(ordersDataSource.updateOrder(order, id, index));
+  }
+  return Promise.reject(new Error("That order Id did not match any event"));
+};
 
-    // TODO
-    /* change forEach by reduce, so we avoid to declare variables with let.
-      reduce return 
-        ordersStatus {
-          currentAmount: number,
-          paidStatus: Array<String>
-        }
-    */
-    orderIds.forEach(orderId => {
-      const orderIndex = orders.findIndex((order: any) => {
-        return order.id === orderId;
-      });
+const markManyAsPaid = async (
+  orderIds: Array<string>
+): Promise<Array<string>> => {
+  let orderStatus = orderIds.map((orderId: any) => {
+    const index = ordersDataSource.orders.findIndex(
+      (order: any) => order.id === orderId
+    );
 
-      if (orderIndex === -1) {
-        paidStatus.push(`order ${orderId} not found`);
-        currentAmount--;
+    if (index === -1) {
+      return `order ${orderId} not found`;
+    } else {
+      if (ordersDataSource.orders[index].paid) {
+        return `order ${orderId} was already marked as paid`;
       } else {
-        if (orders[orderIndex].paid === true) {
-          currentAmount--;
-          paidStatus.push(`order ${orderId} was already marked as paid`);
-        } else {
-          orders[orderIndex].paid = true;
-          paidStatus.push(`order ${orderId} successfully modified`);
-        }
+        ordersDataSource.orders[index].paid = true;
+        return `order ${orderId} successfully modified`;
       }
-    });
-
-    if (!currentAmount)
-      return reject(
-        new Error(
-          "Those orders do not exists or they are already marked as paid"
-        )
-      );
-
-    ordersMock.orders = orders;
-
-    return resolve(paidStatus);
+    }
   });
+  return Promise.resolve(orderStatus);
+};
+const markManyAsNotPaid = async (
+  orderIds: Array<string>
+): Promise<Array<string>> => {
+  let orderStatus = orderIds.map((orderId: string) => {
+    const index = ordersDataSource.orders.findIndex(
+      (order: any) => order.id === orderId
+    );
+
+    if (index === -1) {
+      return `order ${orderId} not found`;
+    } else {
+      if (!ordersDataSource.orders[index].paid) {
+        return `order ${orderId} has not been marked as paid`;
+      } else {
+        ordersDataSource.orders[index].paid = false;
+        return `order ${orderId} successfully modified`;
+      }
+    }
+  });
+  return Promise.resolve(orderStatus);
 };
 
 export const orderService = {
   getOrders,
   getOrder,
+  getOrdersByEventId,
   createOrder,
-  markManyAsPaid
+  updateOrder,
+  markManyAsPaid,
+  markManyAsNotPaid
 };

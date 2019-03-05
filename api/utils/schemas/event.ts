@@ -1,20 +1,19 @@
 import * as Joi from "joi";
 
-const eventIdSchema = Joi.string().max(36);
-
-// TODO validate:
-/*
-  expiration_date > start_hour, both in future date,
-  start_hour < end_hourt, both are valid
-*/
-// Note: this validations delete validations in Controllers
+const eventIdSchema = Joi.string().uuid();
 
 const createEventSchema = {
   event_name: Joi.string()
     .max(250)
     .required(),
-  start_date: Joi.number().required(),
-  expiration_date: Joi.number().required(),
+  start_date: Joi.date()
+    .timestamp("unix")
+    .min("now")
+    .required(),
+  expiration_date: Joi.date()
+    .timestamp("unix")
+    .min(Joi.ref("start_date"))
+    .required(),
   start_hour: Joi.number()
     .positive()
     .min(0)
@@ -22,8 +21,7 @@ const createEventSchema = {
     .required(),
   end_hour: Joi.number()
     .positive()
-    .min(0)
-    .max(1440)
+    .greater(Joi.ref("start_hour"))
     .required(),
   poc_chuc_torta_unitary_price: Joi.number()
     .positive()

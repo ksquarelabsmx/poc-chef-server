@@ -6,7 +6,7 @@ import { uri } from "./../utils/uri";
 import { response } from "./../utils/response";
 import { eventService } from "../services/event";
 
-const debug = Debug("chef:orders:controller:orders");
+const debug = Debug("chef:events:controller:events");
 
 const eventStrategy = (eventService: any, query: string = "") => {
   switch (query) {
@@ -21,6 +21,8 @@ const eventStrategy = (eventService: any, query: string = "") => {
 
 const getEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    debug(`EventController: ${chalk.green("getting event")}`);
+    
     const id = req.params.eventId;
     const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
     const event = await eventService.getEvent(id);
@@ -30,7 +32,7 @@ const getEvent = async (req: Request, res: Response, next: NextFunction) => {
     debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
     next(err);
   }
-};
+}; 
 
 const getEvents = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -49,7 +51,7 @@ const getEvents = async (req: Request, res: Response, next: NextFunction) => {
 
 const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    debug(`EventController: ${chalk.green("getting events")}`);
+    debug(`EventController: ${chalk.green("updating events")}`);
 
     const { body: event } = req;
     const id = req.params.eventId;
@@ -65,7 +67,7 @@ const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
 
 const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    debug(`EventController: ${chalk.green("creating events")}`);
+    debug(`EventController: ${chalk.green("creating event")}`);
 
     const { body: event } = req;
     const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));

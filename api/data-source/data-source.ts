@@ -48,7 +48,7 @@ const events = [
 
 const orders = [
   {
-    id: "1",
+    id: uuid(),
     total: 45,
     shrimp_tortas_total: 1,
     shrimp_torta_unitary_price: 25,
@@ -61,7 +61,9 @@ const orders = [
     owner: {
       id: "1",
       name: "Juan Perez"
-    }
+    },
+    paid: false,
+    canceled: false
   }
 ];
 
@@ -82,5 +84,10 @@ const addOrder = (order: any) => {
   return order;
 };
 
-export const ordersMock = { orders, addOrder };
-export const eventsMock = { events, addEvent, updateEvent };
+const updateOrder = (order: any, id: string, index: string | number) => {
+  (<any>orders)[index] = { id, ...order };
+  return (<any>orders)[index];
+};
+
+export const ordersDataSource = { orders, addOrder, updateOrder };
+export const eventsDataSource = { events, addEvent, updateEvent };
