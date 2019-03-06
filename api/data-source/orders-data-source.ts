@@ -21,17 +21,25 @@ const orders = [
   }
 ];
 
-const find = () => orders;
+const find = (query?: any): any => {
+  if (query) {
+    const key = Object.keys(query)[0];
+    return orders.filter((order: any) => order[key] === query[key]);
+  } else {
+    return orders;
+  }
+};
 
-const addOrder = (order: any) => {
+const save = (order: any): any => {
   order.id = uuid();
   orders.push(order);
   return order;
 };
 
-const updateOrder = (order: any, id: string, index: string | number) => {
-  (<any>orders)[index] = { id, ...order };
+const update = (order: any): any => {
+  const index = orders.findIndex((ord: any) => ord.id === order.id);
+  (<any>orders)[index] = { ...order };
   return (<any>orders)[index];
 };
 
-export const ordersDataSource = { find, addOrder, updateOrder };
+export const ordersDataSource = { find, save, update };

@@ -5,22 +5,24 @@ import { Request, Response, NextFunction } from "express";
 import { uri } from "./../utils/uri";
 import { response } from "./../utils/response";
 import { orderService } from "./../services/order";
+import { orderMapper } from "./../mappers/order";
+import { IOrder, IOrderDTO } from "./../interfaces/order";
 
 const debug = Debug("chef:orders:controller:orders");
-
+/*
 const orderStrategy = (orderService: any, query: string = "") => {
   return query
     ? orderService.getOrdersByEventId(query)
     : orderService.getOrders();
-};
+};*/
 
 const getOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`OrderController: ${chalk.green("getting orders")}`);
 
-    const query = req.query.eventId;
+    //const query = req.query.eventId;
     const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    const orders = await orderStrategy(orderService, query);
+    const orders = await orderService.getOrders();
 
     res.send(response.success(orders, 200, source));
   } catch (err) {
@@ -48,11 +50,11 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`OrderController: ${chalk.green("creating order")}`);
 
-    const { body: order } = req;
-    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    const createOrder = await orderService.createOrder({ order });
+    const order: IOrder = orderMapper.toEntity(req.body);
+    const createOrder = await orderService.createOrder(order)
+    const orderDTO: IOrderDTO = orderMapper.toDTO(createOrder);
 
-    res.send(response.success(createOrder, 200, source));
+    res.status(201).json(orderDTO);
   } catch (err) {
     debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
     next(err);
@@ -61,16 +63,18 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 
 const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    debug(`OrderController: ${chalk.green("getting events")}`);
+    debug(`EventController: ${chalk.green("getting events")}`);
 
-    const { body: order } = req;
-    const id = req.params.orderId;
-    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    const updatedOrder = await orderService.updateOrder({ order, id });
+    const event: IOrder = orderMapper.toEntity({
+      id: req.params.id,
+      ...req.body
+    });
+    const updatedEvent = await orderService.updateOrder(event);
+    const orderDTO: IOrderDTO = orderMapper.toDTO(updatedEvent);
 
-    res.send(response.success(updatedOrder, 200, source));
+    res.status(201).json(orderDTO);
   } catch (err) {
-    debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
+    debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
     next(err);
   }
 };

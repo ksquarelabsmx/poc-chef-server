@@ -46,17 +46,25 @@ const events = [
   }
 ];
 
-const find = () => events;
+const find = (query?: any): any => {
+  if (query) {
+    const key = Object.keys(query)[0];
+    return events.filter((order: any) => order[key] === query[key]);
+  } else {
+    return events;
+  }
+};
 
-const addEvent = (event: any) => {
+const save = (event: any): any => {
   event.id = uuid();
   events.push(event);
   return event;
 };
 
-const updateEvent = (event: any, id: string, index: string | number) => {
-  (<any>events)[index] = { id, ...event };
+const update = (event: any): any => {
+  const index = events.findIndex((even: any) => even.id === event.id);
+  (<any>events)[index] = { ...event };
   return (<any>events)[index];
 };
 
-export const eventsDataSource = { find, addEvent, updateEvent };
+export const eventsDataSource = { find, save, update };

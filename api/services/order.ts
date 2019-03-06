@@ -1,3 +1,4 @@
+import { IOrder } from "./../interfaces/order"
 import { ordersDataSource, eventsDataSource } from "./../data-source";
 
 const getOrders = async (): Promise<any> => {
@@ -5,48 +6,41 @@ const getOrders = async (): Promise<any> => {
 };
 
 const getOrder = async (orderId: string): Promise<any> => {
-  const order = ordersDataSource.find().find(
-    (order: any) => order.id === orderId
-  );
+  const order = ordersDataSource.find({ id: orderId });
 
   if (order) {
     return Promise.resolve(order);
   }
   return Promise.reject(new Error("That order Id did not match any order"));
 };
-
+/*
 const getOrdersByEventId = async (eventId: string): Promise<any> => {
-  const orders = ordersDataSource.find().filter(
-    (order: any) => order.event.id === eventId
-  );
+  const orders = ordersDataSource.find()
 
   if (orders.length) {
     return Promise.resolve(orders);
   }
   return Promise.reject(new Error("That event Id did not match any order"));
-};
+};*/
 
-const createOrder = async ({ order }: any): Promise<any> => {
-  const event = eventsDataSource.find().find(
-    (event: any) => event.id === order.event.id
-  );
+const createOrder = async (order: IOrder): Promise<any> => {
+  const event = eventsDataSource.find({ id: order.event.id });
 
   if (event) {
     if (!event.finished) {
-      return Promise.resolve(ordersDataSource.addOrder(order));
+      return Promise.resolve(ordersDataSource.save(order));
     }
     return Promise.reject(new Error("That event has already finished"));
   }
   return Promise.reject(new Error("That event Id did not match any event"));
 };
 
-const updateOrder = async ({ order, id }: any): Promise<any> => {
-  const index = ordersDataSource.find().findIndex(
-    (order: any) => order.id === id
-  );
+const updateOrder = async (order: IOrder): Promise<any> => {
+  const { id } = order
+  const index = ordersDataSource.find({ id });
 
-  if (index !== -1) {
-    return Promise.resolve(ordersDataSource.updateOrder(order, id, index));
+  if (index) {
+    return Promise.resolve(ordersDataSource.update(order));
   }
   return Promise.reject(new Error("That order Id did not match any event"));
 };
@@ -54,39 +48,36 @@ const updateOrder = async ({ order, id }: any): Promise<any> => {
 const markManyAsPaid = async (
   orderIds: Array<string>
 ): Promise<Array<string>> => {
-  let orderStatus = orderIds.map((orderId: any) => {
-    const index = ordersDataSource.find().findIndex(
-      (order: any) => order.id === orderId
-    );
-
-    if (index === -1) {
+  const orderStatus = orderIds.map((orderId: any) => {
+    const order = ordersDataSource.find({id: orderId});
+    if (order) {
       return `order ${orderId} not found`;
     } else {
-      if (ordersDataSource.find()[index].paid) {
+      if (order.paid) {
         return `order ${orderId} was already marked as paid`;
       } else {
-        ordersDataSource.find()[index].paid = true;
+        order.paid = true;
+        ordersDataSource.update(order);
         return `order ${orderId} successfully modified`;
       }
     }
   });
   return Promise.resolve(orderStatus);
 };
+
 const markManyAsNotPaid = async (
   orderIds: Array<string>
 ): Promise<Array<string>> => {
-  let orderStatus = orderIds.map((orderId: string) => {
-    const index = ordersDataSource.find().findIndex(
-      (order: any) => order.id === orderId
-    );
-
-    if (index === -1) {
+  const orderStatus = orderIds.map((orderId: any) => {
+    const order = ordersDataSource.find({id: orderId});
+    if (order) {
       return `order ${orderId} not found`;
     } else {
-      if (!ordersDataSource.find()[index].paid) {
+      if (order.paid) {
         return `order ${orderId} has not been marked as paid`;
       } else {
-        ordersDataSource.find()[index].paid = false;
+        order.paid = true;
+        ordersDataSource.update(order);
         return `order ${orderId} successfully modified`;
       }
     }
@@ -97,7 +88,7 @@ const markManyAsNotPaid = async (
 export const orderService = {
   getOrders,
   getOrder,
-  getOrdersByEventId,
+  //getOrdersByEventId,
   createOrder,
   updateOrder,
   markManyAsPaid,
