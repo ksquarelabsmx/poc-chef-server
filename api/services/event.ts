@@ -7,7 +7,7 @@ const getEvents = async (): Promise<any> => {
 };
 
 const getCurrentEvents = async (): Promise<any> => {
-  const events = eventsDataSource.find({finished: false})
+  const events = eventsDataSource.find({ finished: false });
   if (events) {
     return Promise.resolve(events);
   }
@@ -15,15 +15,15 @@ const getCurrentEvents = async (): Promise<any> => {
 };
 
 const getPastEvents = async (): Promise<any> => {
-  const events = eventsDataSource.find({finished: true});
+  const events = eventsDataSource.find({ finished: true });
   if (events) {
     return Promise.resolve(events);
   }
   return Promise.reject(new Error("There are no past events"));
 };
 
-const getEvent = async (id: number): Promise<any> => {
-  const event = eventsDataSource.find({id});
+const getEventById = async (id: number): Promise<any> => {
+  const event = eventsDataSource.find({ id });
   if (event) {
     return Promise.resolve(event);
   }
@@ -35,21 +35,21 @@ const createEvent = async (event: IEvent): Promise<IEvent> => {
 };
 
 const updateEvent = async (event: IEvent): Promise<IEvent> => {
-  const { id } = event
-  const eventFinded = eventsDataSource.find({id})
-  
+  const { id } = event;
+  const eventFinded = eventsDataSource.find({ id });
+
   if (eventFinded) {
-    if(eventFinded.finished){
+    if (eventFinded.finished) {
       return Promise.reject(new Error("Event has already finished"));
     }
     return Promise.resolve(eventsDataSource.update(event));
-  } 
+  }
   return Promise.reject(new Error("That event Id did not match any event"));
 };
 
 export const eventService = {
   getEvents,
-  getEvent,
+  getEventById,
   getPastEvents,
   getCurrentEvents,
   createEvent,

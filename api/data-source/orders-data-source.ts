@@ -1,19 +1,20 @@
 import { v4 as uuid } from "uuid";
+import { IOrder } from "./../interfaces/order";
 
-const orders = [
+const orders: IOrder[] = [
   {
     id: uuid(),
     total: 45,
-    shrimp_tortas_total: 1,
-    shrimp_torta_unitary_price: 25,
-    poc_chuc_tortas_total: 1,
-    poc_chuc_torta_unitary_price: 20,
+    shrimpTortasTotal: 1,
+    shrimpTortaUnitaryPrice: 25,
+    pocChucTortasTotal: 1,
+    pocChucTortaUnitaryPrice: 20,
     event: {
-      id: "1",
-      created_at: 1000000000
+      id: uuid(),
+      createdAt: 1548000000
     },
     owner: {
-      id: "1",
+      id: uuid(),
       name: "Juan Perez"
     },
     paid: false,
@@ -30,13 +31,13 @@ const find = (query?: any): any => {
   }
 };
 
-const save = (order: any): any => {
+const save = (order: IOrder): IOrder => {
   order.id = uuid();
   orders.push(order);
   return order;
 };
 
-const update = (order: any): any => {
+const update = (order: IOrder): IOrder => {
   const index = orders.findIndex((ord: any) => ord.id === order.id);
   (<any>orders)[index] = { ...order };
   return (<any>orders)[index];

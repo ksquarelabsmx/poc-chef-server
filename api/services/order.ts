@@ -1,12 +1,12 @@
-import { IOrder } from "./../interfaces/order"
+import { IOrder } from "./../interfaces/order";
 import { ordersDataSource, eventsDataSource } from "./../data-source";
 
 const getOrders = async (): Promise<any> => {
   return Promise.resolve(ordersDataSource.find());
 };
 
-const getOrder = async (orderId: string): Promise<any> => {
-  const order = ordersDataSource.find({ id: orderId });
+const getOrderById = async (id: string): Promise<any> => {
+  const order = ordersDataSource.find({ id });
 
   if (order) {
     return Promise.resolve(order);
@@ -23,7 +23,7 @@ const getOrdersByEventId = async (eventId: string): Promise<any> => {
   return Promise.reject(new Error("That event Id did not match any order"));
 };*/
 
-const createOrder = async (order: IOrder): Promise<any> => {
+const createOrder = async (order: IOrder): Promise<IOrder> => {
   const event = eventsDataSource.find({ id: order.event.id });
 
   if (event) {
@@ -35,8 +35,8 @@ const createOrder = async (order: IOrder): Promise<any> => {
   return Promise.reject(new Error("That event Id did not match any event"));
 };
 
-const updateOrder = async (order: IOrder): Promise<any> => {
-  const { id } = order
+const updateOrder = async (order: IOrder): Promise<IOrder> => {
+  const { id } = order;
   const index = ordersDataSource.find({ id });
 
   if (index) {
@@ -45,40 +45,37 @@ const updateOrder = async (order: IOrder): Promise<any> => {
   return Promise.reject(new Error("That order Id did not match any event"));
 };
 
-const markManyAsPaid = async (
-  orderIds: Array<string>
-): Promise<Array<string>> => {
-  const orderStatus = orderIds.map((orderId: any) => {
-    const order = ordersDataSource.find({id: orderId});
-    if (order) {
-      return `order ${orderId} not found`;
+const markManyAsPaid = async (orderIds: string[]): Promise<string[]> => {
+  const orderStatus = orderIds.map((id: string) => {
+    const order: IOrder = ordersDataSource.find({ id })[0];
+    console.log(order);
+    if (order === undefined) {
+      return `order ${id} not found`;
     } else {
       if (order.paid) {
-        return `order ${orderId} was already marked as paid`;
+        return `order ${id} was already marked as paid`;
       } else {
         order.paid = true;
         ordersDataSource.update(order);
-        return `order ${orderId} successfully modified`;
+        return `order ${id} successfully modified`;
       }
     }
   });
   return Promise.resolve(orderStatus);
 };
 
-const markManyAsNotPaid = async (
-  orderIds: Array<string>
-): Promise<Array<string>> => {
-  const orderStatus = orderIds.map((orderId: any) => {
-    const order = ordersDataSource.find({id: orderId});
-    if (order) {
-      return `order ${orderId} not found`;
+const markManyAsNotPaid = async (orderIds: string[]): Promise<string[]> => {
+  const orderStatus = orderIds.map((id: any) => {
+    const order: IOrder = ordersDataSource.find({ id })[0];
+    if (order === undefined) {
+      return `order ${id} not found`;
     } else {
-      if (order.paid) {
-        return `order ${orderId} has not been marked as paid`;
+      if (!order.paid) {
+        return `order ${id} has not been marked as paid`;
       } else {
-        order.paid = true;
+        order.paid = false;
         ordersDataSource.update(order);
-        return `order ${orderId} successfully modified`;
+        return `order ${id} successfully modified`;
       }
     }
   });
@@ -87,7 +84,7 @@ const markManyAsNotPaid = async (
 
 export const orderService = {
   getOrders,
-  getOrder,
+  getOrderById,
   //getOrdersByEventId,
   createOrder,
   updateOrder,

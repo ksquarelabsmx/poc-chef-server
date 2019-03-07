@@ -37,7 +37,7 @@ const getOrder = async (req: Request, res: Response, next: NextFunction) => {
 
     const orderId = req.params.orderId;
     const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    const order = await orderService.getOrder(orderId);
+    const order = await orderService.getOrderById(orderId);
 
     res.send(response.success(order, 200, source));
   } catch (err) {
@@ -51,7 +51,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     debug(`OrderController: ${chalk.green("creating order")}`);
 
     const order: IOrder = orderMapper.toEntity(req.body);
-    const createOrder = await orderService.createOrder(order)
+    const createOrder = await orderService.createOrder(order);
     const orderDTO: IOrderDTO = orderMapper.toDTO(createOrder);
 
     res.status(201).json(orderDTO);

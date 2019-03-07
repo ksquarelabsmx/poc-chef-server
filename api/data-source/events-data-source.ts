@@ -1,46 +1,46 @@
 import { v4 as uuid } from "uuid";
-import { getTimeFromEpoch, getTimeFromMins } from "../utils/time";
+import { IEvent, IEventDB } from "./../interfaces/event";
 
-const events = [
+const events: IEventDB[] = [
   {
     id: uuid(),
-    event_name: "Tortas para la oficina 1",
-    start_date: getTimeFromEpoch(1548000000), // epoch
-    expiration_date: getTimeFromEpoch(1549000000), // epoch
-    start_hour: getTimeFromMins(800),
-    end_hour: getTimeFromMins(1200),
-    poc_chuc_torta_unitary_price: 25,
-    poc_chuc_torta_amount: 10,
-    shrimp_torta_unitary_price: 30,
-    shrimp_torta_amount: 12,
-    finished: false,
+    eventName: "Tortas para la oficina 1",
+    startDate: 1548000000, // epoch
+    expirationDate: 1549000000, // epoch
+    startHour: 800,
+    endHour: 1200,
+    pocChucTortaunitaryPrice: 25,
+    pocChucTortaAmount: 10,
+    shrimpTortaunitaryPrice: 30,
+    shrimpTortaAmount: 12,
+    finished: true,
     total: 22
   },
   {
     id: uuid(),
-    event_name: "Tortas para la oficina 2",
-    start_date: getTimeFromEpoch(1548500000), // epoch
-    expiration_date: getTimeFromEpoch(1549500000), // epoch
-    start_hour: getTimeFromMins(800),
-    end_hour: getTimeFromMins(1200),
-    poc_chuc_torta_unitary_price: 25,
-    poc_chuc_torta_amount: 5,
-    shrimp_torta_unitary_price: 30,
-    shrimp_torta_amount: 5,
+    eventName: "Tortas para la oficina 2",
+    startDate: 1548500000, // epoch
+    expirationDate: 1549500000, // epoch
+    startHour: 800,
+    endHour: 1200,
+    pocChucTortaunitaryPrice: 25,
+    pocChucTortaAmount: 5,
+    shrimpTortaunitaryPrice: 30,
+    shrimpTortaAmount: 5,
     finished: true,
     total: 10
   },
   {
     id: uuid(),
-    event_name: "Tortas para la oficina 3",
-    start_date: getTimeFromEpoch(1548500000), // epoch
-    expiration_date: getTimeFromEpoch(1549500000), // epoch
-    start_hour: getTimeFromMins(800),
-    end_hour: getTimeFromMins(1200),
-    poc_chuc_torta_unitary_price: 25,
-    poc_chuc_torta_amount: 15,
-    shrimp_torta_unitary_price: 30,
-    shrimp_torta_amount: 5,
+    eventName: "Tortas para la oficina 3",
+    startDate: 1548500000, // epoch
+    expirationDate: 1549500000, // epoch
+    startHour: 800,
+    endHour: 1200,
+    pocChucTortaunitaryPrice: 25,
+    pocChucTortaAmount: 15,
+    shrimpTortaunitaryPrice: 30,
+    shrimpTortaAmount: 5,
     finished: false,
     total: 20
   }
@@ -55,13 +55,20 @@ const find = (query?: any): any => {
   }
 };
 
-const save = (event: any): any => {
+const save = (event: IEvent): IEvent => {
   event.id = uuid();
-  events.push(event);
+  const result: IEventDB = {
+    ...event,
+    pocChucTortaAmount: 0,
+    shrimpTortaAmount: 0,
+    total: 0,
+    finished: false
+  };
+  events.push(result);
   return event;
 };
 
-const update = (event: any): any => {
+const update = (event: IEvent): IEvent => {
   const index = events.findIndex((even: any) => even.id === event.id);
   (<any>events)[index] = { ...event };
   return (<any>events)[index];
