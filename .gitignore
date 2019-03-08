@@ -11,3 +11,5 @@ build
 # docs services
 public/apidoc
 
+# nyc coverage
+coverage
