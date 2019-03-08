@@ -6,7 +6,7 @@ import chaiHttp = require("chai-http");
 const should: Chai.Should = chai.should();
 chai.use(chaiHttp);
 
-import { server, healthURI } from "../common";
+import { server, healthURI } from "./utils";
 
 describe("/health", () => {
   it("Check api health", done => {
