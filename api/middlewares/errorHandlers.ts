@@ -4,6 +4,7 @@ import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
 import { config } from "../../config";
+import { badRequestFormated } from "./utils";
 
 const debug = Debug("chef:orders:controller:orders");
 
@@ -19,10 +20,12 @@ function wrapErrors(err: any, req: Request, res: Response, next: NextFunction) {
   next(err);
 }
 
-function withErrorStack(err: any, stack: any) {
+function withErrorStack(err: boom.Payload, stack: any) {
   if (config.server.name.toLowerCase() !== "production") {
     return { ...err, stack };
   }
+
+  return err;
 }
 
 function clientErrorHandler(
@@ -43,20 +46,25 @@ function clientErrorHandler(
 }
 
 function errorHandler(
-  err: any,
+  err: boom<any>,
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Response {
   const {
     output: { statusCode, payload }
   } = err;
+
   // catch error while streaming
   if (res.headersSent) {
     next(err);
   }
+  if (statusCode === 400) {
+    const data = withErrorStack(payload, err.stack);
+    return res.status(statusCode).json(badRequestFormated(data));
+  }
 
-  res.status(statusCode).json(withErrorStack(payload, err.stack));
+  return res.status(statusCode).json(withErrorStack(payload, err.stack));
 }
 
 export { logErrors, wrapErrors, clientErrorHandler, errorHandler };

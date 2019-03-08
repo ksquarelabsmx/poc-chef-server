@@ -48,7 +48,6 @@ const updateOrder = async (order: IOrder): Promise<IOrder> => {
 const markManyAsPaid = async (orderIds: string[]): Promise<string[]> => {
   const orderStatus = orderIds.map((id: string) => {
     const order: IOrder = ordersDataSource.find({ id })[0];
-    console.log(order);
     if (order === undefined) {
       return `order ${id} not found`;
     } else {

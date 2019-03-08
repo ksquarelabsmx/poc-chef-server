@@ -1,54 +1,36 @@
 import * as Joi from "joi";
+import * as moment from "moment";
 
 const eventIdSchema = Joi.string().uuid();
 
-const createEventSchema = {
-  event_name: Joi.string()
-    .max(250)
+const eventSchema = {
+  event_name: Joi.string().required(),
+
+  start_date: Joi.number()
+    .min(moment().unix()) // don't allow start_date in past
     .required(),
-  start_date: Joi.date()
-    .timestamp("unix")
-    .min("now")
+
+  expiration_date: Joi.number()
+    .greater(Joi.ref("start_date"))
     .required(),
-  expiration_date: Joi.date()
-    .timestamp("unix")
-    .min(Joi.ref("start_date"))
-    .required(),
+
   start_hour: Joi.number()
-    .positive()
     .min(0)
-    .max(1440)
+    .max(1440) // time in seconds
     .required(),
+
   end_hour: Joi.number()
-    .positive()
     .greater(Joi.ref("start_hour"))
+    .max(1440) // time in seconds
     .required(),
+
   poc_chuc_torta_unitary_price: Joi.number()
     .positive()
-    .min(0)
-    .max(1000)
     .required(),
-  poc_chuc_torta_amount: Joi.number()
-    .positive()
-    .min(0)
-    .max(1000)
-    .required(),
+
   shrimp_torta_unitary_price: Joi.number()
     .positive()
-    .min(0)
-    .max(1000)
-    .required(),
-  shrimp_torta_amount: Joi.number()
-    .positive()
-    .min(0)
-    .max(1000)
-    .required(),
-  total: Joi.number()
-    .positive()
-    .min(0)
-    .max(1000)
-    .required(),
-  finished: Joi.boolean().required()
+    .required()
 };
 
-export { eventIdSchema, createEventSchema };
+export { eventIdSchema, eventSchema };

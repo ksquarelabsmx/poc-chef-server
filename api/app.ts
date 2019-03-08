@@ -4,6 +4,7 @@ import * as Debug from "debug";
 import * as helmet from "helmet";
 import * as express from "express";
 import * as bodyParser from "body-parser";
+const slash = require("express-slash");
 import { Request, Response } from "express";
 
 import {
@@ -15,7 +16,6 @@ import {
 import routes from "./routes/v1";
 
 const debug = Debug("chef:orders:app");
-const slash = require("express-slash");
 
 debug(`app loading...`);
 
@@ -49,9 +49,9 @@ app.use(bodyParser.json());
 routes(app);
 
 // v1/name/ redirect to v1/name
-app.use(slash());
+app.use(slash(0));
 
-app.use(function(req: Request, res: Response) {
+app.use((req: Request, res: Response) => {
   const {
     output: { statusCode, payload }
   } = boom.notFound();
