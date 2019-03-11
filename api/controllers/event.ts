@@ -8,7 +8,7 @@ import { eventService } from "../services/event";
 import { eventMapper } from "./../mappers/event";
 import { IEvent, IEventDTO } from "./../interfaces/event";
 
-const debug = Debug("chef:orders:controller:orders");
+const debug = Debug("chef:events:controller:events");
 
 const eventStrategy = (eventService: any, query: string = "") => {
   switch (query) {
@@ -23,9 +23,11 @@ const eventStrategy = (eventService: any, query: string = "") => {
 
 const getEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    debug(`EventController: ${chalk.green("getting event")}`);
+
     const id = req.params.eventId;
     const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
-    const event = await eventService.getEvent(id);
+    const event = await eventService.getEventById(id);
 
     res.send(response.success(event, 200, source));
   } catch (err) {

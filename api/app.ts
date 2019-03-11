@@ -4,7 +4,7 @@ import * as Debug from "debug";
 import * as helmet from "helmet";
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import slash = require("express-slash");
+const slash = require("express-slash");
 import { Request, Response } from "express";
 
 import {
