@@ -45,7 +45,6 @@ interface IOrder {
 export interface IEventOrdersDTO extends IEventDetailsDTO {
   orders: IOrder[];
 }
-<<<<<<< HEAD
 
 export interface IEventDB extends IEvent {
   pocChucTortaAmount: number;
@@ -53,5 +52,3 @@ export interface IEventDB extends IEvent {
   total: number;
   finished: boolean;
 }
-=======
->>>>>>> develop
