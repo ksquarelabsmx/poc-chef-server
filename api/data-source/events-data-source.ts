@@ -9,9 +9,9 @@ const events: IEventDB[] = [
     expirationDate: 1549000000, // epoch
     startHour: 800,
     endHour: 1200,
-    pocChucTortaunitaryPrice: 25,
+    pocChucTortaUnitaryPrice: 25,
     pocChucTortaAmount: 10,
-    shrimpTortaunitaryPrice: 30,
+    shrimpTortaUnitaryPrice: 30,
     shrimpTortaAmount: 12,
     finished: true,
     total: 22
@@ -23,9 +23,9 @@ const events: IEventDB[] = [
     expirationDate: 1549500000, // epoch
     startHour: 800,
     endHour: 1200,
-    pocChucTortaunitaryPrice: 25,
+    pocChucTortaUnitaryPrice: 25,
     pocChucTortaAmount: 5,
-    shrimpTortaunitaryPrice: 30,
+    shrimpTortaUnitaryPrice: 30,
     shrimpTortaAmount: 5,
     finished: true,
     total: 10
@@ -37,9 +37,9 @@ const events: IEventDB[] = [
     expirationDate: 1549500000, // epoch
     startHour: 800,
     endHour: 1200,
-    pocChucTortaunitaryPrice: 25,
+    pocChucTortaUnitaryPrice: 25,
     pocChucTortaAmount: 15,
-    shrimpTortaunitaryPrice: 30,
+    shrimpTortaUnitaryPrice: 30,
     shrimpTortaAmount: 5,
     finished: false,
     total: 20
@@ -50,9 +50,8 @@ const find = (query?: any): any => {
   if (query) {
     const key = Object.keys(query)[0];
     return events.filter((order: any) => order[key] === query[key]);
-  } else {
-    return events;
   }
+  return events;
 };
 
 const save = (event: IEvent): IEvent => {

@@ -6,8 +6,8 @@ export interface IEvent {
   expirationDate: number;
   startHour: number;
   endHour: number;
-  pocChucTortaunitaryPrice: number;
-  shrimpTortaunitaryPrice: number;
+  pocChucTortaUnitaryPrice: number;
+  shrimpTortaUnitaryPrice: number;
 }
 
 export interface IEventDTO {

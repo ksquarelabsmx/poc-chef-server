@@ -1,50 +1,68 @@
-import { IEvent, IEventDTO } from "./../interfaces/event";
+import * as fp from "lodash/fp";
+import * as boom from "boom";
+
+import { IEvent } from "./../interfaces/event";
 import { eventsDataSource } from "./../data-source";
 
-// TODO: implement interfaces and mappers
-const getEvents = async (): Promise<any> => {
+// TODO: Define returns
+const getEvents = async (): Promise<IEvent> => {
   return Promise.resolve(eventsDataSource.find());
 };
 
 const getCurrentEvents = async (): Promise<any> => {
-  const events = eventsDataSource.find({ finished: false });
-  if (events) {
+  try {
+    const events = await eventsDataSource.find({ finished: false });
     return Promise.resolve(events);
+  } catch (err) {
+    return Promise.reject(new Error(err));
   }
-  return Promise.reject(new Error("There are no current events"));
 };
 
 const getPastEvents = async (): Promise<any> => {
-  const events = eventsDataSource.find({ finished: true });
-  if (events) {
+  try {
+    const events = await eventsDataSource.find({ finished: true });
     return Promise.resolve(events);
+  } catch (err) {
+    return Promise.reject(new Error(err));
   }
-  return Promise.reject(new Error("There are no past events"));
 };
 
 const getEventById = async (id: number): Promise<any> => {
-  const event = eventsDataSource.find({ id });
-  if (event) {
-    return Promise.resolve(event);
-  }
-  return Promise.reject(new Error("That event Id did not match any event"));
-};
-
-const createEvent = async (event: IEvent): Promise<IEvent> => {
-  return Promise.resolve(eventsDataSource.save(event));
-};
-
-const updateEvent = async (event: IEvent): Promise<IEvent> => {
-  const { id } = event;
-  const eventFinded = eventsDataSource.find({ id });
-
-  if (eventFinded) {
-    if (eventFinded.finished) {
-      return Promise.reject(new Error("Event has already finished"));
+  try {
+    const event = await eventsDataSource.find({ id });
+    if (!fp.isEmpty(event)) {
+      return Promise.resolve(event[0]);
     }
-    return Promise.resolve(eventsDataSource.update(event));
+    return Promise.reject(boom.notFound("Not Found"));
+  } catch (err) {
+    return Promise.reject(new Error(err));
   }
-  return Promise.reject(new Error("That event Id did not match any event"));
+};
+
+const createEvent = async (event: IEvent): Promise<any> => {
+  try {
+    const createdEvent = await eventsDataSource.save(event);
+    return Promise.resolve(createdEvent);
+  } catch (err) {
+    return Promise.resolve(new Error(err));
+  }
+};
+
+const updateEvent = async (event: IEvent): Promise<any> => {
+  try {
+    const { id } = event;
+    const eventFinded = eventsDataSource.find({ id });
+
+    if (!fp.isEmpty(eventFinded)) {
+      if (eventFinded.finished) {
+        return Promise.reject(boom.badRequest("Event has already finished"));
+      }
+      return Promise.resolve(eventsDataSource.update(event));
+    }
+    return Promise.reject(boom.notFound("Not Found"));
+  } catch (err) {
+    return Promise.reject(new Error(err));
+  }
 };
 
 export const eventService = {
