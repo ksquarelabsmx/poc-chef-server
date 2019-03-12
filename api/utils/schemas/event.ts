@@ -1,7 +1,7 @@
 import * as Joi from "joi";
 import * as moment from "moment";
 
-const eventIdSchema = Joi.string().max(36);
+const eventIdSchema = Joi.string().uuid();
 
 const eventSchema = {
   event_name: Joi.string().required(),

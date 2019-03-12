@@ -45,3 +45,10 @@ interface IOrder {
 export interface IEventOrdersDTO extends IEventDetailsDTO {
   orders: IOrder[];
 }
+
+export interface IEventDB extends IEvent {
+  pocChucTortaAmount: number;
+  shrimpTortaAmount: number;
+  total: number;
+  finished: boolean;
+}

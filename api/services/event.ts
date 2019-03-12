@@ -1,30 +1,29 @@
-import * as boom from "boom";
-import { Request } from "express";
-
 import { IEvent, IEventDTO } from "./../interfaces/event";
-import { eventsMock } from "./../data-source/data-source";
+import { eventsDataSource } from "./../data-source";
 
 // TODO: implement interfaces and mappers
 const getEvents = async (): Promise<any> => {
-  return Promise.resolve(eventsMock.events);
+  return Promise.resolve(eventsDataSource.find());
 };
 
-const getCurrentEvents = async (req: Request): Promise<any> => {
-  const events = eventsMock.events.filter((event: any) => {
-    return event.finished === false;
-  });
-  return Promise.resolve(events);
+const getCurrentEvents = async (): Promise<any> => {
+  const events = eventsDataSource.find({ finished: false });
+  if (events) {
+    return Promise.resolve(events);
+  }
+  return Promise.reject(new Error("There are no current events"));
 };
 
-const getPastEvents = async (req: Request): Promise<any> => {
-  const events = eventsMock.events.filter((event: any) => {
-    return event.finished === true;
-  });
-  return Promise.resolve(events);
+const getPastEvents = async (): Promise<any> => {
+  const events = eventsDataSource.find({ finished: true });
+  if (events) {
+    return Promise.resolve(events);
+  }
+  return Promise.reject(new Error("There are no past events"));
 };
 
-const getEvent = async (id: number): Promise<any> => {
-  const event = eventsMock.events.find((event: any) => event.id === id);
+const getEventById = async (id: number): Promise<any> => {
+  const event = eventsDataSource.find({ id });
   if (event) {
     return Promise.resolve(event);
   }
@@ -32,29 +31,25 @@ const getEvent = async (id: number): Promise<any> => {
 };
 
 const createEvent = async (event: IEvent): Promise<IEvent> => {
-  return Promise.resolve(eventsMock.addEvent(event));
+  return Promise.resolve(eventsDataSource.save(event));
 };
 
 const updateEvent = async (event: IEvent): Promise<IEvent> => {
   const { id } = event;
-  const eventFinded = eventsMock.events.find((event: any) => event.id === id);
-  const eventIndex = eventsMock.events.findIndex(
-    (event: any) => event.id === id
-  );
+  const eventFinded = eventsDataSource.find({ id });
 
-  if (!eventFinded) {
-    return Promise.reject(boom.notFound("Not Found"));
+  if (eventFinded) {
+    if (eventFinded.finished) {
+      return Promise.reject(new Error("Event has already finished"));
+    }
+    return Promise.resolve(eventsDataSource.update(event));
   }
-  if (eventFinded.finished) {
-    return Promise.reject(boom.badRequest("Event has already finished"));
-  }
-
-  return Promise.resolve(eventsMock.updateEvent(event, eventIndex));
+  return Promise.reject(new Error("That event Id did not match any event"));
 };
 
 export const eventService = {
   getEvents,
-  getEvent,
+  getEventById,
   getPastEvents,
   getCurrentEvents,
   createEvent,

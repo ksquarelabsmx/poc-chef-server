@@ -1,6 +1,6 @@
 import * as Joi from "joi";
 
-const orderIdSchema = Joi.string().max(36);
+const orderIdSchema = Joi.string().uuid();
 
 const createOrderSchema = {
   total: Joi.number()
@@ -30,18 +30,20 @@ const createOrderSchema = {
     .required(),
   event: Joi.object({
     id: Joi.string()
-      .max(36)
+      .uuid()
       .required(),
     created_at: Joi.number().required()
   }).required(),
   owner: Joi.object({
     id: Joi.string()
-      .max(36)
+      .uuid()
       .required(),
     name: Joi.string()
       .max(36)
       .required()
-  }).required()
+  }).required(),
+  paid: Joi.boolean().required(),
+  canceled: Joi.boolean().required()
 };
 
 export { orderIdSchema, createOrderSchema };
