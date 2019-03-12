@@ -53,6 +53,7 @@
     "@types/express": "^4.16.1",
     "@types/helmet": "0.0.42",
     "@types/joi": "^14.3.2",
+    "@types/lodash": "^4.14.123",
     "@types/mocha": "^5.2.6",
     "@types/moment-timezone": "^0.5.10",
     "@types/uuid": "^3.4.4",
