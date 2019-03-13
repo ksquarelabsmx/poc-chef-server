@@ -84,7 +84,7 @@ export const eventRoutes = (app: any) => {
    * {
    *   "event": {
    *     "id": "1",
-   *     "name": "Tortas para la oficina",
+   *     "event_name": "Tortas para la oficina",
    *     "start_date": 10000,
    *     "expiration_date": 20000,
    *     "start_hour": 1000,
