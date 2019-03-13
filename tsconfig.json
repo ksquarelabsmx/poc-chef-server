@@ -14,6 +14,6 @@
     },
     "lib": ["es7"]
   },
-  "include": ["api/**/*", "__test__/**/*"],
+  "include": ["api/**/*", "test/**/*"],
   "exclude": ["node_modules"]
 }

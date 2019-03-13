@@ -10,7 +10,24 @@
     "start": "NODE_ENV=production node build/api/server.js",
     "setup": "DEBUG=chef:* NODE_ENV=development ./scripts/setup_db.js",
     "start-dev": "DEBUG=chef:* NODE_ENV=development nodemon",
-    "test": "node ./node_modules/jest/bin/jest"
+    "test": "nyc  mocha --timeout=1000"
+  },
+  "nyc": {
+    "include": [
+      "api/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
   },
   "apidoc": {
     "title": "Poc-Chef API",
@@ -29,18 +46,25 @@
   "homepage": "https://gitlab.com/ksjsgroup/poc-chef-backend#readme",
   "devDependencies": {
     "@types/boom": "^7.2.1",
+    "@types/chai": "^4.1.7",
+    "@types/chai-http": "^3.0.5",
     "@types/cors": "^2.8.4",
     "@types/debug": "^4.1.2",
     "@types/express": "^4.16.1",
     "@types/helmet": "0.0.42",
     "@types/joi": "^14.3.2",
+    "@types/lodash": "^4.14.123",
+    "@types/mocha": "^5.2.6",
     "@types/moment-timezone": "^0.5.10",
     "@types/uuid": "^3.4.4",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
     "jest": "^23.6.0",
     "nodemon": "^1.18.9",
     "sinon": "^7.2.2",
+    "source-map-support": "^0.5.10",
     "standard": "^12.0.1",
     "supertest": "^3.3.0",
     "ts-node": "^8.0.2",
