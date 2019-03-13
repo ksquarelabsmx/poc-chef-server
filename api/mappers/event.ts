@@ -8,8 +8,8 @@ const toEntity = (eventDTO: IEventDTO): IEvent => {
     expirationDate: eventDTO.expiration_date,
     startHour: eventDTO.start_hour,
     endHour: eventDTO.end_hour,
-    pocChucTortaunitaryPrice: eventDTO.poc_chuc_torta_unitary_price,
-    shrimpTortaunitaryPrice: eventDTO.shrimp_torta_unitary_price
+    pocChucTortaUnitaryPrice: eventDTO.poc_chuc_torta_unitary_price,
+    shrimpTortaUnitaryPrice: eventDTO.shrimp_torta_unitary_price
   };
 };
 
@@ -21,8 +21,8 @@ const toDTO = (eventEntity: IEvent): IEventDTO => {
     expiration_date: eventEntity.expirationDate,
     start_hour: eventEntity.startHour,
     end_hour: eventEntity.endHour,
-    poc_chuc_torta_unitary_price: eventEntity.pocChucTortaunitaryPrice,
-    shrimp_torta_unitary_price: eventEntity.shrimpTortaunitaryPrice
+    poc_chuc_torta_unitary_price: eventEntity.pocChucTortaUnitaryPrice,
+    shrimp_torta_unitary_price: eventEntity.shrimpTortaUnitaryPrice
   };
 };
 

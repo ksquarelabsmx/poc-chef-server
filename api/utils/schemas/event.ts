@@ -20,7 +20,6 @@ const eventSchema = {
     .required(),
 
   end_hour: Joi.number()
-    .greater(Joi.ref("start_hour"))
     .max(1440) // time in seconds
     .required(),
 

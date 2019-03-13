@@ -6,8 +6,8 @@ export interface IEvent {
   expirationDate: number;
   startHour: number;
   endHour: number;
-  pocChucTortaunitaryPrice: number;
-  shrimpTortaunitaryPrice: number;
+  pocChucTortaUnitaryPrice: number;
+  shrimpTortaUnitaryPrice: number;
 }
 
 export interface IEventDTO {
@@ -46,7 +46,7 @@ export interface IEventOrdersDTO extends IEventDetailsDTO {
   orders: IOrder[];
 }
 
-export interface IEventDB extends IEvent {
+export interface IEventDao extends IEvent {
   pocChucTortaAmount: number;
   shrimpTortaAmount: number;
   total: number;

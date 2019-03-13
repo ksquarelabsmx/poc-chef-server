@@ -1,10 +1,11 @@
 import * as _url from "url";
+import { Request } from "express";
 
-function getURI(
+const getURI = (
   protocol: string,
   originalUrl: string,
   host: string | undefined
-) {
+) => {
   return decodeURIComponent(
     _url.format({
       protocol: protocol,
@@ -12,6 +13,7 @@ function getURI(
       pathname: originalUrl
     })
   );
-}
+};
 
-export const uri = { getURI };
+export const uriBuilder = (req: Request) =>
+  getURI(req.protocol, req.originalUrl, req.get("host"));
