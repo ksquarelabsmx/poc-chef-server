@@ -30,10 +30,12 @@ const getPastEvents = async (): Promise<any> => {
 const getEventById = async (id: number): Promise<any> => {
   try {
     const event = await eventsDataSource.find({ id });
-    if (!fp.isEmpty(event)) {
-      return Promise.resolve(event[0]);
+
+    if (fp.isEmpty(event)) {
+      return Promise.reject(boom.notFound("Not Found"));
     }
-    return Promise.reject(boom.notFound("Not Found"));
+
+    return Promise.resolve(fp.head(event));
   } catch (err) {
     return Promise.reject(new Error(err));
   }
@@ -53,13 +55,14 @@ const updateEvent = async (event: IEvent): Promise<any> => {
     const { id } = event;
     const eventFinded = eventsDataSource.find({ id });
 
-    if (!fp.isEmpty(eventFinded)) {
-      if (eventFinded.finished) {
-        return Promise.reject(boom.badRequest("Event has already finished"));
-      }
-      return Promise.resolve(eventsDataSource.update(event));
+    if (fp.isEmpty(eventFinded)) {
+      return Promise.reject(boom.notFound("Not Found"));
     }
-    return Promise.reject(boom.notFound("Not Found"));
+    if (eventFinded.finished) {
+      return Promise.reject(boom.badRequest("Event has already finished"));
+    }
+
+    return Promise.resolve(eventsDataSource.update(event));
   } catch (err) {
     return Promise.reject(new Error(err));
   }

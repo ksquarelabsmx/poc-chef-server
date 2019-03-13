@@ -2,7 +2,7 @@ import chalk from "chalk";
 import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
-import { uri } from "./../utils/uri";
+import { uriBuilder } from "./../utils/uri";
 import { response } from "./../utils/response";
 import { orderService } from "./../services/order";
 import { orderMapper } from "./../mappers/order";
@@ -21,7 +21,7 @@ const getOrders = async (req: Request, res: Response, next: NextFunction) => {
     debug(`OrderController: ${chalk.green("getting orders")}`);
 
     //const query = req.query.eventId;
-    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    const source: string = uriBuilder(req);
     const orders = await orderService.getOrders();
 
     res.send(response.success(orders, 200, source));
@@ -36,7 +36,7 @@ const getOrder = async (req: Request, res: Response, next: NextFunction) => {
     debug(`OrderController: ${chalk.green("getting order")}`);
 
     const orderId = req.params.orderId;
-    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    const source: string = uriBuilder(req);
     const order = await orderService.getOrderById(orderId);
 
     res.send(response.success(order, 200, source));
@@ -87,7 +87,7 @@ const handleAction = async (
   try {
     debug(`OrderCOntroller: ${chalk.green("paying orders")}`);
 
-    const source = uri.getURI(req.protocol, req.originalUrl, req.get("host"));
+    const source: string = uriBuilder(req);
     const action = req.body.action;
 
     switch (action) {

@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
-import { IEvent, IEventDB } from "./../interfaces/event";
+import { IEvent, IEventDao } from "./../interfaces/event";
 
-const events: IEventDB[] = [
+const events: IEventDao[] = [
   {
     id: uuid(),
     eventName: "Tortas para la oficina 1",
@@ -56,7 +56,7 @@ const find = (query?: any): any => {
 
 const save = (event: IEvent): IEvent => {
   event.id = uuid();
-  const result: IEventDB = {
+  const result: IEventDao = {
     ...event,
     pocChucTortaAmount: 0,
     shrimpTortaAmount: 0,

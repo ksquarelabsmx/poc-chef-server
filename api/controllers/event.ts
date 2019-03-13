@@ -2,11 +2,11 @@ import chalk from "chalk";
 import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
-import { uri } from "./../utils/uri";
+import { uriBuilder } from "./../utils/uri";
 import { response } from "./../utils/response";
 import { eventService } from "../services/event";
 import { eventMapper } from "./../mappers/event";
-import { IEvent, IEventDTO, IEventDB } from "./../interfaces/event";
+import { IEvent, IEventDTO } from "./../interfaces/event";
 
 const debug = Debug("chef:events:controller:events");
 
@@ -26,11 +26,7 @@ const getEvent = async (req: Request, res: Response, next: NextFunction) => {
     debug(`EventController: ${chalk.green("getting event")}`);
 
     const id = req.params.eventId;
-    const source: string = uri.getURI(
-      req.protocol,
-      req.originalUrl,
-      req.get("host")
-    );
+    const source: string = uriBuilder(req);
     const event = await eventService.getEventById(id);
 
     res.send(response.success(event, 200, source));
@@ -45,11 +41,7 @@ const getEvents = async (req: Request, res: Response, next: NextFunction) => {
     debug(`EventController: ${chalk.green("getting events")}`);
 
     const query = req.query.type;
-    const source: string = uri.getURI(
-      req.protocol,
-      req.originalUrl,
-      req.get("host")
-    );
+    const source: string = uriBuilder(req);
     const events = await eventStrategy(eventService, query);
 
     res.send(response.success(events, 200, source));
@@ -63,11 +55,7 @@ const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`EventController: ${chalk.green("getting events")}`);
 
-    const source: string = uri.getURI(
-      req.protocol,
-      req.originalUrl,
-      req.get("host")
-    );
+    const source: string = uriBuilder(req);
     const event: IEvent = eventMapper.toEntity({
       id: req.params.id,
       ...req.body
@@ -86,11 +74,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`EventController: ${chalk.green("creating events")}`);
 
-    const source: string = uri.getURI(
-      req.protocol,
-      req.originalUrl,
-      req.get("host")
-    );
+    const source: string = uriBuilder(req);
     const event: IEvent = eventMapper.toEntity(req.body);
     const createdEvent = await eventService.createEvent(event);
     const eventDTO: IEventDTO = eventMapper.toDTO(createdEvent);
