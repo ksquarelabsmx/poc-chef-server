@@ -1,0 +1,32 @@
+import chalk from "chalk";
+import * as Debug from "debug";
+import { Response, Request, NextFunction } from "express";
+
+import { uriBuilder } from "../utils/uri";
+import { response } from "../utils/response";
+import { IUser, IUserDto } from "../interfaces/user";
+import { userService } from "../services/user";
+import { userMapper } from "./../mappers/user";
+
+const debug = Debug("chef:events:controller:user");
+
+const createUser = async (req: Request, res: Response, next: NextFunction) => {
+  debug(`EventController: ${chalk.green("creating user")}`);
+  try {
+    const source: string = uriBuilder(req);
+    const user: IUser = { ...req.body };
+    const createdUser = await userService.createUser(user);
+    const userDto: IUserDto = userMapper.toDto(createdUser);
+
+    res.send(response.success(userDto, 201, source));
+  } catch (err) {
+    debug(`createUser Controller Error: ${chalk.red(err.message)}`);
+    next(err);
+  }
+};
+
+const userController = {
+  createUser
+};
+
+export { userController };
