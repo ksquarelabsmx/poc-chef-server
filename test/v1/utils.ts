@@ -4,6 +4,7 @@ import * as moment from "moment";
 export const server: string = "http://localhost:3000";
 export const healthURI: string = "/v1/ping";
 export const eventURI: string = "/v1/events";
+export const userURI: string = "/v1/users";
 
 const futureDate = (days: number, hours: number): number =>
   moment()
@@ -30,4 +31,11 @@ export const eventMock: IEvent = {
   endHour: 1200,
   pocChucTortaUnitaryPrice: 25,
   shrimpTortaUnitaryPrice: 30
+};
+
+export const userMock = {
+  name: "Admin Admin",
+  password: "4dm1n",
+  email: "admin@example.com",
+  role: "admin partner"
 };
