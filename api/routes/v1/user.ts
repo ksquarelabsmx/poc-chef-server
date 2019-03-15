@@ -29,9 +29,9 @@ export const userRoutes = (app: Express) => {
    *
    * @apiParamExample Request
    * {
-   *   "name": "Miguel Delgado",
-   *   "password": "Maik",
-   *   "email": "mdelgado@gmail.com",
+   *   "name": "Juan Perez",
+   *   "password": "4dm1n",
+   *   "email": "admin@ksquareinc.com",
    *   "role": "partner"
    * }
    *
@@ -39,9 +39,8 @@ export const userRoutes = (app: Express) => {
    * HTTP 1.1 201 Created
    * {
    *   "id": "f70bf7b4-0274-4dbf-9943-a32a46b4048a",
-   *   "name": "Miguel Delgado",
-   *   "password": "Maik",
-   *   "email": "mdelgado@gmail.com",
+   *   "name": "Juan Perez",
+   *   "email": "admin@ksquareinc.com",
    *   "role": "partner",
    *   "create_at": 1552602238,
    *   "update_at": 1552602238
