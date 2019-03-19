@@ -1,5 +1,7 @@
+import * as fp from "lodash/fp";
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
+
 import { IUserDao, IUser } from "./../interfaces/user";
 
 const users: IUserDao[] = [
@@ -34,7 +36,7 @@ const save = (user: IUser): IUserDao => {
   return userDao;
 };
 
-const findByEmail = (email: string): boolean =>
-  users.some((user: IUserDao): boolean => user.email === email);
+const findByEmail = (email: string): IUserDao | undefined =>
+  fp.find((user: IUserDao) => user.email === email, users);
 
 export const usersDataSource = { save, findByEmail };

@@ -3,6 +3,15 @@ const emailInUse = `{
   "error": "email already in use"
 }`;
 
+const userNotExist = `{
+  "field": "email",
+  "error": "invalid email"
+}`;
+
+const invalidPassword = "invalid password";
+
 export const error = {
-  emailInUse
+  emailInUse,
+  userNotExist,
+  invalidPassword
 };
