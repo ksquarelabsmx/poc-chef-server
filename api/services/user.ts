@@ -6,12 +6,15 @@ import { usersDataSource } from "../data-source/users-data-source";
 
 const createUser = async (user: IUser): Promise<any> => {
   try {
-    const existEmail: boolean = usersDataSource.findByEmail(user.email);
+    const userDao: IUserDao | undefined = usersDataSource.findByEmail(
+      user.email
+    );
 
-    if (existEmail) {
+    if (userDao) {
       return Promise.reject(boom.badRequest(error.emailInUse));
     }
 
+    // TODO encrypt password
     const createdUser: IUserDao = await usersDataSource.save(user);
     return Promise.resolve(createdUser);
   } catch (err) {

@@ -10,6 +10,7 @@ debug(
   `Configuration API-Chef-Orders: ${chalk.magenta("getting configurations...")}`
 );
 
+// TODO: JWT configuration
 const configurations: any = {
   production: {
     server: {
