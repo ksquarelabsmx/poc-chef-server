@@ -24,7 +24,7 @@ const eventStrategy = (eventService: any, query: string = "") => {
 const getEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`EventController: ${chalk.green("getting event")}`);
-
+    console.log(req.params);
     const id = req.params.eventId;
     const source: string = uriBuilder(req);
     const event = await eventService.getEventById(id);

@@ -1,37 +1,31 @@
 export interface IOrder {
   id?: string;
-  total: number;
-  shrimpTortasTotal: number;
-  shrimpTortaUnitaryPrice: number;
-  pocChucTortasTotal: number;
-  pocChucTortaUnitaryPrice: number;
-  event: {
-    id: string;
-    createdAt: number;
-  };
-  owner: {
-    id: string;
-    name: string;
-  };
-  paid: boolean;
-  canceled: boolean;
+  userId: string;
+  eventId: string;
+  price: number;
+  orderProductId: string[];
+  createdBy: string;
 }
 
 export interface IOrderDTO {
   id?: string;
-  total: number;
-  shrimp_tortas_total: number;
-  shrimp_torta_unitary_price: number;
-  poc_chuc_tortas_total: number;
-  poc_chuc_torta_unitary_price: number;
-  event: {
-    id: string;
-    created_at: number;
-  };
-  owner: {
-    id: string;
-    name: string;
-  };
+  user_id: string;
+  event_id: string;
+  price: number;
+  order_product_id: string[];
+  created_by: string;
+}
+
+export interface IOrderDetails extends IOrder {
+  createdAt: number;
+  updatedAt: number;
   paid: boolean;
-  canceled: boolean;
+  cancelled: boolean;
+}
+
+export interface IOrderDetailsDTO extends IOrderDTO {
+  created_at: number;
+  updated_at: number;
+  paid: boolean;
+  cancelled: boolean;
 }

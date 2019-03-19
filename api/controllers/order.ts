@@ -6,7 +6,7 @@ import { uriBuilder } from "./../utils/uri";
 import { response } from "./../utils/response";
 import { orderService } from "./../services/order";
 import { orderMapper } from "./../mappers/order";
-import { IOrder, IOrderDTO } from "./../interfaces/order";
+import { IOrder, IOrderDetailsDTO } from "./../interfaces/order";
 
 const debug = Debug("chef:orders:controller:orders");
 /*
@@ -52,7 +52,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 
     const order: IOrder = orderMapper.toEntity(req.body);
     const createOrder = await orderService.createOrder(order);
-    const orderDTO: IOrderDTO = orderMapper.toDTO(createOrder);
+    const orderDTO: IOrderDetailsDTO = orderMapper.toDTO(createOrder);
 
     res.status(201).json(orderDTO);
   } catch (err) {
@@ -66,11 +66,11 @@ const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
     debug(`EventController: ${chalk.green("getting events")}`);
 
     const event: IOrder = orderMapper.toEntity({
-      id: req.params.id,
+      id: req.params.orderId,
       ...req.body
     });
     const updatedEvent = await orderService.updateOrder(event);
-    const orderDTO: IOrderDTO = orderMapper.toDTO(updatedEvent);
+    const orderDTO: IOrderDetailsDTO = orderMapper.toDTO(updatedEvent);
 
     res.status(201).json(orderDTO);
   } catch (err) {

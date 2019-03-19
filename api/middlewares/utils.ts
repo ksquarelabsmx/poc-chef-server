@@ -15,7 +15,7 @@ interface IBadRequest {
 
 function badRequestStrategy(payload: IErrorWithStack): IBadRequest {
   const { statusCode, error, message, stack } = payload;
-
+  console.log(message);
   // only return this in development and test mode
   if (stack) {
     switch (message) {

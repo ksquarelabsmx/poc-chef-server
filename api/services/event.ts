@@ -1,11 +1,11 @@
 import * as fp from "lodash/fp";
 import * as boom from "boom";
 
-import { IEvent } from "./../interfaces/event";
+import { IEvent, IEventDetails } from "./../interfaces/event";
 import { eventsDataSource } from "./../data-source";
 
 // TODO: Define returns
-const getEvents = async (): Promise<IEvent> => {
+const getEvents = async (): Promise<IEventDetails> => {
   return Promise.resolve(eventsDataSource.find());
 };
 
@@ -59,6 +59,9 @@ const updateEvent = async (event: IEvent): Promise<any> => {
       return Promise.reject(boom.notFound("Not Found"));
     }
     if (eventFinded.finished) {
+      return Promise.reject(boom.badRequest("Event has already finished"));
+    }
+    if (eventFinded.cancelled) {
       return Promise.reject(boom.badRequest("Event has already finished"));
     }
 

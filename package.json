@@ -10,7 +10,7 @@
     "start": "NODE_ENV=production node build/api/server.js",
     "setup": "DEBUG=chef:* NODE_ENV=development ./scripts/setup_db.js",
     "start-dev": "DEBUG=chef:* NODE_ENV=development nodemon",
-    "test": "nyc  mocha --timeout=1000"
+    "test": "nyc mocha --timeout=1000"
   },
   "nyc": {
     "include": [

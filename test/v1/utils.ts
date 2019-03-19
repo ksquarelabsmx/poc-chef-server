@@ -18,8 +18,7 @@ export const eventMockDTO = {
   expiration_date: futureDate(1, 2), // epoch
   start_hour: 800,
   end_hour: 1200,
-  poc_chuc_torta_unitary_price: 25,
-  shrimp_torta_unitary_price: 30
+  created_by: "6d623d08-113c-4565-81b2-e17c90331241"
 };
 
 export const eventMock: IEvent = {
@@ -28,6 +27,5 @@ export const eventMock: IEvent = {
   expirationDate: futureDate(1, 2), // epoch
   startHour: 800,
   endHour: 1200,
-  pocChucTortaUnitaryPrice: 25,
-  shrimpTortaUnitaryPrice: 30
+  createdBy: "6d623d08-113c-4565-81b2-e17c90331241"
 };

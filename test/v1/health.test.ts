@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 import { server, healthURI } from "./utils";
 
-describe("/health", () => {
+describe.skip("/health", () => {
   it("Check api health", done => {
     chai
       .request(server)
