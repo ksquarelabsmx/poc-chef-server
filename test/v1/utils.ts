@@ -5,6 +5,7 @@ export const server: string = "http://localhost:3000";
 export const healthURI: string = "/v1/ping";
 export const eventURI: string = "/v1/events";
 export const userURI: string = "/v1/users";
+export const authURI: string = "/v1/auth";
 
 const futureDate = (days: number, hours: number): number =>
   moment()
@@ -38,4 +39,9 @@ export const userMock = {
   password: "4dm1n",
   email: "admin@example.com",
   role: "admin partner"
+};
+
+export const loginMock = {
+  email: "admin@example.com",
+  password: "4dm1n"
 };
