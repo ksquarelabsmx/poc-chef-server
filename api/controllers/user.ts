@@ -10,12 +10,17 @@ import { userMapper } from "./../mappers/user";
 
 const debug = Debug("chef:events:controller:user");
 
-const createUser = async (req: Request, res: Response, next: NextFunction) => {
+const registerPartner = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   debug(`EventController: ${chalk.green("creating user")}`);
   try {
     const source: string = uriBuilder(req);
     const user: IUser = { ...req.body };
-    const createdUser = await userService.createUser(user);
+
+    const createdUser = await userService.registerPartner(user);
     const userDto: IUserDto = userMapper.toDto(createdUser);
 
     res.send(response.success(userDto, 201, source));
@@ -26,7 +31,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const userController = {
-  createUser
+  registerPartner
 };
 
 export { userController };

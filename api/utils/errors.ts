@@ -10,8 +10,11 @@ const userNotExist = `{
 
 const invalidPassword = "invalid password";
 
+const invalidAuthProvider = "invalid auth provider";
+
 export const error = {
   emailInUse,
   userNotExist,
-  invalidPassword
+  invalidPassword,
+  invalidAuthProvider
 };

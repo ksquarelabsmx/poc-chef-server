@@ -30,10 +30,12 @@ describe("/user", () => {
           res.body.should.have.property("code", 201);
           res.body.should.have.property("data");
           res.body.data.should.have.property("id");
-          res.body.data.should.have.property("id");
           res.body.data.should.have.property("name", name);
           res.body.data.should.have.property("email", email);
+          res.body.data.should.have.property("created_at");
+          res.body.data.should.have.property("updated_at");
           res.body.data.should.have.property("role", "partner");
+          res.body.data.should.have.property("auth_provider_id");
 
           done();
         });
@@ -80,13 +82,15 @@ describe("/user", () => {
           res.body.should.have.property("code", 201);
           res.body.should.have.property("data");
           res.body.data.should.have.property("id");
-          res.body.data.should.have.property("id");
           res.body.data.should.have.property("name", name);
           res.body.data.should.have.property(
             "email",
             "admin_partner@example.com"
           );
           res.body.data.should.have.property("role", "partner admin");
+          res.body.data.should.have.property("created_at");
+          res.body.data.should.have.property("updated_at");
+          res.body.data.should.have.property("auth_provider_id");
 
           done();
         });

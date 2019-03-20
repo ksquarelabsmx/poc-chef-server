@@ -11,6 +11,7 @@ const users: IUserDao[] = [
     email: "maik@fakegmail.com",
     password: "plainpassword",
     role: "partner",
+    authProviderId: uuid(),
     createdAt: moment()
       .utc()
       .unix(),
