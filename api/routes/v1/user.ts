@@ -76,6 +76,6 @@ export const userRoutes = (app: Express) => {
   app.post(
     "/v1/users/register",
     validation(userSchema),
-    userController.createUser
+    userController.registerPartner
   );
 };
