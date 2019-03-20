@@ -1,3 +1,4 @@
+import { IOrder, IOrderDTO } from "./order";
 // interfaces for update event and create event
 export interface IEvent {
   id?: string;
@@ -6,8 +7,7 @@ export interface IEvent {
   expirationDate: number;
   startHour: number;
   endHour: number;
-  pocChucTortaUnitaryPrice: number;
-  shrimpTortaUnitaryPrice: number;
+  createdBy: string;
 }
 
 export interface IEventDTO {
@@ -17,38 +17,31 @@ export interface IEventDTO {
   expiration_date: number;
   start_hour: number;
   end_hour: number;
-  poc_chuc_torta_unitary_price: number;
-  shrimp_torta_unitary_price: number;
+  created_by: string;
 }
 
 // interface for get all events
-export interface IEventDetailsDTO extends IEventDTO {
-  poc_chuc_torta_amount: number;
-  shrimp_torta_amount: number;
+export interface IEventDetails extends IEvent {
   total: number;
+  finished: boolean;
+  cancelled: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface IEventDetailsDTO extends IEventDTO {
+  total: number;
+  finished: boolean;
+  cancelled: boolean;
+  created_at: number;
+  updated_at: number;
 }
 
 // interfaces for get event with orders details
-
-// order interface
-interface IOrder {
-  id: string;
-  full_name: string;
-  poc_chuc_torta_unitary_price: number;
-  poc_chuc_torta_amount: number;
-  shrimp_torta_unitary_price: number;
-  shrimp_torta_amount: number;
-  total: number;
-  paid: boolean;
-}
-
 export interface IEventOrdersDTO extends IEventDetailsDTO {
-  orders: IOrder[];
+  orders: IOrderDTO[];
 }
 
-export interface IEventDao extends IEvent {
-  pocChucTortaAmount: number;
-  shrimpTortaAmount: number;
-  total: number;
-  finished: boolean;
+export interface IEventOrders extends IEventDetails {
+  orders: IOrder[];
 }

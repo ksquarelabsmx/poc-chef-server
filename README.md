@@ -6,6 +6,14 @@ Install dependencies:
 npm install
 ```
 
+Install global dependencies:
+
+```bash
+npm install -g nyc
+npm install -g mocha
+npm install -g source-map-support
+```
+
 Run project:
 
 ```bash

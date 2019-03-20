@@ -1,4 +1,9 @@
-import { IEvent, IEventDTO } from "./../interfaces/event";
+import {
+  IEvent,
+  IEventDTO,
+  IEventDetails,
+  IEventDetailsDTO
+} from "./../interfaces/event";
 
 const toEntity = (eventDTO: IEventDTO): IEvent => {
   return {
@@ -8,12 +13,11 @@ const toEntity = (eventDTO: IEventDTO): IEvent => {
     expirationDate: eventDTO.expiration_date,
     startHour: eventDTO.start_hour,
     endHour: eventDTO.end_hour,
-    pocChucTortaUnitaryPrice: eventDTO.poc_chuc_torta_unitary_price,
-    shrimpTortaUnitaryPrice: eventDTO.shrimp_torta_unitary_price
+    createdBy: eventDTO.created_by
   };
 };
 
-const toDTO = (eventEntity: IEvent): IEventDTO => {
+const toDTO = (eventEntity: IEventDetails): IEventDetailsDTO => {
   return {
     id: eventEntity.id,
     event_name: eventEntity.eventName,
@@ -21,8 +25,12 @@ const toDTO = (eventEntity: IEvent): IEventDTO => {
     expiration_date: eventEntity.expirationDate,
     start_hour: eventEntity.startHour,
     end_hour: eventEntity.endHour,
-    poc_chuc_torta_unitary_price: eventEntity.pocChucTortaUnitaryPrice,
-    shrimp_torta_unitary_price: eventEntity.shrimpTortaUnitaryPrice
+    total: eventEntity.total,
+    created_by: eventEntity.createdBy,
+    finished: eventEntity.finished,
+    cancelled: eventEntity.cancelled,
+    created_at: eventEntity.createdAt,
+    updated_at: eventEntity.updatedAt
   };
 };
 

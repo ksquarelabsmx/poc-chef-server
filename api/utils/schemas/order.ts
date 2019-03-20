@@ -3,47 +3,22 @@ import * as Joi from "joi";
 const orderIdSchema = Joi.string().uuid();
 
 const createOrderSchema = {
-  total: Joi.number()
+  user_id: Joi.string()
+    .uuid()
+    .required(),
+  event_id: Joi.string()
+    .uuid()
+    .required(),
+  price: Joi.number()
     .positive()
     .min(0)
-    .max(1000)
     .required(),
-  shrimp_tortas_total: Joi.number()
-    .positive()
-    .min(0)
-    .max(1000)
+  order_product_id: Joi.array()
+    .items(Joi.string().uuid())
     .required(),
-  shrimp_torta_unitary_price: Joi.number()
-    .positive()
-    .min(0)
-    .max(1000)
-    .required(),
-  poc_chuc_tortas_total: Joi.number()
-    .positive()
-    .min(0)
-    .max(1000)
-    .required(),
-  poc_chuc_torta_unitary_price: Joi.number()
-    .positive()
-    .min(0)
-    .max(1000)
-    .required(),
-  event: Joi.object({
-    id: Joi.string()
-      .uuid()
-      .required(),
-    created_at: Joi.number().required()
-  }).required(),
-  owner: Joi.object({
-    id: Joi.string()
-      .uuid()
-      .required(),
-    name: Joi.string()
-      .max(36)
-      .required()
-  }).required(),
-  paid: Joi.boolean().required(),
-  canceled: Joi.boolean().required()
+  created_by: Joi.string()
+    .uuid()
+    .required()
 };
 
 export { orderIdSchema, createOrderSchema };
