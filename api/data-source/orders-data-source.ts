@@ -44,9 +44,9 @@ const save = (order: IOrder): IOrderDetails => {
 };
 
 const update = (order: IOrder): IOrderDetails => {
-  const index = orders.findIndex((ord: any) => ord.id === order.id);
-  (<any>orders)[index] = { ...(<any>orders)[index], ...order };
-  return (<any>orders)[index];
+  const index = orders.findIndex((ord: IOrderDetails) => ord.id === order.id);
+  orders[index] = { ...orders[index], ...order };
+  return orders[index];
 };
 
 export const ordersDataSource = { find, save, update };

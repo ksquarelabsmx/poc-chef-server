@@ -74,9 +74,9 @@ const save = (event: IEvent): IEventDetails => {
 };
 
 const update = (event: IEvent): IEventDetails => {
-  const index = events.findIndex((even: any) => even.id === event.id);
-  (<any>events)[index] = { ...(<any>events)[index], ...event };
-  return (<any>events)[index];
+  const index = events.findIndex((even: IEventDetails) => even.id === event.id);
+  events[index] = { ...events[index], ...event };
+  return events[index];
 };
 
 export const eventsDataSource = { find, save, update };

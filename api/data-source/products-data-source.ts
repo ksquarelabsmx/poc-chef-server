@@ -38,9 +38,9 @@ const save = (product: IProduct): IProductDetails => {
 };
 
 const update = (product: IProduct): IProductDetails => {
-  const index = products.findIndex((p: any) => p.id === product.id);
-  (<any>products)[index] = { ...(<any>products)[index], ...product };
-  return (<any>product)[index];
+  const index = products.findIndex((p: IProductDetails) => p.id === product.id);
+  products[index] = { ...products[index], ...product };
+  return products[index];
 };
 
 export const productsDataSource = { find, save, update };
