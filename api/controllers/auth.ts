@@ -9,6 +9,7 @@ import { Response, Request, NextFunction } from "express";
 
 const debug = Debug("chef:events:controller:auth");
 
+// This is used by partner/ admin partner
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`AuthController: ${chalk.green("authenticate login")}`);
@@ -25,6 +26,22 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const googleLogin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    debug(`AuthController: ${chalk.green("authenticate googleLogin")}`);
+    const { idToken } = req.body;
+
+    const userInfo = await authService.googleLogin(idToken);
+    const source: string = uriBuilder(req);
+
+    return res.send(response.success(userInfo, 200, source));
+  } catch (err) {
+    debug(`googleLogin Controller Error: ${chalk.red(err)}`);
+    next(err);
+  }
+};
+
 export const authController = {
-  login
+  login,
+  googleLogin
 };
