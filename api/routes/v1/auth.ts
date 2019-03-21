@@ -63,4 +63,6 @@ export const authRoutes = (app: Express) => {
     validation(credentialsSchema),
     authController.login
   );
+
+  app.post("/v1/auth/googleLogin", authController.googleLogin);
 };

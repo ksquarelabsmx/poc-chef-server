@@ -21,6 +21,7 @@ const registerPartner = async (user: IUser): Promise<any> => {
       | undefined = await authDataSource.findByName("custom");
 
     if (!authProvider) {
+      // TODO: use another status code
       return Promise.reject(boom.internal(error.invalidAuthProvider));
     }
 
@@ -29,8 +30,6 @@ const registerPartner = async (user: IUser): Promise<any> => {
       ...user,
       authProviderId: authProvider.id
     });
-
-    console.log(createdUser);
 
     return Promise.resolve(createdUser);
   } catch (err) {
