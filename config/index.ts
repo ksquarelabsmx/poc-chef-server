@@ -1,3 +1,4 @@
+import { authURI } from "./../test/v1/utils";
 // load .env file
 require("dotenv").config();
 
@@ -10,7 +11,7 @@ debug(
   `Configuration API-Chef-Orders: ${chalk.magenta("getting configurations...")}`
 );
 
-// TODO: JWT configuration
+// TODO: JWT configuration`0.3
 const configurations: any = {
   production: {
     server: {
@@ -21,7 +22,13 @@ const configurations: any = {
       username: process.env.AUTH_ADMIN_USERNAME,
       password: process.env.AUTH_ADMIN_PASSWORD,
       email: process.env.AUTH_ADMIN_EMAIL,
-      jwt_secret: process.env.AUTH_JWT_SECRET
+      jwt_secret: process.env.AUTH_JWT_SECRET,
+      google: {
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        projectId: process.env.GOOGLE_PROJECT_ID,
+        authURI: process.env.GOOGLE_AUTH_URI
+      }
     }
   },
   testing: {
@@ -39,7 +46,13 @@ const configurations: any = {
       username: process.env.AUTH_ADMIN_USERNAME,
       password: process.env.AUTH_ADMIN_PASSWORD,
       email: process.env.AUTH_ADMIN_EMAIL,
-      jwt_secret: process.env.AUTH_JWT_SECRET
+      jwt_secret: process.env.AUTH_JWT_SECRET,
+      google: {
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        projectId: process.env.GOOGLE_PROJECT_ID,
+        authURI: process.env.GOOGLE_AUTH_URI
+      }
     },
     db: {
       database: process.env.DB_NAME || "poc_chef",
