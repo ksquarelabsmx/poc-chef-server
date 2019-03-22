@@ -18,12 +18,29 @@ const authenticate = (password: string, userPassword: string) => {
   return password === userPassword;
 };
 
-const getDataFromPayload = (payload: TokenPayload): IGoogleUser => ({
-  userId: payload.sub,
-  email: payload.email || "",
-  name: payload.name || "",
-  picture: payload.picture || ""
-});
+const getDataFromPayload = (payload: TokenPayload): IGoogleUser => {
+  const getEmail = fp.compose(
+    fp.defaultTo(""),
+    fp.prop("email")
+  );
+
+  const getName = fp.compose(
+    fp.defaultTo(""),
+    fp.prop("name")
+  );
+
+  const getPicture = fp.compose(
+    fp.defaultTo(""),
+    fp.prop("picture")
+  );
+
+  return {
+    userId: payload.sub,
+    email: getEmail(payload),
+    name: getName(payload),
+    picture: getPicture(payload)
+  };
+};
 
 // get user from datasource or create it
 const handlerGoogleUser = async (
