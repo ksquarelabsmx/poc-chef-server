@@ -53,7 +53,7 @@ describe("/events", () => {
             "a79639e6-3ed9-467c-b9c5-1e60908d812c"
           );
           res.body.data[1].should.have.property("total", 10);
-          res.body.data[1].should.have.property("cancelled", false);
+          res.body.data[1].should.have.property("cancelled", true);
           res.body.data[1].should.have.property("finished", true);
           res.body.data[1].should.have.property("createdAt", 1548000000);
           res.body.data[1].should.have.property("updatedAt", 1548000000);
@@ -120,7 +120,7 @@ describe("/events", () => {
             "a79639e6-3ed9-467c-b9c5-1e60908d812c"
           );
           res.body.data[1].should.have.property("total", 10);
-          res.body.data[1].should.have.property("cancelled", false);
+          res.body.data[1].should.have.property("cancelled", true);
           res.body.data[1].should.have.property("finished", true);
           res.body.data[1].should.have.property("createdAt", 1548000000);
           res.body.data[1].should.have.property("updatedAt", 1548000000);

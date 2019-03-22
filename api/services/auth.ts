@@ -5,6 +5,7 @@ import { error } from "./../utils/errors";
 import { ILogin } from "../interfaces/auth";
 import { IUserDao } from "./../interfaces/user";
 import { usersDataSource } from "./../data-source/users-data-source";
+import { appResponse } from "./../utils/appResponse";
 
 // TODO: add encrypt decrypt
 const authenticate = (password: string, userPassword: string) => {
@@ -18,7 +19,7 @@ const validateLogin = async (loginCredentials: ILogin): Promise<any> => {
     const user: IUserDao | undefined = usersDataSource.findByEmail(email);
 
     if (!user) {
-      return Promise.reject(boom.badRequest(error.userNotExist));
+      return Promise.reject(appResponse.badRequest(error.userNotExist));
     }
     if (!authenticate(password, user.password)) {
       return Promise.reject(boom.unauthorized(error.invalidPassword));

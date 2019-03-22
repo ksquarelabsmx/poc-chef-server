@@ -16,7 +16,7 @@ const orderProducts: IOrderProductDetails[] = [
   }
 ];
 
-const find = (query?: any): any => {
+const find = (query?: any): IOrderProductDetails[] => {
   if (query) {
     const [key] = Object.keys(query);
     return orderProducts.filter((user: any) => user[key] === query[key]);
@@ -41,7 +41,7 @@ const save = (orderProduct: IOrderProduct): IOrderProductDetails => {
 };
 
 const update = (orderProduct: IOrderProduct): IOrderProductDetails => {
-  const index = orderProducts.findIndex(
+  const index: number = orderProducts.findIndex(
     (p: IOrderProductDetails) => p.id === orderProduct.id
   );
   orderProducts[index] = {

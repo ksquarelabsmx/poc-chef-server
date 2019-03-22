@@ -26,7 +26,7 @@ const events: IEventDetails[] = [
     endHour: 1200,
     createdBy: "a79639e6-3ed9-467c-b9c5-1e60908d812c",
     total: 10,
-    cancelled: false,
+    cancelled: true,
     finished: true,
     createdAt: 1548000000,
     updatedAt: 1548000000
@@ -47,7 +47,7 @@ const events: IEventDetails[] = [
   }
 ];
 
-const find = (query?: any): any => {
+const find = (query?: any): IEventDetails[] => {
   if (query) {
     const [key] = Object.keys(query);
     return events.filter((order: any) => order[key] === query[key]);
@@ -74,7 +74,9 @@ const save = (event: IEvent): IEventDetails => {
 };
 
 const update = (event: IEvent): IEventDetails => {
-  const index = events.findIndex((even: IEventDetails) => even.id === event.id);
+  const index: number = events.findIndex(
+    (even: IEventDetails) => even.id === event.id
+  );
   events[index] = { ...events[index], ...event };
   return events[index];
 };
