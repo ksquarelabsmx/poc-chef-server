@@ -19,11 +19,11 @@ const authProviders: IAuthProviderDao[] = [
   }
 ];
 
-const findByName = (name: string): IAuthProviderDao | undefined =>
+const findByName = (name: string): IAuthProviderDao =>
   fp.find(
     (authProvider: IAuthProviderDao) => authProvider.name === name,
     authProviders
-  );
+  ) || authProviders[0];
 
 export const authDataSource = {
   authProviders,

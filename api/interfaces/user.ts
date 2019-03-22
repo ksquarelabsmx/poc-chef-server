@@ -26,3 +26,10 @@ export interface IUserDto {
   created_at: number;
   updated_at: number;
 }
+
+export interface IGoogleUser {
+  userId: string;
+  email: string;
+  name: string;
+  picture: string;
+}

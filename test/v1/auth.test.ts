@@ -24,7 +24,7 @@ describe("/auth", () => {
           if (err) {
             throw err;
           }
-          console.log(res.body);
+
           res.body.should.have.property("code", 200);
           res.body.data.should.have.property("id");
           res.body.data.should.have.property("email", "maik@fakegmail.com");
