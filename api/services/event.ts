@@ -3,9 +3,11 @@ import * as boom from "boom";
 
 import { IEvent, IEventDetails } from "./../interfaces/event";
 import { eventsDataSource } from "./../data-source";
+import { appResponse } from "../utils/appResponse";
+import { error } from "./../utils/errors";
 
 // TODO: Define returns
-const getEvents = async (): Promise<IEventDetails> => {
+const getEvents = async (): Promise<IEventDetails[]> => {
   return Promise.resolve(eventsDataSource.find());
 };
 
@@ -44,6 +46,7 @@ const getEventById = async (id: number): Promise<any> => {
 const createEvent = async (event: IEvent): Promise<any> => {
   try {
     const createdEvent = await eventsDataSource.save(event);
+
     return Promise.resolve(createdEvent);
   } catch (err) {
     return Promise.resolve(new Error(err));
@@ -58,11 +61,8 @@ const updateEvent = async (event: IEvent): Promise<any> => {
     if (fp.isEmpty(eventFinded)) {
       return Promise.reject(boom.notFound("Not Found"));
     }
-    if (eventFinded.finished) {
-      return Promise.reject(boom.badRequest("Event has already finished"));
-    }
-    if (eventFinded.cancelled) {
-      return Promise.reject(boom.badRequest("Event has already finished"));
+    if (eventFinded[0].finished) {
+      return Promise.reject(appResponse.badRequest(error.eventIsFinished));
     }
 
     return Promise.resolve(eventsDataSource.update(event));

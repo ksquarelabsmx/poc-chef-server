@@ -5,6 +5,7 @@ import { IUser, IUserDao } from "../interfaces/user";
 import { IAuthProviderDao } from "../interfaces/auth";
 import { usersDataSource } from "../data-source/users-data-source";
 import { authDataSource } from "../data-source/auth-provider-data-source";
+import { appResponse } from "./../utils/appResponse";
 
 const registerPartner = async (user: IUser): Promise<any> => {
   try {
@@ -13,7 +14,7 @@ const registerPartner = async (user: IUser): Promise<any> => {
     );
 
     if (userDao) {
-      return Promise.reject(boom.badRequest(error.emailInUse));
+      return Promise.reject(appResponse.badRequest(error.emailInUse));
     }
 
     const authProvider:

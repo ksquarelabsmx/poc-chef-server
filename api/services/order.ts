@@ -1,8 +1,11 @@
 import * as fp from "lodash/fp";
 import * as boom from "boom";
 
+import { error } from "./../utils/errors";
 import { IOrder, IOrderDetails } from "./../interfaces/order";
+import { IEventDetails } from "./../interfaces/event";
 import { ordersDataSource, eventsDataSource } from "./../data-source";
+import { appResponse } from "../utils/appResponse";
 
 const getOrders = async (): Promise<IOrderDetails> => {
   return Promise.resolve(ordersDataSource.find());
@@ -13,7 +16,7 @@ const getOrderById = async (id: number): Promise<any> => {
     const order = ordersDataSource.find({ id });
 
     if (fp.isEmpty(order)) {
-      return Promise.resolve(boom.notFound("Not Found"));
+      return Promise.reject(boom.notFound("Not Found"));
     }
 
     return Promise.resolve(fp.head(order));
@@ -33,13 +36,15 @@ const getOrdersByEventId = async (eventId: string): Promise<any> => {
 
 const createOrder = async (order: IOrder): Promise<any> => {
   try {
-    const eventFinded = eventsDataSource.find({ id: order.eventId });
-    //TODO: format error
+    const eventFinded: IEventDetails[] = eventsDataSource.find({
+      id: order.eventId
+    });
+
     if (fp.isEmpty(eventFinded)) {
-      return Promise.reject(boom.badRequest("Not Found"));
+      return Promise.reject(appResponse.badRequest(error.eventNotExist));
     }
-    if (eventFinded.finished) {
-      return Promise.reject(boom.badRequest("Event has already finished"));
+    if (eventFinded[0].finished) {
+      return Promise.reject(appResponse.badRequest(error.eventIsFinished));
     }
 
     const createdOrder = ordersDataSource.save(order);
@@ -55,13 +60,17 @@ const updateOrder = async (order: IOrder): Promise<any> => {
     const orderFinded = ordersDataSource.find({ id });
 
     if (fp.isEmpty(orderFinded)) {
-      return Promise.reject(boom.badRequest("Not Found"));
+      return Promise.reject(boom.notFound("Not Found"));
     }
-    if (orderFinded.cancelled) {
-      return Promise.reject(boom.badRequest("Order has already cancelled"));
+    //validate if the request order.eventId is the same as the existing order.eventId
+    if (orderFinded[0].eventId !== order.eventId) {
+      return Promise.reject(appResponse.badRequest(error.orderEventDifferent));
     }
-    if (orderFinded.paid) {
-      return Promise.reject(boom.badRequest("Order has already paid"));
+    if (orderFinded[0].cancelled) {
+      return Promise.reject(appResponse.badRequest(error.orderIsCancelled));
+    }
+    if (orderFinded[0].paid) {
+      return Promise.reject(appResponse.badRequest(error.orderIsPaid));
     }
 
     return Promise.resolve(ordersDataSource.update(order));

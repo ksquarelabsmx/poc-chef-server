@@ -6,6 +6,7 @@ export const healthURI: string = "/v1/ping";
 export const eventURI: string = "/v1/events";
 export const userURI: string = "/v1/users";
 export const authURI: string = "/v1/auth";
+export const orderURI: string = "/v1/orders";
 
 const futureDate = (days: number, hours: number): number =>
   moment()
@@ -42,4 +43,12 @@ export const userMock = {
 export const loginMock = {
   email: "admin@example.com",
   password: "4dm1n"
+};
+
+export const orderMockDTO = {
+  user_id: "3d916bdb-fd4e-4fbd-b4fc-d05253e4ac1a",
+  event_id: "8c9ae830-dd56-4828-8503-c70355253de9",
+  price: 20,
+  order_product_id: ["48f04396-e3be-4970-87d5-be2412639303"],
+  created_by: "6d623d08-113c-4565-81b2-e17c90331241"
 };

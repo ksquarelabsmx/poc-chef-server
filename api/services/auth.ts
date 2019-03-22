@@ -7,6 +7,7 @@ import { ILogin, IAuthProviderDao } from "../interfaces/auth";
 import { IUserDao, IUser, IGoogleUser } from "./../interfaces/user";
 import { authDataSource } from "./../data-source/auth-provider-data-source";
 import { usersDataSource } from "./../data-source/users-data-source";
+import { appResponse } from "./../utils/appResponse";
 import {
   LoginTicket,
   TokenPayload
@@ -83,7 +84,7 @@ const validateLogin = async (loginCredentials: ILogin): Promise<any> => {
     const user: IUserDao | undefined = usersDataSource.findByEmail(email);
 
     if (!user) {
-      return Promise.reject(boom.badRequest(error.userNotExist));
+      return Promise.reject(appResponse.badRequest(error.userNotExist));
     }
     if (!authenticate(password, user.password)) {
       return Promise.reject(boom.unauthorized(error.invalidPassword));
