@@ -1,5 +1,5 @@
 import * as path from "path";
-import { static as Static } from "express";
+import { Express, static as Static } from "express";
 
 import { pingRoutes } from "./ping";
 import { orderRoutes } from "./order";
@@ -7,7 +7,7 @@ import { eventRoutes } from "./event";
 import { userRoutes } from "./user";
 import { authRoutes } from "./auth";
 
-const routes = (app: any) => {
+const routes = (app: Express) => {
   pingRoutes(app);
   orderRoutes(app);
   eventRoutes(app);

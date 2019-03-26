@@ -1,6 +1,7 @@
+import * as moment from "moment";
 import { v4 as uuid } from "uuid";
+
 import { IEvent, IEventDetails } from "./../interfaces/event";
-import moment = require("moment");
 
 const events: IEventDetails[] = [
   {

@@ -1,9 +1,10 @@
+import * as moment from "moment";
+import { v4 as uuid } from "uuid";
+
 import {
   IOrderProductDetails,
   IOrderProduct
 } from "./../interfaces/order-product";
-import { v4 as uuid } from "uuid";
-import moment = require("moment");
 
 const orderProducts: IOrderProductDetails[] = [
   {

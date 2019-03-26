@@ -4,7 +4,7 @@ import * as Debug from "debug";
 import { uriBuilder } from "./../utils/uri";
 import { response } from "./../utils/response";
 import { ILogin } from "./../interfaces/auth";
-import { authService } from "./../services/auth";
+import { authService } from "./../services";
 import { Response, Request, NextFunction } from "express";
 
 const debug = Debug("chef:events:controller:auth");

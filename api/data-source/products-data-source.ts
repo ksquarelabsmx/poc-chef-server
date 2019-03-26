@@ -1,6 +1,7 @@
-import { IProduct, IProductDetails } from "./../interfaces/product";
+import * as moment from "moment";
 import { v4 as uuid } from "uuid";
-import moment = require("moment");
+
+import { IProduct, IProductDetails } from "./../interfaces/product";
 
 const products: IProductDetails[] = [
   {

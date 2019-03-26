@@ -1,5 +1,7 @@
-import { pingController } from "./../../controllers/ping";
+import { Express } from "express";
 
-export const pingRoutes = (app: any) => {
+import { pingController } from "./../../controllers";
+
+export const pingRoutes = (app: Express) => {
   app.get("/v1/ping", pingController.pong);
 };
