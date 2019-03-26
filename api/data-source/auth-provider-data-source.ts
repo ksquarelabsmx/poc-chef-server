@@ -1,9 +1,9 @@
 import * as fp from "lodash/fp";
 import { v4 as uuid } from "uuid";
 
-import { IAuthProviderDao } from "./../interfaces/auth";
+import { auth } from "./../interfaces";
 
-const authProviders: IAuthProviderDao[] = [
+const authProviders: auth.IAuthProviderDao[] = [
   {
     id: uuid(),
     name: "google",
@@ -19,9 +19,9 @@ const authProviders: IAuthProviderDao[] = [
   }
 ];
 
-const findByName = (name: string): IAuthProviderDao =>
+const findByName = (name: string): auth.IAuthProviderDao =>
   fp.find(
-    (authProvider: IAuthProviderDao) => authProvider.name === name,
+    (authProvider: auth.IAuthProviderDao) => authProvider.name === name,
     authProviders
   ) || authProviders[0];
 

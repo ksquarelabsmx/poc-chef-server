@@ -1,9 +1,9 @@
 import { Express } from "express";
 
-import { validateJWT } from "./../../policies";
+//import { validateJWT } from "./../../policies";
 import { eventController } from "../../controllers";
-import { validation } from "../../middlewares/validationHandler";
-import { eventIdSchema, eventSchema } from "../../utils/schemas/event";
+import { validation } from "../../middlewares";
+import { eventSchema } from "../../utils/schemas";
 
 export const eventRoutes = (app: Express) => {
   /**
@@ -138,7 +138,7 @@ export const eventRoutes = (app: Express) => {
    */
   app.get(
     "/v1/events/:eventId",
-    validation({ eventId: eventIdSchema }, "params"),
+    validation({ eventId: eventSchema.eventId }, "params"),
     eventController.getEvent
   );
 
@@ -249,8 +249,8 @@ export const eventRoutes = (app: Express) => {
 
   app.put(
     "/v1/events/:id",
-    validation({ id: eventIdSchema }, "params"),
-    validation(eventSchema),
+    validation({ id: eventSchema.eventId }, "params"),
+    validation(eventSchema.event),
     eventController.updateEvent
   );
 
@@ -340,5 +340,9 @@ export const eventRoutes = (app: Express) => {
    * }
    *
    */
-  app.post("/v1/events", validation(eventSchema), eventController.createEvent);
+  app.post(
+    "/v1/events",
+    validation(eventSchema.event),
+    eventController.createEvent
+  );
 };

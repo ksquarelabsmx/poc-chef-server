@@ -2,11 +2,11 @@ import chalk from "chalk";
 import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
-import { uriBuilder } from "./../utils/uri";
-import { response } from "./../utils/response";
-import { orderService } from "./../services";
+import { uriBuilder } from "./../utils";
+import { response } from "./../utils";
 import { orderMapper } from "./../mappers";
-import { IOrder, IOrderDetailsDTO } from "./../interfaces/order";
+import { orderRepository } from "./../repository";
+import { order } from "./../interfaces";
 
 const debug = Debug("chef:orders:controller:orders");
 
@@ -16,7 +16,7 @@ const getOrders = async (req: Request, res: Response, next: NextFunction) => {
 
     //const query = req.query.eventId;
     const source: string = uriBuilder(req);
-    const orders = await orderService.getOrders();
+    const orders = await orderRepository.getOrders();
 
     res.send(response.success(orders, 200, source));
   } catch (err) {
@@ -31,7 +31,7 @@ const getOrder = async (req: Request, res: Response, next: NextFunction) => {
 
     const orderId = req.params.orderId;
     const source: string = uriBuilder(req);
-    const order = await orderService.getOrderById(orderId);
+    const order = await orderRepository.getOrderById(orderId);
 
     res.send(response.success(order, 200, source));
   } catch (err) {
@@ -44,11 +44,12 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`OrderController: ${chalk.green("creating order")}`);
 
-    const order: IOrder = orderMapper.toEntity(req.body);
-    const createOrder = await orderService.createOrder(order);
-    const orderDTO: IOrderDetailsDTO = orderMapper.toDTO(createOrder);
+    const source: string = uriBuilder(req);
+    const order: order.IOrder = orderMapper.toEntity(req.body);
+    const createOrder = await orderRepository.createOrder(order);
+    const orderDTO: order.IOrderDetailsDTO = orderMapper.toDTO(createOrder);
 
-    res.status(201).json(orderDTO);
+    res.send(response.success(orderDTO, 201, source));
   } catch (err) {
     debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
     next(err);
@@ -59,14 +60,15 @@ const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`EventController: ${chalk.green("getting events")}`);
 
-    const event: IOrder = orderMapper.toEntity({
+    const source: string = uriBuilder(req);
+    const event: order.IOrder = orderMapper.toEntity({
       id: req.params.orderId,
       ...req.body
     });
-    const updatedEvent = await orderService.updateOrder(event);
-    const orderDTO: IOrderDetailsDTO = orderMapper.toDTO(updatedEvent);
+    const updatedEvent = await orderRepository.updateOrder(event);
+    const orderDTO: order.IOrderDetailsDTO = orderMapper.toDTO(updatedEvent);
 
-    res.status(201).json(orderDTO);
+    res.send(response.success(orderDTO, 201, source));
   } catch (err) {
     debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
     next(err);
@@ -86,12 +88,12 @@ const handleAction = async (
 
     switch (action) {
       case "mark_as_paid": {
-        const results = await orderService.markManyAsPaid(req.body.ids);
+        const results = await orderRepository.markManyAsPaid(req.body.ids);
         res.send(response.success(results, 200, source));
         break;
       }
       case "mark_as_not_paid": {
-        const results = await orderService.markManyAsNotPaid(req.body.ids);
+        const results = await orderRepository.markManyAsNotPaid(req.body.ids);
         res.send(response.success(results, 200, source));
         break;
       }

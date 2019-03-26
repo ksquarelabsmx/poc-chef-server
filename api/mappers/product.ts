@@ -1,11 +1,6 @@
-import {
-  IProduct,
-  IProductDTO,
-  IProductDetailsDTO,
-  IProductDetails
-} from "./../interfaces/product";
+import { product } from "./../interfaces";
 
-const toEntity = (productDTO: IProductDTO): IProduct => {
+const toEntity = (productDTO: product.IProductDTO): product.IProduct => {
   return {
     id: productDTO.id,
     name: productDTO.name,
@@ -14,7 +9,9 @@ const toEntity = (productDTO: IProductDTO): IProduct => {
   };
 };
 
-const toDTO = (productEntity: IProductDetails): IProductDetailsDTO => {
+const toDTO = (
+  productEntity: product.IProductDetails
+): product.IProductDetailsDTO => {
   return {
     id: productEntity.id,
     name: productEntity.name,

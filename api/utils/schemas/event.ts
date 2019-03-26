@@ -1,9 +1,9 @@
 import * as Joi from "joi";
 import * as moment from "moment";
 
-const eventIdSchema = Joi.string().uuid();
+const eventId = Joi.string().uuid();
 
-const eventSchema = {
+const event = {
   event_name: Joi.string().required(),
 
   start_date: Joi.number()
@@ -28,4 +28,4 @@ const eventSchema = {
     .required()
 };
 
-export { eventIdSchema, eventSchema };
+export const eventSchema = { eventId, event };

@@ -1,9 +1,9 @@
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 
-import { IEvent, IEventDetails } from "./../interfaces/event";
+import { event } from "./../interfaces";
 
-const events: IEventDetails[] = [
+const events: event.IEventDetails[] = [
   {
     id: "c64b1314-64ab-4fcf-99a1-df9edd1307ce",
     eventName: "Tortas para la oficina 1",
@@ -48,7 +48,7 @@ const events: IEventDetails[] = [
   }
 ];
 
-const find = (query?: any): IEventDetails[] => {
+const find = (query?: any): event.IEventDetails[] => {
   if (query) {
     const [key] = Object.keys(query);
     return events.filter((order: any) => order[key] === query[key]);
@@ -56,9 +56,9 @@ const find = (query?: any): IEventDetails[] => {
   return events;
 };
 
-const save = (event: IEvent): IEventDetails => {
+const save = (event: event.IEvent): event.IEventDetails => {
   event.id = uuid();
-  const result: IEventDetails = {
+  const result: event.IEventDetails = {
     ...event,
     total: 0,
     finished: false,
@@ -74,9 +74,9 @@ const save = (event: IEvent): IEventDetails => {
   return result;
 };
 
-const update = (event: IEvent): IEventDetails => {
+const update = (event: event.IEvent): event.IEventDetails => {
   const index: number = events.findIndex(
-    (even: IEventDetails) => even.id === event.id
+    (even: event.IEventDetails) => even.id === event.id
   );
   events[index] = { ...events[index], ...event };
   return events[index];

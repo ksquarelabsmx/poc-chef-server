@@ -1,6 +1,6 @@
 import * as Joi from "joi";
 
-const userSchema = {
+const user = {
   name: Joi.string()
     .max(15)
     .required(),
@@ -13,4 +13,4 @@ const userSchema = {
     .required()
 };
 
-export { userSchema };
+export const userSchema = { user };

@@ -2,11 +2,11 @@ import chalk from "chalk";
 import * as Debug from "debug";
 import { Response, Request, NextFunction } from "express";
 
-import { uriBuilder } from "../utils/uri";
-import { response } from "../utils/response";
-import { IUser, IUserDto } from "../interfaces/user";
-import { userService } from "../services";
+import { uriBuilder } from "../utils";
+import { response } from "../utils";
+import { user } from "../interfaces";
 import { userMapper } from "./../mappers";
+import { userRepository } from "./../repository";
 
 const debug = Debug("chef:events:controller:user");
 
@@ -18,10 +18,10 @@ const registerPartner = async (
   debug(`EventController: ${chalk.green("creating user")}`);
   try {
     const source: string = uriBuilder(req);
-    const user: IUser = { ...req.body };
+    const user: user.IUser = { ...req.body };
 
-    const createdUser = await userService.registerPartner(user);
-    const userDto: IUserDto = userMapper.toDto(createdUser);
+    const createdUser = await userRepository.registerPartner(user);
+    const userDto: user.IUserDto = userMapper.toDto(createdUser);
 
     res.send(response.success(userDto, 201, source));
   } catch (err) {

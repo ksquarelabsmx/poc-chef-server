@@ -8,32 +8,42 @@ import { badRequestFormated } from "./utils";
 
 const debug = Debug("chef:orders:controller:orders");
 
-function logErrors(err: any, req: Request, res: Response, next: NextFunction) {
+const logErrors = (
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   debug(`LogErrors: ${chalk.red(err.stack)}`);
   next(err);
-}
+};
 
-function wrapErrors(err: any, req: Request, res: Response, next: NextFunction) {
+const wrapErrors = (
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   if (!err.isBoom) {
     next(boom.badImplementation(err));
   }
   next(err);
-}
+};
 
-function withErrorStack(err: boom.Payload, stack: any) {
+const withErrorStack = (err: boom.Payload, stack: any) => {
   if (config.server.name.toLowerCase() !== "production") {
     return { ...err, stack };
   }
 
   return err;
-}
+};
 
-function clientErrorHandler(
+const clientErrorHandler = (
   err: any,
   req: Request,
   res: Response,
   next: NextFunction
-) {
+) => {
   const {
     output: { statusCode, payload }
   } = err;
@@ -43,14 +53,14 @@ function clientErrorHandler(
   } else {
     next(err);
   }
-}
+};
 
-function errorHandler(
+const errorHandler = (
   err: boom<any>,
   req: Request,
   res: Response,
   next: NextFunction
-): Response {
+): Response => {
   const {
     output: { statusCode, payload }
   } = err;
@@ -65,6 +75,6 @@ function errorHandler(
   }
 
   return res.status(statusCode).json(withErrorStack(payload, err.stack));
-}
+};
 
 export { logErrors, wrapErrors, clientErrorHandler, errorHandler };

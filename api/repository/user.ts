@@ -1,10 +1,10 @@
 import * as boom from "boom";
 
-import { error } from "../utils/errors";
-import { IUser, IUserDao } from "../interfaces/user";
-import { IAuthProviderDao } from "../interfaces/auth";
-import { usersDataSource, authDataSource } from "../data-source";
-import { appResponse } from "./../utils/appResponse";
+import { error } from "./../utils";
+import { IUser, IUserDao } from "./../interfaces/user";
+import { IAuthProviderDao } from "./../interfaces/auth";
+import { usersDataSource, authDataSource } from "./../data-source";
+import { response } from "./../utils";
 
 const registerPartner = async (user: IUser): Promise<any> => {
   try {
@@ -13,7 +13,7 @@ const registerPartner = async (user: IUser): Promise<any> => {
     );
 
     if (userDao) {
-      return Promise.reject(appResponse.badRequest(error.emailInUse));
+      return Promise.reject(response.badRequest(error.emailInUse));
     }
 
     const authProvider:
@@ -37,6 +37,6 @@ const registerPartner = async (user: IUser): Promise<any> => {
   }
 };
 
-export const userService = {
+export const userRepository = {
   registerPartner
 };
