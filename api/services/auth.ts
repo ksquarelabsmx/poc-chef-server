@@ -1,18 +1,20 @@
 import * as boom from "boom";
 import * as fp from "lodash/fp";
+import * as uuid from "uuid";
+import * as moment from "moment";
+import * as jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
-
-import { error } from "./../utils/errors";
-import { ILogin, IAuthProviderDao } from "../interfaces/auth";
-import { IUserDao, IUser, IGoogleUser } from "./../interfaces/user";
-import { authDataSource } from "./../data-source/auth-provider-data-source";
-import { usersDataSource } from "./../data-source/users-data-source";
-import { appResponse } from "./../utils/appResponse";
 import {
   LoginTicket,
   TokenPayload
 } from "google-auth-library/build/src/auth/loginticket";
+
 import { config } from "../../config";
+import { error } from "./../utils/errors";
+import { appResponse } from "../utils/appResponse";
+import { ILogin, IAuthProviderDao } from "../interfaces/auth";
+import { IUserDao, IUser, IGoogleUser } from "./../interfaces/user";
+import { usersDataSource, authDataSource } from "./../data-source";
 
 // TODO: add encrypt decrypt
 const authenticate = (password: string, userPassword: string) => {
@@ -77,7 +79,7 @@ const handlerGoogleUser = async (
   }
 };
 
-// validate that user/password are correctsz
+// validate that user/password are corrects
 const validateLogin = async (loginCredentials: ILogin): Promise<any> => {
   try {
     const { email, password } = loginCredentials;
@@ -119,6 +121,48 @@ const googleLogin = async (idToken: string): Promise<any> => {
   } catch (err) {
     return Promise.reject(boom.internal("Internal Server Error"));
   }
+};
+
+const createJWT = (user: IUserDao, type: string) => {
+  const { id, email, role, name } = user;
+  const { auth } = config;
+
+  // get data for a token type. (user, admin, refresh, ...)
+  const {
+    expiry: { unit, length },
+    subject,
+    audience
+  } = auth.jwt[type];
+
+  // generate jwt data
+  const expires: number = moment()
+    .utc()
+    .add(length, unit)
+    .unix();
+  const issued: number = moment()
+    .utc()
+    .unix();
+  const expiresIn: number = expires - issued;
+
+  // generate jwt
+  const token = jwt.sign(
+    {
+      id,
+      email,
+      name,
+      role,
+      sub: subject,
+      aud: audience,
+      exp: expires,
+      iat: issued,
+      jti: uuid.v4()
+    },
+    auth.jwt.secret
+  );
+
+  return {
+    jwt: token
+  };
 };
 
 export const authService = {

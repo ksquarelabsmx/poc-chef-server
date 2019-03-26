@@ -11,7 +11,6 @@ debug(
   `Configuration API-Chef-Orders: ${chalk.magenta("getting configurations...")}`
 );
 
-// TODO: JWT configuration`0.3
 const configurations: any = {
   production: {
     server: {
@@ -46,12 +45,38 @@ const configurations: any = {
       username: process.env.AUTH_ADMIN_USERNAME,
       password: process.env.AUTH_ADMIN_PASSWORD,
       email: process.env.AUTH_ADMIN_EMAIL,
-      jwt_secret: process.env.AUTH_JWT_SECRET,
       google: {
         clientId: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         projectId: process.env.GOOGLE_PROJECT_ID,
         authURI: process.env.GOOGLE_AUTH_URI
+      },
+      jwt: {
+        secret: process.env.AUTH_JWT_SECRET,
+        user: {
+          expiry: {
+            unit: "months",
+            length: 2
+          },
+          subject: "access",
+          audience: "user"
+        },
+        admin: {
+          expiry: {
+            unit: "days",
+            length: 1
+          },
+          subject: "access",
+          audience: "admin"
+        },
+        refresh: {
+          expiry: {
+            unit: "months",
+            length: 12
+          },
+          subject: "refresh",
+          audience: "all"
+        }
       }
     },
     db: {

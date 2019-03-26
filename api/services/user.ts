@@ -3,8 +3,7 @@ import * as boom from "boom";
 import { error } from "../utils/errors";
 import { IUser, IUserDao } from "../interfaces/user";
 import { IAuthProviderDao } from "../interfaces/auth";
-import { usersDataSource } from "../data-source/users-data-source";
-import { authDataSource } from "../data-source/auth-provider-data-source";
+import { usersDataSource, authDataSource } from "../data-source";
 import { appResponse } from "./../utils/appResponse";
 
 const registerPartner = async (user: IUser): Promise<any> => {
