@@ -1,8 +1,8 @@
 import { Express } from "express";
 
 import { orderController } from "../../controllers";
-import { validation } from "../../middlewares/validationHandler";
-import { createOrderSchema, orderIdSchema } from "../../utils/schemas/order";
+import { validation } from "../../middlewares";
+import { orderSchema } from "../../utils/schemas";
 
 // TODO: update docs according to the new model
 export const orderRoutes = (app: Express) => {
@@ -90,7 +90,7 @@ export const orderRoutes = (app: Express) => {
    */
   app.get(
     "/v1/orders/:orderId",
-    validation({ orderId: orderIdSchema }, "params"),
+    validation({ orderId: orderSchema.orderId }, "params"),
     orderController.getOrder
   );
   /**
@@ -168,7 +168,7 @@ export const orderRoutes = (app: Express) => {
    */
   app.post(
     "/v1/orders",
-    validation(createOrderSchema),
+    validation(orderSchema.order),
     orderController.createOrder
   );
   /**
@@ -262,8 +262,8 @@ export const orderRoutes = (app: Express) => {
 
   app.put(
     "/v1/orders/:orderId",
-    validation({ orderId: orderIdSchema }, "params"),
-    validation(createOrderSchema),
+    validation({ orderId: orderSchema.orderId }, "params"),
+    validation(orderSchema.order),
     orderController.updateOrder
   );
 };

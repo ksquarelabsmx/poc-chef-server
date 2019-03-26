@@ -1,13 +1,13 @@
 import * as fp from "lodash/fp";
 import * as boom from "boom";
 
-import { error } from "./../utils/errors";
+import { error } from "./../utils";
 import { IOrder, IOrderDetails } from "./../interfaces/order";
 import { IEventDetails } from "./../interfaces/event";
 import { ordersDataSource, eventsDataSource } from "./../data-source";
-import { appResponse } from "../utils/appResponse";
+import { response } from "../utils";
 
-const getOrders = async (): Promise<IOrderDetails> => {
+const getOrders = async (): Promise<IOrderDetails[]> => {
   return Promise.resolve(ordersDataSource.find());
 };
 
@@ -21,6 +21,7 @@ const getOrderById = async (id: number): Promise<any> => {
 
     return Promise.resolve(fp.head(order));
   } catch (err) {
+    //TODO: boom.internal(servererror)
     return Promise.reject(new Error(err));
   }
 };
@@ -41,10 +42,10 @@ const createOrder = async (order: IOrder): Promise<any> => {
     });
 
     if (fp.isEmpty(eventFinded)) {
-      return Promise.reject(appResponse.badRequest(error.eventNotExist));
+      return Promise.reject(response.badRequest(error.eventNotExist));
     }
     if (eventFinded[0].finished) {
-      return Promise.reject(appResponse.badRequest(error.eventIsFinished));
+      return Promise.reject(response.badRequest(error.eventIsFinished));
     }
 
     const createdOrder = ordersDataSource.save(order);
@@ -64,13 +65,13 @@ const updateOrder = async (order: IOrder): Promise<any> => {
     }
     //validate if the request order.eventId is the same as the existing order.eventId
     if (orderFinded[0].eventId !== order.eventId) {
-      return Promise.reject(appResponse.badRequest(error.orderEventDifferent));
+      return Promise.reject(response.badRequest(error.orderEventDifferent));
     }
     if (orderFinded[0].cancelled) {
-      return Promise.reject(appResponse.badRequest(error.orderIsCancelled));
+      return Promise.reject(response.badRequest(error.orderIsCancelled));
     }
     if (orderFinded[0].paid) {
-      return Promise.reject(appResponse.badRequest(error.orderIsPaid));
+      return Promise.reject(response.badRequest(error.orderIsPaid));
     }
 
     return Promise.resolve(ordersDataSource.update(order));
@@ -102,7 +103,7 @@ const markManyAsPaid = async (orderIds: string[]): Promise<string[]> => {
 
 const markManyAsNotPaid = async (orderIds: string[]): Promise<string[]> => {
   try {
-    const orderStatus = orderIds.map((id: any) => {
+    const orderStatus: string[] = orderIds.map((id: any) => {
       const order = ordersDataSource.find({ id });
       if (fp.isEmpty(order)) {
         return `order ${id} not found`;
@@ -120,7 +121,7 @@ const markManyAsNotPaid = async (orderIds: string[]): Promise<string[]> => {
   }
 };
 
-export const orderService = {
+export const orderRepository = {
   getOrders,
   getOrderById,
   //getOrdersByEventId,

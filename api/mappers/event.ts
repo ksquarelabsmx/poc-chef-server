@@ -1,11 +1,6 @@
-import {
-  IEvent,
-  IEventDTO,
-  IEventDetails,
-  IEventDetailsDTO
-} from "./../interfaces/event";
+import { event } from "./../interfaces";
 
-const toEntity = (eventDTO: IEventDTO): IEvent => {
+const toEntity = (eventDTO: event.IEventDTO): event.IEvent => {
   return {
     id: eventDTO.id,
     eventName: eventDTO.event_name,
@@ -17,7 +12,7 @@ const toEntity = (eventDTO: IEventDTO): IEvent => {
   };
 };
 
-const toDTO = (eventEntity: IEventDetails): IEventDetailsDTO => {
+const toDTO = (eventEntity: event.IEventDetails): event.IEventDetailsDTO => {
   return {
     id: eventEntity.id,
     event_name: eventEntity.eventName,

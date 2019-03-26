@@ -2,9 +2,9 @@
 import * as chai from "chai";
 import chaiHttp = require("chai-http");
 
-// Configure chaiHttp and should
-const should: Chai.Should = chai.should();
+// Configure chaiHttp and expect
 chai.use(chaiHttp);
+const { expect } = chai;
 
 import { authURI, server, loginMock } from "./utils";
 
@@ -25,10 +25,10 @@ describe("/auth", () => {
             throw err;
           }
 
-          res.body.should.have.property("code", 200);
-          res.body.data.should.have.property("id");
-          res.body.data.should.have.property("email", "maik@fakegmail.com");
-          res.body.data.should.have.property("role", "partner");
+          expect(res.body).to.have.property("code", 200);
+          expect(res.body.data).to.have.property("id");
+          expect(res.body.data).to.have.property("email", "maik@fakegmail.com");
+          expect(res.body.data).to.have.property("role", "partner");
           done();
         });
     });
@@ -44,11 +44,11 @@ describe("/auth", () => {
             throw err;
           }
 
-          res.body.should.have.property("status", 400);
-          res.body.should.have.property("message", "Bad Request");
-          res.body.should.have.property("errors");
-          res.body.errors[0].should.have.property("field", "email");
-          res.body.errors[0].should.have.property("error", "is required");
+          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "email");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
           done();
         });
     });
@@ -64,11 +64,11 @@ describe("/auth", () => {
             throw err;
           }
 
-          res.body.should.have.property("status", 400);
-          res.body.should.have.property("message", "Bad Request");
-          res.body.should.have.property("errors");
-          res.body.errors[0].should.have.property("field", "password");
-          res.body.errors[0].should.have.property("error", "is required");
+          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "password");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
         });
       done();
     });
@@ -85,11 +85,11 @@ describe("/auth", () => {
             throw err;
           }
 
-          res.body.should.have.property("status", 400);
-          res.body.should.have.property("message", "Bad Request");
-          res.body.should.have.property("errors");
-          res.body.errors.should.have.property("field", "email");
-          res.body.errors.should.have.property("error", "invalid email");
+          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors).to.have.property("field", "email");
+          expect(res.body.errors).to.have.property("error", "invalid email");
           done();
         });
     });
@@ -98,19 +98,22 @@ describe("/auth", () => {
         .request(server)
         .post(`${authURI}/login`)
         .send({
-          email: "thisisanewemail@ksquareinc.com",
-          password
+          email,
+          password: 0
         })
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          res.body.should.have.property("status", 400);
-          res.body.should.have.property("message", "Bad Request");
-          res.body.should.have.property("errors");
-          res.body.errors.should.have.property("field", "email");
-          res.body.errors.should.have.property("error", "invalid email");
+          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "password");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a string"
+          );
           done();
         });
     });

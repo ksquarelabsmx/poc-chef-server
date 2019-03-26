@@ -1,6 +1,6 @@
-import { IUserDao, IUserDto } from "./../interfaces/user";
+import { user } from "./../interfaces";
 
-const toDto = (userDao: IUserDao): IUserDto => {
+const toDto = (userDao: user.IUserDao): user.IUserDto => {
   return {
     id: userDao.id,
     name: userDao.name,

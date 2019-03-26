@@ -2,9 +2,9 @@
 import * as chai from "chai";
 import chaiHttp = require("chai-http");
 
-// Configure chaiHttp and should
-const should: Chai.Should = chai.should();
+// Configure chaiHttp and expect
 chai.use(chaiHttp);
+const { expect } = chai;
 
 import { server, healthURI } from "./utils";
 
@@ -18,8 +18,8 @@ describe("/health", () => {
           throw err;
         }
 
-        res.should.have.status(200);
-        res.body.should.have.property("message", "pong");
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property("message", "pong");
         done();
       });
   });

@@ -1,6 +1,8 @@
-import { IBadRequest, IErrorWithStack } from "./../interfaces/error";
+import { error } from "./../interfaces";
 
-function badRequestStrategy(payload: IErrorWithStack): IBadRequest {
+const badRequestStrategy = (
+  payload: error.IErrorWithStack
+): error.IBadRequest => {
   const { statusCode, error, message, stack } = payload;
   // only return this in development and test mode
   if (stack) {
@@ -28,8 +30,10 @@ function badRequestStrategy(payload: IErrorWithStack): IBadRequest {
         errors: JSON.parse(message)
       };
   }
-}
+};
 
-export function badRequestFormated(payload: IErrorWithStack): IBadRequest {
+export const badRequestFormated = (
+  payload: error.IErrorWithStack
+): error.IBadRequest => {
   return badRequestStrategy(payload);
-}
+};

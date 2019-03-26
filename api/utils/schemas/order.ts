@@ -1,8 +1,8 @@
 import * as Joi from "joi";
 
-const orderIdSchema = Joi.string().uuid();
+const orderId = Joi.string().uuid();
 
-const createOrderSchema = {
+const order = {
   user_id: Joi.string()
     .uuid()
     .required(),
@@ -21,4 +21,4 @@ const createOrderSchema = {
     .required()
 };
 
-export { orderIdSchema, createOrderSchema };
+export const orderSchema = { orderId, order };

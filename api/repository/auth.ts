@@ -10,8 +10,8 @@ import {
 } from "google-auth-library/build/src/auth/loginticket";
 
 import { config } from "../../config";
-import { error } from "./../utils/errors";
-import { appResponse } from "../utils/appResponse";
+import { error } from "./../utils";
+import { response } from "./../utils";
 import { ILogin, IAuthProviderDao } from "../interfaces/auth";
 import { IUserDao, IUser, IGoogleUser } from "./../interfaces/user";
 import { usersDataSource, authDataSource } from "./../data-source";
@@ -86,7 +86,7 @@ const validateLogin = async (loginCredentials: ILogin): Promise<any> => {
     const user: IUserDao | undefined = usersDataSource.findByEmail(email);
 
     if (!user) {
-      return Promise.reject(appResponse.badRequest(error.userNotExist));
+      return Promise.reject(response.badRequest(error.userNotExist));
     }
     if (!authenticate(password, user.password)) {
       return Promise.reject(boom.unauthorized(error.invalidPassword));
@@ -165,7 +165,7 @@ const createJWT = (user: IUserDao, type: string) => {
   };
 };
 
-export const authService = {
+export const authRepository = {
   validateLogin,
   googleLogin
 };

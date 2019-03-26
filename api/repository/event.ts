@@ -3,8 +3,8 @@ import * as boom from "boom";
 
 import { IEvent, IEventDetails } from "./../interfaces/event";
 import { eventsDataSource } from "./../data-source";
-import { appResponse } from "../utils/appResponse";
-import { error } from "./../utils/errors";
+import { response } from "./../utils";
+import { error } from "./../utils";
 
 // TODO: Define returns
 const getEvents = async (): Promise<IEventDetails[]> => {
@@ -62,7 +62,7 @@ const updateEvent = async (event: IEvent): Promise<any> => {
       return Promise.reject(boom.notFound("Not Found"));
     }
     if (eventFinded[0].finished) {
-      return Promise.reject(appResponse.badRequest(error.eventIsFinished));
+      return Promise.reject(response.badRequest(error.eventIsFinished));
     }
 
     return Promise.resolve(eventsDataSource.update(event));
@@ -71,7 +71,7 @@ const updateEvent = async (event: IEvent): Promise<any> => {
   }
 };
 
-export const eventService = {
+export const eventRepository = {
   getEvents,
   getEventById,
   getPastEvents,

@@ -1,8 +1,8 @@
 import { Express } from "express";
 
-import { userSchema } from "../../utils/schemas/user";
-import { validation } from "../../middlewares/validationHandler";
+import { userSchema } from "../../utils/schemas";
 import { userController } from "../../controllers";
+import { validation } from "../../middlewares";
 
 export const userRoutes = (app: Express) => {
   /**
@@ -75,7 +75,7 @@ export const userRoutes = (app: Express) => {
 
   app.post(
     "/v1/users/register",
-    validation(userSchema),
+    validation(userSchema.user),
     userController.registerPartner
   );
 };

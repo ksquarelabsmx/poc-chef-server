@@ -1,11 +1,8 @@
-import {
-  IOrderProduct,
-  IOrderProductDTO,
-  IOrderProductDetails,
-  IOrderProductDetailsDTO
-} from "./../interfaces/order-product";
+import { orderProduct } from "./../interfaces";
 
-const toEntity = (orderProductDTO: IOrderProductDTO): IOrderProduct => {
+const toEntity = (
+  orderProductDTO: orderProduct.IOrderProductDTO
+): orderProduct.IOrderProduct => {
   return {
     id: orderProductDTO.id,
     orderId: orderProductDTO.order_id,
@@ -14,7 +11,9 @@ const toEntity = (orderProductDTO: IOrderProductDTO): IOrderProduct => {
   };
 };
 
-const toDTO = (orderEntity: IOrderProductDetails): IOrderProductDetailsDTO => {
+const toDTO = (
+  orderEntity: orderProduct.IOrderProductDetails
+): orderProduct.IOrderProductDetailsDTO => {
   return {
     id: orderEntity.id,
     order_id: orderEntity.orderId,

@@ -9,9 +9,7 @@ npm install
 Install global dependencies:
 
 ```bash
-npm install -g nyc
-npm install -g mocha
-npm install -g source-map-support
+npm install -g nyc mocha source-map-support apidoc
 ```
 
 Run project:
@@ -37,6 +35,12 @@ npm run test
 ```
 
 ### Documentation
+
+Run project first
+
+```bash
+npm run start-dev
+```
 
 ```bash
 npm run apidoc

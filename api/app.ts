@@ -12,7 +12,7 @@ import {
   wrapErrors,
   clientErrorHandler,
   errorHandler
-} from "./middlewares/errorHandlers";
+} from "./middlewares";
 import routes from "./routes/v1";
 
 const debug = Debug("chef:orders:app");

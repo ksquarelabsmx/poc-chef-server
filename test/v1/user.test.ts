@@ -2,9 +2,9 @@
 import * as chai from "chai";
 import chaiHttp = require("chai-http");
 
-// Configure chaiHttp and should
-const should: Chai.Should = chai.should();
+// Configure chaiHttp and
 chai.use(chaiHttp);
+const { expect } = chai;
 
 import { userURI, server, userMock } from "./utils";
 
@@ -27,16 +27,15 @@ describe("/user", () => {
             throw err;
           }
 
-          res.body.should.have.property("code", 201);
-          res.body.should.have.property("data");
-          res.body.data.should.have.property("id");
-          res.body.data.should.have.property("name", name);
-          res.body.data.should.have.property("email", email);
-          res.body.data.should.have.property("created_at");
-          res.body.data.should.have.property("updated_at");
-          res.body.data.should.have.property("role", "partner");
-          res.body.data.should.have.property("auth_provider_id");
-
+          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data).to.have.property("id");
+          expect(res.body.data).to.have.property("name", name);
+          expect(res.body.data).to.have.property("email", email);
+          expect(res.body.data).to.have.property("created_at");
+          expect(res.body.data).to.have.property("updated_at");
+          expect(res.body.data).to.have.property("role", "partner");
+          expect(res.body.data).to.have.property("auth_provider_id");
           done();
         });
     });
@@ -55,12 +54,14 @@ describe("/user", () => {
             throw err;
           }
 
-          res.body.should.have.property("status", 400);
-          res.body.should.have.property("message", "Bad Request");
-          res.body.should.have.property("errors");
-          res.body.errors.should.have.property("field", "email");
-          res.body.errors.should.have.property("error", "email already in use");
-
+          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors).to.have.property("field", "email");
+          expect(res.body.errors).to.have.property(
+            "error",
+            "email already in use"
+          );
           done();
         });
     });
@@ -79,19 +80,18 @@ describe("/user", () => {
             throw err;
           }
 
-          res.body.should.have.property("code", 201);
-          res.body.should.have.property("data");
-          res.body.data.should.have.property("id");
-          res.body.data.should.have.property("name", name);
-          res.body.data.should.have.property(
+          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data).to.have.property("id");
+          expect(res.body.data).to.have.property("name", name);
+          expect(res.body.data).to.have.property(
             "email",
             "admin_partner@example.com"
           );
-          res.body.data.should.have.property("role", "partner admin");
-          res.body.data.should.have.property("created_at");
-          res.body.data.should.have.property("updated_at");
-          res.body.data.should.have.property("auth_provider_id");
-
+          expect(res.body.data).to.have.property("role", "partner admin");
+          expect(res.body.data).to.have.property("created_at");
+          expect(res.body.data).to.have.property("updated_at");
+          expect(res.body.data).to.have.property("auth_provider_id");
           done();
         });
     });
@@ -110,11 +110,11 @@ describe("/user", () => {
             throw err;
           }
 
-          res.body.should.have.property("status", 400);
-          res.body.should.have.property("message", "Bad Request");
-          res.body.should.have.property("errors");
-          res.body.errors[0].should.have.property("field", "role");
-          res.body.errors[0].should.have.property(
+          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "role");
+          expect(res.body.errors[0]).to.have.property(
             "error",
             "must be one of [partner, partner admin]"
           );
@@ -135,11 +135,11 @@ describe("/user", () => {
             throw err;
           }
 
-          res.body.should.have.property("status", 400);
-          res.body.should.have.property("message", "Bad Request");
-          res.body.should.have.property("errors");
-          res.body.errors[0].should.have.property("field", "name");
-          res.body.errors[0].should.have.property("error", "is required");
+          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "name");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
           done();
         });
     });
@@ -157,11 +157,11 @@ describe("/user", () => {
             throw err;
           }
 
-          res.body.should.have.property("status", 400);
-          res.body.should.have.property("message", "Bad Request");
-          res.body.should.have.property("errors");
-          res.body.errors[0].should.have.property("field", "password");
-          res.body.errors[0].should.have.property("error", "is required");
+          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "password");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
           done();
         });
     });
@@ -179,11 +179,11 @@ describe("/user", () => {
             throw err;
           }
 
-          res.body.should.have.property("status", 400);
-          res.body.should.have.property("message", "Bad Request");
-          res.body.should.have.property("errors");
-          res.body.errors[0].should.have.property("field", "email");
-          res.body.errors[0].should.have.property("error", "is required");
+          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "email");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
           done();
         });
     });
@@ -201,11 +201,11 @@ describe("/user", () => {
             throw err;
           }
 
-          res.body.should.have.property("status", 400);
-          res.body.should.have.property("message", "Bad Request");
-          res.body.should.have.property("errors");
-          res.body.errors[0].should.have.property("field", "role");
-          res.body.errors[0].should.have.property("error", "is required");
+          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "role");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
           done();
         });
     });

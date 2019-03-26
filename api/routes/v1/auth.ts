@@ -1,8 +1,8 @@
 import { Express } from "express";
 
 import { authController } from "./../../controllers";
-import { validation } from "../../middlewares/validationHandler";
-import { credentialsSchema } from "../../utils/schemas/auth";
+import { validation } from "../../middlewares";
+import { credentialsSchema } from "../../utils/schemas";
 
 export const authRoutes = (app: Express) => {
   /**
@@ -60,7 +60,7 @@ export const authRoutes = (app: Express) => {
    */
   app.post(
     "/v1/auth/login",
-    validation(credentialsSchema),
+    validation(credentialsSchema.credentials),
     authController.login
   );
 
