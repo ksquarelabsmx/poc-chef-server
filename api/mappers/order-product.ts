@@ -25,4 +25,4 @@ const toDTO = (orderEntity: IOrderProductDetails): IOrderProductDetailsDTO => {
   };
 };
 
-const orderProductMapper = { toEntity, toDTO };
+export const orderProductMapper = { toEntity, toDTO };

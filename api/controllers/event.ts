@@ -4,8 +4,8 @@ import { Request, Response, NextFunction } from "express";
 
 import { uriBuilder } from "./../utils/uri";
 import { response } from "./../utils/response";
-import { eventService } from "../services/event";
-import { eventMapper } from "./../mappers/event";
+import { eventService } from "../services";
+import { eventMapper } from "./../mappers";
 import { IEvent, IEventDTO } from "./../interfaces/event";
 
 const debug = Debug("chef:events:controller:events");

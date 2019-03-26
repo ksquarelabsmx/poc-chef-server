@@ -1,9 +1,11 @@
-import { orderController } from "../../controllers/order";
+import { Express } from "express";
+
+import { orderController } from "../../controllers";
 import { validation } from "../../middlewares/validationHandler";
 import { createOrderSchema, orderIdSchema } from "../../utils/schemas/order";
 
 // TODO: update docs according to the new model
-export const orderRoutes = (app: any) => {
+export const orderRoutes = (app: Express) => {
   /**
    * @api        {get}  /v1/orders  Get orders
    * @apiGroup   Orders

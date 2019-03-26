@@ -4,17 +4,11 @@ import { Request, Response, NextFunction } from "express";
 
 import { uriBuilder } from "./../utils/uri";
 import { response } from "./../utils/response";
-import { orderService } from "./../services/order";
-import { orderMapper } from "./../mappers/order";
+import { orderService } from "./../services";
+import { orderMapper } from "./../mappers";
 import { IOrder, IOrderDetailsDTO } from "./../interfaces/order";
 
 const debug = Debug("chef:orders:controller:orders");
-/*
-const orderStrategy = (orderService: any, query: string = "") => {
-  return query
-    ? orderService.getOrdersByEventId(query)
-    : orderService.getOrders();
-};*/
 
 const getOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {

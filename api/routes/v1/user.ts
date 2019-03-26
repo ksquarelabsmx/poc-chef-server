@@ -2,7 +2,7 @@ import { Express } from "express";
 
 import { userSchema } from "../../utils/schemas/user";
 import { validation } from "../../middlewares/validationHandler";
-import { userController } from "../../controllers/user";
+import { userController } from "../../controllers";
 
 export const userRoutes = (app: Express) => {
   /**

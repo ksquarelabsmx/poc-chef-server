@@ -5,8 +5,8 @@ import { Response, Request, NextFunction } from "express";
 import { uriBuilder } from "../utils/uri";
 import { response } from "../utils/response";
 import { IUser, IUserDto } from "../interfaces/user";
-import { userService } from "../services/user";
-import { userMapper } from "./../mappers/user";
+import { userService } from "../services";
+import { userMapper } from "./../mappers";
 
 const debug = Debug("chef:events:controller:user");
 

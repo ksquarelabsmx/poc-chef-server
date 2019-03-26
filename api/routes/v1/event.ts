@@ -1,8 +1,11 @@
-import { eventController } from "../../controllers/event";
+import { Express } from "express";
+
+import { validateJWT } from "./../../policies";
+import { eventController } from "../../controllers";
 import { validation } from "../../middlewares/validationHandler";
 import { eventIdSchema, eventSchema } from "../../utils/schemas/event";
 
-export const eventRoutes = (app: any) => {
+export const eventRoutes = (app: Express) => {
   /**
    * @api        {get}  /v1/events?type=:type Get all events
    * @apiGroup   Events
