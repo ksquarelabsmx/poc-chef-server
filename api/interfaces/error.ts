@@ -17,3 +17,9 @@ export interface IBadRequest {
   errors?: IDomainValidationError;
   reason?: string;
 }
+
+export interface IError {
+  title: string;
+  detail: string;
+  status: number;
+}

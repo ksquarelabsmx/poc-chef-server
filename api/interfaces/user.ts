@@ -33,3 +33,10 @@ export interface IGoogleUser {
   name: string;
   picture: string;
 }
+
+export interface IUserWithoutPass {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}

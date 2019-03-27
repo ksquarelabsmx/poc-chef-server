@@ -1,4 +1,5 @@
-import { IDomainValidationError } from "./../interfaces/error";
+import { IDomainValidationError, IError } from "./../interfaces/error";
+// TODO errors by namespace
 
 const emailInUse: IDomainValidationError = {
   field: "email",
@@ -35,9 +36,68 @@ const orderIsPaid: IDomainValidationError = {
   error: "Order has already paid"
 };
 
-const invalidPassword = "invalid password";
+const invalidPassword: string = "invalid password";
 
-const invalidAuthProvider = "invalid auth provider";
+const invalidAuthProvider: string = "invalid auth provider";
+
+const noTokenPresent: IError = {
+  title: "Unathorized",
+  detail: "No Token Present",
+  status: 401
+};
+
+const malformedHeader: IError = {
+  title: "Unathorized",
+  detail: "Malformed header",
+  status: 401
+};
+
+const invalidAuthMethod: IError = {
+  title: "Unathorized",
+  detail: "Unexpected authorization method",
+  status: 401
+};
+
+const expiredToken: IError = {
+  title: "Unathorized",
+  detail: "expired token",
+  status: 401
+};
+
+const jwtInvalid: IError = {
+  title: "JsonWebTokenError",
+  detail: "invalid token",
+  status: 401
+};
+
+const tokenEarly: IError = {
+  title: "Unathorized",
+  detail: "token is early",
+  status: 401
+};
+
+const invalidAudencie: IError = {
+  title: "Forbidden",
+  detail: "token cannot be used in this domain",
+  status: 403
+};
+
+const invalidSubject: IError = {
+  title: "Forbidden",
+  detail: "token cannot be used for this request",
+  status: 403
+};
+
+export const authErrors = {
+  noTokenPresent,
+  malformedHeader,
+  invalidAuthMethod,
+  jwtInvalid,
+  expiredToken,
+  tokenEarly,
+  invalidAudencie,
+  invalidSubject
+};
 
 export const error = {
   emailInUse,

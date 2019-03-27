@@ -1,6 +1,6 @@
 import { Express } from "express";
 
-//import { validateJWT } from "./../../policies";
+import { validateJWT } from "./../../policies";
 import { eventController } from "../../controllers";
 import { validation } from "../../middlewares";
 import { eventSchema } from "../../utils/schemas";
@@ -52,7 +52,7 @@ export const eventRoutes = (app: Express) => {
    *   "message": "Internal Server Error"
    * }
    */
-  app.get("/v1/events", eventController.getEvents);
+  app.get("/v1/events", validateJWT("access"), eventController.getEvents);
 
   /**
    * @api        {get}  /v1/events/:id Get an event
@@ -138,6 +138,7 @@ export const eventRoutes = (app: Express) => {
    */
   app.get(
     "/v1/events/:eventId",
+    validateJWT("access"),
     validation({ eventId: eventSchema.eventId }, "params"),
     eventController.getEvent
   );
@@ -249,6 +250,7 @@ export const eventRoutes = (app: Express) => {
 
   app.put(
     "/v1/events/:id",
+    validateJWT("access"),
     validation({ id: eventSchema.eventId }, "params"),
     validation(eventSchema.event),
     eventController.updateEvent
@@ -342,6 +344,7 @@ export const eventRoutes = (app: Express) => {
    */
   app.post(
     "/v1/events",
+    validateJWT("access"),
     validation(eventSchema.event),
     eventController.createEvent
   );

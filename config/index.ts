@@ -53,21 +53,13 @@ const configurations: any = {
       },
       jwt: {
         secret: process.env.AUTH_JWT_SECRET,
-        user: {
+        access: {
           expiry: {
             unit: "months",
             length: 2
           },
           subject: "access",
           audience: "user"
-        },
-        admin: {
-          expiry: {
-            unit: "days",
-            length: 1
-          },
-          subject: "access",
-          audience: "admin"
         },
         refresh: {
           expiry: {
