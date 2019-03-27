@@ -1,13 +1,11 @@
 import * as fp from "lodash/fp";
 import * as boom from "boom";
 
-import { error } from "./../utils";
-import { IOrder, IOrderDetails } from "./../interfaces/order";
-import { IEventDetails } from "./../interfaces/event";
+import { error, response } from "./../utils";
+import { order, event } from "./../interfaces";
 import { ordersDataSource, eventsDataSource } from "./../data-source";
-import { response } from "../utils";
 
-const getOrders = async (): Promise<IOrderDetails[]> => {
+const getOrders = async (): Promise<order.IOrderDetails[]> => {
   return Promise.resolve(ordersDataSource.find());
 };
 
@@ -25,19 +23,10 @@ const getOrderById = async (id: number): Promise<any> => {
     return Promise.reject(new Error(err));
   }
 };
-/*
-const getOrdersByEventId = async (eventId: string): Promise<any> => {
-  const orders = ordersDataSource.find()
 
-  if (orders.length) {
-    return Promise.resolve(orders);
-  }
-  return Promise.reject(new Error("That event Id did not match any order"));
-};*/
-
-const createOrder = async (order: IOrder): Promise<any> => {
+const createOrder = async (order: order.IOrder): Promise<any> => {
   try {
-    const eventFinded: IEventDetails[] = eventsDataSource.find({
+    const eventFinded: event.IEventDetails[] = eventsDataSource.find({
       id: order.eventId
     });
 
@@ -55,7 +44,7 @@ const createOrder = async (order: IOrder): Promise<any> => {
   }
 };
 
-const updateOrder = async (order: IOrder): Promise<any> => {
+const updateOrder = async (order: order.IOrder): Promise<any> => {
   try {
     const { id } = order;
     const orderFinded = ordersDataSource.find({ id });
@@ -124,7 +113,6 @@ const markManyAsNotPaid = async (orderIds: string[]): Promise<string[]> => {
 export const orderRepository = {
   getOrders,
   getOrderById,
-  //getOrdersByEventId,
   createOrder,
   updateOrder,
   markManyAsPaid,

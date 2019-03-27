@@ -1,13 +1,12 @@
 import * as fp from "lodash/fp";
 import * as boom from "boom";
 
-import { IEvent, IEventDetails } from "./../interfaces/event";
+import { event } from "./../interfaces";
 import { eventsDataSource } from "./../data-source";
-import { response } from "./../utils";
-import { error } from "./../utils";
+import { error, response } from "./../utils";
 
 // TODO: Define returns
-const getEvents = async (): Promise<IEventDetails[]> => {
+const getEvents = async (): Promise<event.IEventDetails[]> => {
   return Promise.resolve(eventsDataSource.find());
 };
 
@@ -43,7 +42,7 @@ const getEventById = async (id: number): Promise<any> => {
   }
 };
 
-const createEvent = async (event: IEvent): Promise<any> => {
+const createEvent = async (event: event.IEvent): Promise<any> => {
   try {
     const createdEvent = await eventsDataSource.save(event);
 
@@ -53,7 +52,7 @@ const createEvent = async (event: IEvent): Promise<any> => {
   }
 };
 
-const updateEvent = async (event: IEvent): Promise<any> => {
+const updateEvent = async (event: event.IEvent): Promise<any> => {
   try {
     const { id } = event;
     const eventFinded = eventsDataSource.find({ id });

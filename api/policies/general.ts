@@ -7,11 +7,10 @@ import { config } from "../../config";
 import { uriBuilder } from "./../utils/uri";
 import { authErrors } from "./../utils/errors";
 import { response } from "./../utils/response";
-import { IError } from "../interfaces/error";
-import { IUserWithoutPass } from "../interfaces/user";
+import { user, error } from "../interfaces";
 
 // check if the authorization header is correct, return
-const checkAuthzHeader = (authorization: string): IError | undefined => {
+const checkAuthzHeader = (authorization: string): error.IError | undefined => {
   if (!authorization) {
     return authErrors.noTokenPresent;
   }
@@ -29,7 +28,7 @@ const checkAuthzHeader = (authorization: string): IError | undefined => {
   }
 };
 
-const checkJWT = (token: string, type: string): IError | undefined => {
+const checkJWT = (token: string, type: string): error.IError | undefined => {
   const decodedjwt: any = jwt.decode(token);
   const actualTime: number = moment()
     .utc()
@@ -67,7 +66,7 @@ export const validateJWT = (type: string) => (
   const authorization: string = req.get("Authorization") || "";
   const source: string = uriBuilder(req);
 
-  const authzError: IError | undefined = checkAuthzHeader(authorization);
+  const authzError: error.IError | undefined = checkAuthzHeader(authorization);
 
   // check authorization header errors
   if (authzError) {
@@ -76,7 +75,7 @@ export const validateJWT = (type: string) => (
   }
 
   const token: string = authorization.split(" ")[1];
-  const tokenError: IError | undefined = checkJWT(token, type);
+  const tokenError: error.IError | undefined = checkJWT(token, type);
 
   // check jwt errors
   if (tokenError) {
@@ -86,10 +85,7 @@ export const validateJWT = (type: string) => (
 
   // TODO: add jwt information into request
   const decodedjwt: any = jwt.decode(token);
-  const userData: IUserWithoutPass = fp.pick(
-    ["role", "email", "name", "id"],
-    decodedjwt
-  );
+  const userData: user.IUserDto = fp.omit("password", decodedjwt);
 
   // add data in req session
 
