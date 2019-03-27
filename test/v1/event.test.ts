@@ -6,14 +6,22 @@ import chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 const { expect } = chai;
 
-import { eventURI, server, eventMockDTO } from "./utils";
+import { eventURI, server, eventMockDTO, jwt } from "./utils";
 
 describe("/events", () => {
+  let token: string;
+
+  // get jwt
+  before(async () => {
+    token = await jwt;
+  });
+
   describe("/GET", () => {
     it("Should get all events", done => {
       chai
         .request(server)
         .get(eventURI)
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -91,6 +99,7 @@ describe("/events", () => {
       chai
         .request(server)
         .get(`${eventURI}?type=past`)
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -146,6 +155,7 @@ describe("/events", () => {
       chai
         .request(server)
         .get(`${eventURI}?type=current`)
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -199,6 +209,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -230,6 +241,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -254,6 +266,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -278,6 +291,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -306,6 +320,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -330,6 +345,7 @@ describe("/events", () => {
           start_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -354,6 +370,7 @@ describe("/events", () => {
           start_hour,
           end_hour
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -379,6 +396,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -407,6 +425,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -435,6 +454,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -466,6 +486,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -494,6 +515,7 @@ describe("/events", () => {
           end_hour: "1440",
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -522,6 +544,7 @@ describe("/events", () => {
           end_hour,
           created_by: 10
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -550,6 +573,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -574,6 +598,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -601,6 +626,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -629,6 +655,7 @@ describe("/events", () => {
           end_hour: 1441,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -657,6 +684,7 @@ describe("/events", () => {
           end_hour,
           created_by: "6d623d08-113c-4565-81b2-e17c903312"
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -683,6 +711,7 @@ describe("/events", () => {
         const createdEvent = await chai
           .request(server)
           .post(eventURI)
+          .set("Authorization", `Bearer ${token}`)
           .send({
             event_name,
             start_date,
@@ -717,6 +746,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -748,6 +778,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -772,6 +803,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -796,6 +828,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -823,6 +856,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -847,6 +881,7 @@ describe("/events", () => {
           start_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -871,6 +906,7 @@ describe("/events", () => {
           start_hour,
           end_hour
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -896,6 +932,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -924,6 +961,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -952,6 +990,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -983,6 +1022,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -1011,6 +1051,7 @@ describe("/events", () => {
           end_hour: "1440",
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -1039,6 +1080,7 @@ describe("/events", () => {
           end_hour,
           created_by: 10
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -1067,6 +1109,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -1091,6 +1134,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -1118,6 +1162,7 @@ describe("/events", () => {
           end_hour,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -1146,6 +1191,7 @@ describe("/events", () => {
           end_hour: 1441,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -1174,6 +1220,7 @@ describe("/events", () => {
           end_hour,
           created_by: "6d623d08-113c-4565-81b2-e17c903312"
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;

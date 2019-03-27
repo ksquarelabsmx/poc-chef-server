@@ -6,14 +6,20 @@ import chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 const { expect } = chai;
 
-import { orderURI, server, orderMockDTO } from "./utils";
+import { orderURI, server, orderMockDTO, jwt } from "./utils";
 
 describe("/orders", () => {
+  let token: string;
+  before(async () => {
+    token = await jwt;
+  });
+
   describe("/GET", () => {
     it("Should get all orders", done => {
       chai
         .request(server)
         .get(orderURI)
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -105,6 +111,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id, event_id, price, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -131,6 +138,7 @@ describe("/orders", () => {
           action: "mark_as_paid",
           ids: ["fefcd99e-d7fb-4189-9e8f-c9395bea5fa7"]
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -152,6 +160,7 @@ describe("/orders", () => {
           action: "mark_as_paid",
           ids: ["cd639768-37fc-4386-8fc8-f93c2327ebf1"]
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -173,6 +182,7 @@ describe("/orders", () => {
           action: "mark_as_paid",
           ids: ["9a640c51-276a-4c95-a44b-ff47e2702663"]
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -194,6 +204,7 @@ describe("/orders", () => {
           action: "mark_as_not_paid",
           ids: ["fefcd99e-d7fb-4189-9e8f-c9395bea5fa7"]
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -215,6 +226,7 @@ describe("/orders", () => {
           action: "mark_as_not_paid",
           ids: ["93d1d016-6a24-4680-ae80-a558176aba37"]
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -236,6 +248,7 @@ describe("/orders", () => {
           action: "mark_as_not_paid",
           ids: ["9a640c51-276a-4c95-a44b-ff47e2702663"]
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -254,6 +267,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ event_id, price, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -272,6 +286,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id, price, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -290,6 +305,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id, event_id, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -308,6 +324,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id, event_id, price, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -329,6 +346,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id, event_id, price, order_product_id })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -347,6 +365,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id: 100, event_id, price, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -368,6 +387,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id, event_id: 100, price, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -389,6 +409,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id, event_id, price: "40", order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -410,6 +431,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id, event_id, price, order_product_id: 100, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -434,6 +456,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id, event_id, price, order_product_id, created_by: 100 })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -455,6 +478,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id, event_id, price, order_product_id: [100], created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -475,6 +499,7 @@ describe("/orders", () => {
       chai
         .request(server)
         .post(orderURI)
+        .set("Authorization", `Bearer ${token}`)
         .send({
           user_id: "1946fd04-763a-4542-b77b-05332a6c4d8",
           event_id,
@@ -509,6 +534,7 @@ describe("/orders", () => {
           order_product_id,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -530,6 +556,7 @@ describe("/orders", () => {
         .request(server)
         .post(orderURI)
         .send({ user_id, event_id, price: -40, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -557,6 +584,7 @@ describe("/orders", () => {
           order_product_id: ["1946fd04-763a-4542-b77b-05332a6c4d8"],
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -584,6 +612,7 @@ describe("/orders", () => {
           order_product_id,
           created_by: "1946fd04-763a-4542-b77b-05332a6c4d8"
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -608,6 +637,7 @@ describe("/orders", () => {
         const createdOrder = await chai
           .request(server)
           .post(orderURI)
+          .set("Authorization", `Bearer ${token}`)
           .send({
             user_id,
             event_id,
@@ -631,6 +661,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id, event_id, price, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -654,6 +685,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ event_id, price, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -672,6 +704,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id, price, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -690,6 +723,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id, event_id, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -708,6 +742,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id, event_id, price, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -729,6 +764,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id, event_id, price, order_product_id })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -747,6 +783,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id: 100, event_id, price, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -768,6 +805,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id, event_id: 100, price, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -789,6 +827,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id, event_id, price: "40", order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -810,6 +849,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id, event_id, price, order_product_id: 100, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -834,6 +874,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id, event_id, price, order_product_id, created_by: 100 })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -855,6 +896,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id, event_id, price, order_product_id: [100], created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -882,6 +924,7 @@ describe("/orders", () => {
           order_product_id,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -909,6 +952,7 @@ describe("/orders", () => {
           order_product_id,
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -930,6 +974,7 @@ describe("/orders", () => {
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({ user_id, event_id, price: -40, order_product_id, created_by })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -957,6 +1002,7 @@ describe("/orders", () => {
           order_product_id: ["1946fd04-763a-4542-b77b-05332a6c4d8"],
           created_by
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -984,6 +1030,7 @@ describe("/orders", () => {
           order_product_id,
           created_by: "1946fd04-763a-4542-b77b-05332a6c4d8"
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;

@@ -6,9 +6,14 @@ import chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 const { expect } = chai;
 
-import { userURI, server, userMock } from "./utils";
+import { userURI, server, userMock, jwt } from "./utils";
 
 describe("/user", () => {
+  let token: string;
+  before(async () => {
+    token = await jwt;
+  });
+
   describe("user/register", () => {
     const { name, password, email, role } = userMock;
 
@@ -22,6 +27,7 @@ describe("/user", () => {
           email,
           role: "partner"
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -49,6 +55,7 @@ describe("/user", () => {
           email,
           role: "partner"
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -75,6 +82,7 @@ describe("/user", () => {
           email: "admin_partner@example.com",
           role: "partner admin"
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -105,6 +113,7 @@ describe("/user", () => {
           email,
           role: "user"
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -130,6 +139,7 @@ describe("/user", () => {
           email,
           role
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -152,6 +162,7 @@ describe("/user", () => {
           email,
           role
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -174,6 +185,7 @@ describe("/user", () => {
           password,
           role
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
@@ -196,6 +208,7 @@ describe("/user", () => {
           password,
           email
         })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;

@@ -1,5 +1,9 @@
-import { IEvent } from "./../../api/interfaces/event";
 import * as moment from "moment";
+import * as fp from "lodash/fp";
+
+import { IEvent } from "./../../api/interfaces/event";
+import { authRepository } from "./../../api/repository/auth";
+import { request } from "http";
 
 export const server: string = "http://localhost:3000";
 export const healthURI: string = "/v1/ping";
@@ -52,3 +56,12 @@ export const orderMockDTO = {
   order_product_id: ["48f04396-e3be-4970-87d5-be2412639303"],
   created_by: "6d623d08-113c-4565-81b2-e17c90331241"
 };
+
+// pending promise
+export const jwt = (async () => {
+  const loginInfo = await authRepository.validateLogin({
+    email: "maik@fakegmail.com",
+    password: "plainpassword"
+  });
+  return loginInfo.jwt;
+})();
