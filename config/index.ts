@@ -1,4 +1,3 @@
-import { authURI } from "./../test/v1/utils";
 // load .env file
 require("dotenv").config();
 
