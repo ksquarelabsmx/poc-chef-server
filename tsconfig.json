@@ -7,12 +7,12 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "moduleResolution": "node",
-    "outDir": "build/api",
+    "outDir": "build",
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]
     },
-    "lib": ["es7"]
+    "lib": ["es7", "dom"]
   },
   "include": ["api/**/*", "test/**/*"],
   "exclude": ["node_modules"]
