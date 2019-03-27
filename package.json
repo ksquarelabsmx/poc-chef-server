@@ -72,6 +72,8 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^1.5.0",
+    "@typescript-eslint/parser": "^1.5.0",
     "bcrypt": "^3.0.3",
     "bcrypt-promise": "^2.0.0",
     "bluebird": "^3.5.3",
@@ -82,6 +84,7 @@
     "cors": "^2.8.5",
     "debug": "^4.1.1",
     "dotenv": "^6.2.0",
+    "eslint": "^5.15.3",
     "express": "^4.16.4",
     "express-slash": "^2.0.1",
     "google-auth-library": "^3.1.1",

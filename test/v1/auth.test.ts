@@ -26,9 +26,17 @@ describe("/auth", () => {
           }
 
           expect(res.body).to.have.property("code", 200);
-          expect(res.body.data).to.have.property("id");
-          expect(res.body.data).to.have.property("email", "maik@fakegmail.com");
-          expect(res.body.data).to.have.property("role", "partner");
+          expect(res.body.data).to.have.property("jwt");
+          expect(res.body.data.user).to.have.property("id");
+          expect(res.body.data.user).to.have.property(
+            "email",
+            "maik@fakegmail.com"
+          );
+          expect(res.body.data.user).to.have.property("role", "partner");
+          expect(res.body.data.user).to.have.property("auth_provider_id");
+          expect(res.body.data.user).to.have.property("created_at");
+          expect(res.body.data.user).to.have.property("updated_at");
+
           done();
         });
     });

@@ -10,18 +10,17 @@ import {
 } from "google-auth-library/build/src/auth/loginticket";
 
 import { config } from "../../config";
-import { error } from "./../utils";
-import { response } from "./../utils";
-import { ILogin, IAuthProviderDao } from "../interfaces/auth";
-import { IUserDao, IUser, IGoogleUser } from "./../interfaces/user";
+import { error, response } from "./../utils";
+import { user, auth } from "./../interfaces";
 import { usersDataSource, authDataSource } from "./../data-source";
+import { userMapper } from "./../mappers";
 
 // TODO: add encrypt decrypt
 const authenticate = (password: string, userPassword: string) => {
   return password === userPassword;
 };
 
-const getDataFromPayload = (payload: TokenPayload): IGoogleUser => {
+const getDataFromPayload = (payload: TokenPayload): user.IGoogleUser => {
   const getEmail = fp.compose(
     fp.defaultTo(""),
     fp.prop("email")
@@ -47,24 +46,24 @@ const getDataFromPayload = (payload: TokenPayload): IGoogleUser => {
 
 // get user from datasource or create it
 const handlerGoogleUser = async (
-  googleUser: IGoogleUser
-): Promise<IUserDao> => {
+  googleUser: user.IGoogleUser
+): Promise<user.IUserDao> => {
   try {
     const { email, name } = googleUser;
-    const userDao: IUserDao | undefined = await usersDataSource.findByEmail(
-      email
-    );
+    const userDao:
+      | user.IUserDao
+      | undefined = await usersDataSource.findByEmail(email);
     // if user exist return it
     if (userDao) {
       return Promise.resolve(userDao);
     }
 
     // create a user and return it
-    const authProvider: IAuthProviderDao = await authDataSource.findByName(
+    const authProvider: auth.IAuthProviderDao = await authDataSource.findByName(
       "google"
     );
 
-    const user: IUser = {
+    const user: user.IUser = {
       email,
       name,
       password: "DUMMYPASS", // user can't access by password
@@ -72,7 +71,7 @@ const handlerGoogleUser = async (
       authProviderId: authProvider.id
     };
 
-    const createdUser: IUserDao = await usersDataSource.save(user);
+    const createdUser: user.IUserDao = await usersDataSource.save(user);
     return Promise.resolve(createdUser);
   } catch (error) {
     return Promise.reject(boom.internal("Internal Server Error"));
@@ -80,20 +79,31 @@ const handlerGoogleUser = async (
 };
 
 // validate that user/password are corrects
-const validateLogin = async (loginCredentials: ILogin): Promise<any> => {
+const validateLogin = async (loginCredentials: auth.ILogin): Promise<any> => {
   try {
     const { email, password } = loginCredentials;
-    const user: IUserDao | undefined = usersDataSource.findByEmail(email);
+    const userDao: user.IUserDao | undefined = usersDataSource.findByEmail(
+      email
+    );
 
-    if (!user) {
+    if (!userDao) {
       return Promise.reject(response.badRequest(error.userNotExist));
     }
-    if (!authenticate(password, user.password)) {
+    if (!authenticate(password, userDao.password)) {
       return Promise.reject(boom.unauthorized(error.invalidPassword));
     }
 
-    const userInfo = fp.pick(["id", "email", "role"], user);
-    return Promise.resolve(userInfo);
+    // return jwt and user info
+    const userDto: user.IUserDto = userMapper.toDto(userDao);
+
+    const token: string = createJWT(userDao, "access");
+
+    return Promise.resolve({
+      jwt: token,
+      user: {
+        ...userDto
+      }
+    });
   } catch (err) {
     return Promise.reject(boom.internal("Internal Server Error"));
   }
@@ -114,16 +124,24 @@ const googleLogin = async (idToken: string): Promise<any> => {
       return Promise.reject(boom.internal("Can't payload from google account"));
     }
 
-    const userInfo: IGoogleUser = getDataFromPayload(payload);
-    const userDao: IUserDao = await handlerGoogleUser(userInfo);
+    const userData: user.IGoogleUser = getDataFromPayload(payload);
+    const userDao: user.IUserDao = await handlerGoogleUser(userData);
+    const userDto: user.IUserDto = userMapper.toDto(userDao);
+    const token: string = createJWT(userDao, "access");
 
-    return Promise.resolve(userDao);
+    // return jwt and user info
+    return Promise.resolve({
+      jwt: token,
+      user: {
+        ...userDto
+      }
+    });
   } catch (err) {
     return Promise.reject(boom.internal("Internal Server Error"));
   }
 };
 
-const createJWT = (user: IUserDao, type: string) => {
+const createJWT = (user: user.IUserDao, type: string) => {
   const { id, email, role, name } = user;
   const { auth } = config;
 
@@ -159,10 +177,7 @@ const createJWT = (user: IUserDao, type: string) => {
     },
     auth.jwt.secret
   );
-
-  return {
-    jwt: token
-  };
+  return token;
 };
 
 export const authRepository = {

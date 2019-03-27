@@ -1,11 +1,10 @@
 import chalk from "chalk";
 import * as Debug from "debug";
-
-import { uriBuilder } from "./../utils";
-import { response } from "./../utils";
-import { auth } from "./../interfaces";
-import { authRepository } from "./../repository";
 import { Response, Request, NextFunction } from "express";
+
+import { auth } from "./../interfaces";
+import { uriBuilder, response } from "./../utils";
+import { authRepository } from "./../repository";
 
 const debug = Debug("chef:events:controller:auth");
 
@@ -29,10 +28,10 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 const googleLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`AuthController: ${chalk.green("authenticate googleLogin")}`);
-    const { idToken } = req.body;
 
-    const userInfo = await authRepository.googleLogin(idToken);
+    const { idToken } = req.body;
     const source: string = uriBuilder(req);
+    const userInfo = await authRepository.googleLogin(idToken);
 
     return res.send(response.success(userInfo, 200, source));
   } catch (err) {

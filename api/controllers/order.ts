@@ -2,8 +2,7 @@ import chalk from "chalk";
 import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
-import { uriBuilder } from "./../utils";
-import { response } from "./../utils";
+import { uriBuilder, response } from "./../utils";
 import { orderMapper } from "./../mappers";
 import { orderRepository } from "./../repository";
 import { order } from "./../interfaces";

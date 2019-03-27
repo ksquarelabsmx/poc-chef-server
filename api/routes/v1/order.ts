@@ -3,6 +3,7 @@ import { Express } from "express";
 import { orderController } from "../../controllers";
 import { validation } from "../../middlewares";
 import { orderSchema } from "../../utils/schemas";
+import { validateJWT } from "./../../policies";
 
 // TODO: update docs according to the new model
 export const orderRoutes = (app: Express) => {
@@ -47,7 +48,7 @@ export const orderRoutes = (app: Express) => {
    *}]
    */
 
-  app.get("/v1/orders", orderController.getOrders);
+  app.get("/v1/orders", validateJWT("access"), orderController.getOrders);
   /**
    * @api        {get}  /v1/orders/:orderId Get order
    * @apiGroup   Orders
@@ -90,6 +91,7 @@ export const orderRoutes = (app: Express) => {
    */
   app.get(
     "/v1/orders/:orderId",
+    validateJWT("access"),
     validation({ orderId: orderSchema.orderId }, "params"),
     orderController.getOrder
   );
@@ -168,6 +170,7 @@ export const orderRoutes = (app: Express) => {
    */
   app.post(
     "/v1/orders",
+    validateJWT("access"),
     validation(orderSchema.order),
     orderController.createOrder
   );
@@ -186,7 +189,11 @@ export const orderRoutes = (app: Express) => {
    * }
    *
    */
-  app.post("/v1/orders/actions", orderController.handleAction);
+  app.post(
+    "/v1/orders/actions",
+    validateJWT("access"),
+    orderController.handleAction
+  );
   /**
    * @api        {post}  /v1/orders Update order
    * @apiGroup   Orders
@@ -262,6 +269,7 @@ export const orderRoutes = (app: Express) => {
 
   app.put(
     "/v1/orders/:orderId",
+    validateJWT("access"),
     validation({ orderId: orderSchema.orderId }, "params"),
     validation(orderSchema.order),
     orderController.updateOrder

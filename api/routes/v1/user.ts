@@ -1,8 +1,9 @@
 import { Express } from "express";
 
 import { userSchema } from "../../utils/schemas";
-import { userController } from "../../controllers";
+import { validateJWT } from "./../../policies";
 import { validation } from "../../middlewares";
+import { userController } from "../../controllers";
 
 export const userRoutes = (app: Express) => {
   /**
@@ -75,6 +76,7 @@ export const userRoutes = (app: Express) => {
 
   app.post(
     "/v1/users/register",
+    validateJWT("access"),
     validation(userSchema.user),
     userController.registerPartner
   );

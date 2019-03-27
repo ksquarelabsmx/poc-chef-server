@@ -1,14 +1,12 @@
 import * as boom from "boom";
 
-import { error } from "./../utils";
-import { IUser, IUserDao } from "./../interfaces/user";
-import { IAuthProviderDao } from "./../interfaces/auth";
+import { error, response } from "./../utils";
+import { user, auth } from "./../interfaces";
 import { usersDataSource, authDataSource } from "./../data-source";
-import { response } from "./../utils";
 
-const registerPartner = async (user: IUser): Promise<any> => {
+const registerPartner = async (user: user.IUser): Promise<any> => {
   try {
-    const userDao: IUserDao | undefined = usersDataSource.findByEmail(
+    const userDao: user.IUserDao | undefined = usersDataSource.findByEmail(
       user.email
     );
 
@@ -17,7 +15,7 @@ const registerPartner = async (user: IUser): Promise<any> => {
     }
 
     const authProvider:
-      | IAuthProviderDao
+      | auth.IAuthProviderDao
       | undefined = await authDataSource.findByName("custom");
 
     if (!authProvider) {
@@ -26,7 +24,7 @@ const registerPartner = async (user: IUser): Promise<any> => {
     }
 
     // TODO encrypt password
-    const createdUser: IUserDao = await usersDataSource.save({
+    const createdUser: user.IUserDao = await usersDataSource.save({
       ...user,
       authProviderId: authProvider.id
     });
