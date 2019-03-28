@@ -13,7 +13,12 @@ const server = new http.Server(app);
 // server listening
 server.listen(config.server.port, async function() {
   debug(`Server Running on port: ${chalk.cyan(config.server.port)}`);
-  if (!["production", "development", "testing"].includes(config.server.name)) {
+
+  const isValidEnv: boolean = ["production", "development", "testing"].some(
+    (env: string) => env === config.server.name
+  );
+
+  if (!isValidEnv) {
     console.error(
       `NODE_ENV is set to ${
         config.server.name

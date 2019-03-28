@@ -1,9 +1,7 @@
 import * as moment from "moment";
-import * as fp from "lodash/fp";
 
 import { event, order } from "./../../api/interfaces";
-import { authRepository } from "./../../api/repository";
-import { request } from "http";
+import { authService } from "../../api/services";
 
 export const server: string = "http://localhost:3000";
 export const healthURI: string = "/v1/ping";
@@ -59,7 +57,7 @@ export const orderMockDTO: order.IOrderDTO = {
 
 // pending promise
 export const jwt = (async () => {
-  const loginInfo = await authRepository.validateLogin({
+  const loginInfo = await authService.validateLogin({
     email: "maik@fakegmail.com",
     password: "plainpassword"
   });
