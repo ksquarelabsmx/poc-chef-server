@@ -27,7 +27,6 @@ const getPastEvents = async (): Promise<any> => {
     const events: event.IEventDetails[] = await eventsDataSource.find({
       finished: true
     });
-    console.log();
 
     return Promise.resolve(events);
   } catch (err) {

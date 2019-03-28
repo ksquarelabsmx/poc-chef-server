@@ -104,7 +104,7 @@ describe("/events", () => {
           if (err) {
             throw err;
           }
-          console.log(res.body);
+
           expect(res).to.have.status(200);
           expect(res.body).to.have.property("data");
 
