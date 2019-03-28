@@ -15,6 +15,7 @@ export interface IOrderProductDTO {
 export interface IOrderProductDetails extends IOrderProduct {
   createdAt: number;
   updatedAt: number;
+  [key: string]: any;
 }
 
 export interface IOrderProductDetailsDTO extends IOrderProductDTO {

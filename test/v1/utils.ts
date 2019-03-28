@@ -1,8 +1,8 @@
 import * as moment from "moment";
 import * as fp from "lodash/fp";
 
-import { IEvent } from "./../../api/interfaces/event";
-import { authRepository } from "./../../api/repository/auth";
+import { event, order } from "./../../api/interfaces";
+import { authRepository } from "./../../api/repository";
 import { request } from "http";
 
 export const server: string = "http://localhost:3000";
@@ -28,7 +28,7 @@ export const eventMockDTO = {
   created_by: "6d623d08-113c-4565-81b2-e17c90331241"
 };
 
-export const eventMock: IEvent = {
+export const eventMock: event.IEvent = {
   eventName: "Tortastic",
   startDate: futureDate(1, 0), // epoch
   expirationDate: futureDate(1, 2), // epoch
@@ -49,7 +49,7 @@ export const loginMock = {
   password: "4dm1n"
 };
 
-export const orderMockDTO = {
+export const orderMockDTO: order.IOrderDTO = {
   user_id: "3d916bdb-fd4e-4fbd-b4fc-d05253e4ac1a",
   event_id: "8c9ae830-dd56-4828-8503-c70355253de9",
   price: 20,

@@ -21,6 +21,7 @@ export interface IOrderDetails extends IOrder {
   updatedAt: number;
   paid: boolean;
   cancelled: boolean;
+  [key: string]: any;
 }
 
 export interface IOrderDetailsDTO extends IOrderDTO {

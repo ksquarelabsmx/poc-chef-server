@@ -29,7 +29,7 @@ const getEvent = async (req: Request, res: Response, next: NextFunction) => {
 
     const id = req.params.eventId;
     const source: string = uriBuilder(req);
-    const event = await eventRepository.getEventById(id);
+    const event = await eventRepository.getEventOrderById(id);
 
     res.send(response.success(event, 200, source));
   } catch (err) {

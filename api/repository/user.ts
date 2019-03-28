@@ -31,7 +31,7 @@ const registerPartner = async (user: user.IUser): Promise<any> => {
 
     return Promise.resolve(createdUser);
   } catch (err) {
-    return Promise.reject(boom.internal());
+    return Promise.reject(boom.internal("Internal Server Error"));
   }
 };
 

@@ -1,4 +1,4 @@
-import { IOrder, IOrderDTO } from "./order";
+import { order } from "./index";
 // interfaces for update event and create event
 export interface IEvent {
   id?: string;
@@ -27,6 +27,7 @@ export interface IEventDetails extends IEvent {
   cancelled: boolean;
   createdAt: number;
   updatedAt: number;
+  [key: string]: any;
 }
 
 export interface IEventDetailsDTO extends IEventDTO {
@@ -39,9 +40,9 @@ export interface IEventDetailsDTO extends IEventDTO {
 
 // interfaces for get event with orders details
 export interface IEventOrdersDTO extends IEventDetailsDTO {
-  orders: IOrderDTO[];
+  orders: order.IOrderDetailsDTO[];
 }
 
 export interface IEventOrders extends IEventDetails {
-  orders: IOrder[];
+  orders: order.IOrderDetails[];
 }

@@ -19,8 +19,7 @@ const getOrderById = async (id: number): Promise<any> => {
 
     return Promise.resolve(fp.head(order));
   } catch (err) {
-    //TODO: boom.internal(servererror)
-    return Promise.reject(new Error(err));
+    return Promise.reject(boom.internal("Internal Server Error"));
   }
 };
 
@@ -40,7 +39,7 @@ const createOrder = async (order: order.IOrder): Promise<any> => {
     const createdOrder = ordersDataSource.save(order);
     return Promise.resolve(createdOrder);
   } catch (err) {
-    return Promise.reject(new Error(err));
+    return Promise.reject(boom.internal("Internal Server Error"));
   }
 };
 
@@ -65,14 +64,14 @@ const updateOrder = async (order: order.IOrder): Promise<any> => {
 
     return Promise.resolve(ordersDataSource.update(order));
   } catch (err) {
-    return Promise.reject(new Error(err));
+    return Promise.reject(boom.internal("Internal Server Error"));
   }
 };
 
 const markManyAsPaid = async (orderIds: string[]): Promise<string[]> => {
   try {
     const orderStatus = orderIds.map((id: string) => {
-      const order = ordersDataSource.find({ id });
+      const order: order.IOrderDetails[] = ordersDataSource.find({ id });
       if (fp.isEmpty(order)) {
         return `order ${id} not found`;
       }
@@ -86,14 +85,14 @@ const markManyAsPaid = async (orderIds: string[]): Promise<string[]> => {
     });
     return Promise.resolve(orderStatus);
   } catch (err) {
-    return Promise.reject(new Error(err));
+    return Promise.reject(boom.internal("Internal Server Error"));
   }
 };
 
 const markManyAsNotPaid = async (orderIds: string[]): Promise<string[]> => {
   try {
     const orderStatus: string[] = orderIds.map((id: any) => {
-      const order = ordersDataSource.find({ id });
+      const order: order.IOrderDetails[] = ordersDataSource.find({ id });
       if (fp.isEmpty(order)) {
         return `order ${id} not found`;
       }
@@ -106,7 +105,7 @@ const markManyAsNotPaid = async (orderIds: string[]): Promise<string[]> => {
     });
     return Promise.resolve(orderStatus);
   } catch (err) {
-    return Promise.reject(new Error(err));
+    return Promise.reject(boom.internal("Internal Server Error"));
   }
 };
 
