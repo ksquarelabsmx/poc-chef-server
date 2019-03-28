@@ -51,10 +51,12 @@ const orders: order.IOrderDetails[] = [
   }
 ];
 
-const find = (query?: any): any => {
+const find = (query?: any): order.IOrderDetails[] => {
   if (query) {
-    const [key] = Object.keys(query);
-    return orders.filter((order: any) => order[key] === query[key]);
+    const [key]: string[] = Object.keys(query);
+    return orders.filter(
+      (order: order.IOrderDetails) => order[key] === query[key]
+    );
   }
   return orders;
 };
@@ -76,7 +78,7 @@ const save = (order: order.IOrder): order.IOrderDetails => {
   return result;
 };
 
-const update = (order: order.IOrder): order.IOrderDetails => {
+const update = (order: any): order.IOrderDetails => {
   const index: number = orders.findIndex(
     (ord: order.IOrderDetails) => ord.id === order.id
   );

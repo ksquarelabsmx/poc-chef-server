@@ -16,8 +16,10 @@ const orderProducts: orderProduct.IOrderProductDetails[] = [
 
 const find = (query?: any): orderProduct.IOrderProductDetails[] => {
   if (query) {
-    const [key] = Object.keys(query);
-    return orderProducts.filter((user: any) => user[key] === query[key]);
+    const [key]: string[] = Object.keys(query);
+    return orderProducts.filter(
+      (user: orderProduct.IOrderProductDetails) => user[key] === query[key]
+    );
   }
   return orderProducts;
 };

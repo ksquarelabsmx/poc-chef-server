@@ -50,8 +50,10 @@ const events: event.IEventDetails[] = [
 
 const find = (query?: any): event.IEventDetails[] => {
   if (query) {
-    const [key] = Object.keys(query);
-    return events.filter((order: any) => order[key] === query[key]);
+    const [key]: string[] = Object.keys(query);
+    return events.filter(
+      (order: event.IEventDetails) => order[key] === query[key]
+    );
   }
   return events;
 };
