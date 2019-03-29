@@ -1,9 +1,15 @@
 import { Express } from "express";
 
 import { orderController } from "../../controllers";
+import { ordersDataSource } from "./../../data-source";
 import { validation } from "../../middlewares";
 import { orderSchema } from "../../utils/schemas";
-import { validateJWT } from "./../../policies";
+import {
+  validateJWT,
+  onlyOwner,
+  filterRoles,
+  appendUser
+} from "./../../policies";
 
 // TODO: update docs according to the new model
 export const orderRoutes = (app: Express) => {
@@ -48,9 +54,14 @@ export const orderRoutes = (app: Express) => {
    *}]
    */
 
-  app.get("/v1/orders", validateJWT("access"), orderController.getOrders);
+  app.get(
+    "/v1/orders",
+    validateJWT("access"),
+    filterRoles(["partner"]),
+    orderController.getOrders
+  );
   /**
-   * @api        {get}  /v1/orders/:orderId Get order
+   * @api        {get}  /v1/orders/:id Get order
    * @apiGroup   Orders
    *
    * @apiSuccess  {Object}        order	                                orders collection
@@ -90,9 +101,10 @@ export const orderRoutes = (app: Express) => {
    * }
    */
   app.get(
-    "/v1/orders/:orderId",
+    "/v1/orders/:id",
     validateJWT("access"),
-    validation({ orderId: orderSchema.orderId }, "params"),
+    onlyOwner(ordersDataSource),
+    validation({ id: orderSchema.orderId }, "params"),
     orderController.getOrder
   );
   /**
@@ -171,6 +183,7 @@ export const orderRoutes = (app: Express) => {
   app.post(
     "/v1/orders",
     validateJWT("access"),
+    appendUser(),
     validation(orderSchema.order),
     orderController.createOrder
   );
@@ -192,6 +205,7 @@ export const orderRoutes = (app: Express) => {
   app.post(
     "/v1/orders/actions",
     validateJWT("access"),
+    filterRoles(["partner"]),
     orderController.handleAction
   );
   /**
@@ -268,9 +282,10 @@ export const orderRoutes = (app: Express) => {
    */
 
   app.put(
-    "/v1/orders/:orderId",
+    "/v1/orders/:id",
     validateJWT("access"),
-    validation({ orderId: orderSchema.orderId }, "params"),
+    appendUser(),
+    validation({ id: orderSchema.orderId }, "params"),
     validation(orderSchema.order),
     orderController.updateOrder
   );

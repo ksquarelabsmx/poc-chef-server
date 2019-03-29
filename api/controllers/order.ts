@@ -28,9 +28,9 @@ const getOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`OrderController: ${chalk.green("getting order")}`);
 
-    const orderId = req.params.orderId;
+    const id = req.params.id;
     const source: string = uriBuilder(req);
-    const order = await orderRepository.getOrderById(orderId);
+    const order = await orderRepository.getOrderById(id);
 
     res.send(response.success(order, 200, source));
   } catch (err) {
@@ -61,7 +61,7 @@ const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
 
     const source: string = uriBuilder(req);
     const event: order.IOrder = orderMapper.toEntity({
-      id: req.params.orderId,
+      id: req.params.id,
       ...req.body
     });
     const updatedEvent = await orderRepository.updateOrder(event);
