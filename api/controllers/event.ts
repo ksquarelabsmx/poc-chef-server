@@ -27,7 +27,7 @@ const getEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     debug(`EventController: ${chalk.green("getting event")}`);
 
-    const id = req.params.eventId;
+    const id = req.params.id;
     const source: string = uriBuilder(req);
     const event = await eventRepository.getEventOrderById(id);
 

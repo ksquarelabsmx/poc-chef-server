@@ -1,2 +1,2 @@
-export { filterRoles, onlyOwner } from "./access-control";
+export { filterRoles, onlyOwner, appendUser } from "./access-control";
 export { validateJWT } from "./general";
