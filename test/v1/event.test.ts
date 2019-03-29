@@ -702,7 +702,6 @@ describe("/events", () => {
             throw err;
           }
 
-          console.log(res.body);
           expect(res.body).to.have.property("code", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data).to.have.property("id");
