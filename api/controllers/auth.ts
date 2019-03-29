@@ -4,7 +4,7 @@ import { Response, Request, NextFunction } from "express";
 
 import { auth } from "./../interfaces";
 import { uriBuilder, response } from "./../utils";
-import { authRepository } from "./../repository";
+import { authService } from "./../services";
 
 const debug = Debug("chef:events:controller:auth");
 
@@ -15,7 +15,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
     const loginCredentials: auth.ILogin = { ...req.body };
     // reject if credentials are invalid
-    const userInfo = await authRepository.validateLogin(loginCredentials);
+    const userInfo = await authService.validateLogin(loginCredentials);
     const source: string = uriBuilder(req);
 
     return res.send(response.success(userInfo, 200, source));
@@ -31,7 +31,7 @@ const googleLogin = async (req: Request, res: Response, next: NextFunction) => {
 
     const { idToken } = req.body;
     const source: string = uriBuilder(req);
-    const userInfo = await authRepository.googleLogin(idToken);
+    const userInfo = await authService.googleLogin(idToken);
 
     return res.send(response.success(userInfo, 200, source));
   } catch (err) {

@@ -360,7 +360,7 @@ describe("/events", () => {
           done();
         });
     });
-    it("Should fail without created_by", done => {
+    it("Should add created_by from jwt data", done => {
       chai
         .request(server)
         .post(eventURI)
@@ -377,11 +377,18 @@ describe("/events", () => {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
-          expect(res.body.errors[0]).to.have.property("error", "is required");
+          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data).to.have.property("id");
+          expect(res.body.data).to.have.property("event_name", event_name);
+          expect(res.body.data).to.have.property("start_date", start_date);
+          expect(res.body.data).to.have.property(
+            "expiration_date",
+            expiration_date
+          );
+          expect(res.body.data).to.have.property("start_hour", start_hour);
+          expect(res.body.data).to.have.property("end_hour", end_hour);
+          expect(res.body.data).to.have.property("created_by", created_by);
           done();
         });
     });
@@ -533,35 +540,6 @@ describe("/events", () => {
           done();
         });
     });
-    it("Should fail with invalid created_by type", done => {
-      chai
-        .request(server)
-        .post(eventURI)
-        .send({
-          event_name,
-          start_date,
-          expiration_date,
-          start_hour,
-          end_hour,
-          created_by: 10
-        })
-        .set("Authorization", `Bearer ${token}`)
-        .end((err, res) => {
-          if (err) {
-            throw err;
-          }
-
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
-          expect(res.body.errors[0]).to.have.property(
-            "error",
-            "must be a string"
-          );
-          done();
-        });
-    });
     it("Should fail with past date in start_date", done => {
       chai
         .request(server)
@@ -669,35 +647,6 @@ describe("/events", () => {
           expect(res.body.errors[0]).to.have.property(
             "error",
             "must be less than or equal to 1440"
-          );
-          done();
-        });
-    });
-    it("Should fail with created_by no valid UUID", done => {
-      chai
-        .request(server)
-        .post(eventURI)
-        .send({
-          event_name,
-          start_date,
-          expiration_date,
-          start_hour,
-          end_hour,
-          created_by: "6d623d08-113c-4565-81b2-e17c903312"
-        })
-        .set("Authorization", `Bearer ${token}`)
-        .end((err, res) => {
-          if (err) {
-            throw err;
-          }
-
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
-          expect(res.body.errors[0]).to.have.property(
-            "error",
-            "must be a valid GUID"
           );
           done();
         });
@@ -912,16 +861,22 @@ describe("/events", () => {
           if (err) {
             throw err;
           }
-
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
-          expect(res.body.errors[0]).to.have.property("error", "is required");
+          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data).to.have.property("id");
+          expect(res.body.data).to.have.property("event_name", event_name);
+          expect(res.body.data).to.have.property("start_date", start_date);
+          expect(res.body.data).to.have.property(
+            "expiration_date",
+            expiration_date
+          );
+          expect(res.body.data).to.have.property("start_hour", start_hour);
+          expect(res.body.data).to.have.property("end_hour", end_hour);
+          expect(res.body.data).to.have.property("created_by", created_by);
           done();
         });
     });
-    it("Should fail with invalid event_name type", done => {
+    it("Should add created_by from jwt data", done => {
       chai
         .request(server)
         .put(`${eventURI}/${id}`)
@@ -1069,35 +1024,6 @@ describe("/events", () => {
           done();
         });
     });
-    it("Should fail with invalid created_by type", done => {
-      chai
-        .request(server)
-        .put(`${eventURI}/${id}`)
-        .send({
-          event_name,
-          start_date,
-          expiration_date,
-          start_hour,
-          end_hour,
-          created_by: 10
-        })
-        .set("Authorization", `Bearer ${token}`)
-        .end((err, res) => {
-          if (err) {
-            throw err;
-          }
-
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
-          expect(res.body.errors[0]).to.have.property(
-            "error",
-            "must be a string"
-          );
-          done();
-        });
-    });
     it("Should fail with past date in start_date", done => {
       chai
         .request(server)
@@ -1205,35 +1131,6 @@ describe("/events", () => {
           expect(res.body.errors[0]).to.have.property(
             "error",
             "must be less than or equal to 1440"
-          );
-          done();
-        });
-    });
-    it("Should fail with created_by no valid UUID", done => {
-      chai
-        .request(server)
-        .put(`${eventURI}/${id}`)
-        .send({
-          event_name,
-          start_date,
-          expiration_date,
-          start_hour,
-          end_hour,
-          created_by: "6d623d08-113c-4565-81b2-e17c903312"
-        })
-        .set("Authorization", `Bearer ${token}`)
-        .end((err, res) => {
-          if (err) {
-            throw err;
-          }
-
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
-          expect(res.body.errors[0]).to.have.property(
-            "error",
-            "must be a valid GUID"
           );
           done();
         });

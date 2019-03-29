@@ -6,7 +6,7 @@ import { user } from "./../interfaces";
 
 const users: user.IUserDao[] = [
   {
-    id: uuid(),
+    id: "6d623d08-113c-4565-81b2-e17c90331241",
     name: "Maik",
     email: "maik@fakegmail.com",
     password: "plainpassword",

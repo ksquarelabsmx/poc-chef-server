@@ -4,9 +4,8 @@ import * as fp from "lodash/fp";
 import { Request, Response, NextFunction } from "express";
 
 import { config } from "../../config";
-import { uriBuilder } from "./../utils/uri";
+import { uriBuilder, response } from "./../utils";
 import { authErrors } from "./../utils/errors";
-import { response } from "./../utils/response";
 import { user, error } from "../interfaces";
 
 // check if the authorization header is correct, return
@@ -83,11 +82,16 @@ export const validateJWT = (type: string) => (
     return res.send(response.error(title, status, source, detail));
   }
 
-  // TODO: add jwt information into request
   const decodedjwt: any = jwt.decode(token);
   const userData: user.IUserDto = fp.omit("password", decodedjwt);
 
-  // add data in req session
+  // add user data in req session
+  req["session"] = {
+    id: userData.id,
+    email: userData.email,
+    role: userData.role,
+    name: userData.name
+  };
 
   next();
 };

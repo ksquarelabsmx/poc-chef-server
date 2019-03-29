@@ -10,3 +10,10 @@ export interface IAuthProviderDao {
   createdAt: number;
   updatedAt: number;
 }
+
+export interface ISession {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+}

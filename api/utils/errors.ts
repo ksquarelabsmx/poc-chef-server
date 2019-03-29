@@ -88,6 +88,18 @@ const invalidSubject: IError = {
   status: 403
 };
 
+const notRoleAuthorization: IError = {
+  title: "Forbidden",
+  detail: "Role without permissions",
+  status: 403
+};
+
+const notUserAuthorization: IError = {
+  title: "Forbidden",
+  detail: "User without permissions",
+  status: 403
+};
+
 export const authErrors = {
   noTokenPresent,
   malformedHeader,
@@ -96,7 +108,9 @@ export const authErrors = {
   expiredToken,
   tokenEarly,
   invalidAudencie,
-  invalidSubject
+  invalidSubject,
+  notRoleAuthorization,
+  notUserAuthorization
 };
 
 export const error = {

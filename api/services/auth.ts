@@ -10,10 +10,10 @@ import {
 } from "google-auth-library/build/src/auth/loginticket";
 
 import { config } from "../../config";
-import { error, response } from "./../utils";
-import { user, auth } from "./../interfaces";
-import { usersDataSource, authDataSource } from "./../data-source";
-import { userMapper } from "./../mappers";
+import { error, response } from "../utils";
+import { user, auth } from "../interfaces";
+import { usersDataSource, authDataSource } from "../data-source";
+import { userMapper } from "../mappers";
 
 // TODO: add encrypt decrypt
 const authenticate = (password: string, userPassword: string) => {
@@ -180,7 +180,7 @@ const createJWT = (user: user.IUserDao, type: string) => {
   return token;
 };
 
-export const authRepository = {
+export const authService = {
   validateLogin,
   googleLogin
 };
