@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import { event, order } from "./../../api/interfaces";
+import { event, order, user, auth } from "./../../api/interfaces";
 import { authService } from "../../api/services";
 
 export const server: string = "http://localhost:3000";
@@ -17,7 +17,7 @@ const futureDate = (days: number, hours: number): number =>
     .add(hours, "hour")
     .unix();
 
-export const eventMockDTO = {
+export const eventMockDTO: event.IEventDTO = {
   event_name: "Tortastic",
   start_date: futureDate(1, 0), // epoch
   expiration_date: futureDate(1, 2), // epoch
@@ -42,7 +42,7 @@ export const userMock = {
   role: "admin partner"
 };
 
-export const loginMock = {
+export const loginMock: auth.ILogin = {
   email: "admin@example.com",
   password: "4dm1n"
 };
