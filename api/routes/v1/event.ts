@@ -1,6 +1,9 @@
+import { appendUser } from "./../../policies/access-control";
 import { Express } from "express";
 
-import { validateJWT } from "./../../policies";
+import { validateJWT, filterRoles, onlyOwner } from "./../../policies";
+
+import { eventsDataSource } from "./../../data-source";
 import { eventController } from "../../controllers";
 import { validation } from "../../middlewares";
 import { eventSchema } from "../../utils/schemas";
@@ -52,7 +55,12 @@ export const eventRoutes = (app: Express) => {
    *   "message": "Internal Server Error"
    * }
    */
-  app.get("/v1/events", validateJWT("access"), eventController.getEvents);
+  app.get(
+    "/v1/events",
+    validateJWT("access"),
+    filterRoles(["user", "partner"]),
+    eventController.getEvents
+  );
 
   /**
    * @api        {get}  /v1/events/:id Get an event
@@ -139,6 +147,7 @@ export const eventRoutes = (app: Express) => {
   app.get(
     "/v1/events/:eventId",
     validateJWT("access"),
+    filterRoles(["partner"]),
     validation({ eventId: eventSchema.eventId }, "params"),
     eventController.getEvent
   );
@@ -251,6 +260,9 @@ export const eventRoutes = (app: Express) => {
   app.put(
     "/v1/events/:id",
     validateJWT("access"),
+    filterRoles(["partner"]),
+    onlyOwner(eventsDataSource),
+    appendUser(),
     validation({ id: eventSchema.eventId }, "params"),
     validation(eventSchema.event),
     eventController.updateEvent
@@ -345,6 +357,8 @@ export const eventRoutes = (app: Express) => {
   app.post(
     "/v1/events",
     validateJWT("access"),
+    filterRoles(["partner"]),
+    appendUser(),
     validation(eventSchema.event),
     eventController.createEvent
   );
