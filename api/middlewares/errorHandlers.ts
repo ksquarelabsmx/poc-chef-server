@@ -4,6 +4,7 @@ import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
 import { config } from "../../config";
+import { logger } from "./../libraries/log";
 import { badRequestFormated } from "./utils";
 
 const debug = Debug("chef:orders:controller:orders");
@@ -71,10 +72,15 @@ const errorHandler = (
   }
   if (statusCode === 400) {
     const data = withErrorStack(payload, err.stack);
-    return res.status(statusCode).json(badRequestFormated(data));
+    const dataFormatted = badRequestFormated(data);
+
+    logger.error(dataFormatted);
+    return res.status(statusCode).json(dataFormatted);
   }
 
-  return res.status(statusCode).json(withErrorStack(payload, err.stack));
+  const dataFormatted = withErrorStack(payload, err.stack);
+  logger.error(dataFormatted);
+  return res.status(statusCode).json(dataFormatted);
 };
 
 export { logErrors, wrapErrors, clientErrorHandler, errorHandler };
