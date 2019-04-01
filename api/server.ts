@@ -4,11 +4,15 @@ import * as Debug from "debug";
 
 import { app } from "./app";
 import { config } from "../config";
+import { setupLogger } from "./libraries/log";
 
 const debug = Debug("chef:orders:server");
 
 // create server
 const server = new http.Server(app);
+
+// create file for save log information
+setupLogger();
 
 // server listening
 server.listen(config.server.port, async function() {

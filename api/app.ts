@@ -1,6 +1,7 @@
 import * as boom from "boom";
 import * as cors from "cors";
 import * as Debug from "debug";
+import * as morgan from "morgan";
 import * as helmet from "helmet";
 import * as express from "express";
 import * as bodyParser from "body-parser";
@@ -14,6 +15,7 @@ import {
   errorHandler
 } from "./middlewares";
 import routes from "./routes/v1";
+import { requestLogStream } from "./libraries/log";
 
 const debug = Debug("chef:orders:app");
 
@@ -27,6 +29,7 @@ app.enable("strict routing");
 // allow cross origin requests
 // configure to only allow requests from certain origins
 app.use(cors());
+app.use(morgan("short", { stream: requestLogStream }));
 
 // secure express app, this adds some http headers for security.
 app.use(

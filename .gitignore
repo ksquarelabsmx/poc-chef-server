@@ -13,3 +13,6 @@ public/apidoc
 
 # nyc coverage
 coverage
+
+# logs
+.poc-chef-server-logs

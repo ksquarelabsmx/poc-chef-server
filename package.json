@@ -44,6 +44,7 @@
   },
   "homepage": "https://gitlab.com/ksjsgroup/poc-chef-backend#readme",
   "devDependencies": {
+    "@types/app-root-path": "^1.2.4",
     "@types/boom": "^7.2.1",
     "@types/chai": "^4.1.7",
     "@types/cors": "^2.8.4",
@@ -55,6 +56,7 @@
     "@types/lodash": "^4.14.123",
     "@types/mocha": "^5.2.6",
     "@types/moment-timezone": "^0.5.10",
+    "@types/morgan": "^1.7.35",
     "@types/uuid": "^3.4.4",
     "@typescript-eslint/eslint-plugin": "^1.5.0",
     "@typescript-eslint/parser": "^1.5.0",
@@ -65,6 +67,7 @@
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
     "jest": "^24.5.0",
+    "morgan": "^1.9.1",
     "nodemon": "^1.18.9",
     "prettier": "^1.16.4",
     "sinon": "^7.2.2",
@@ -75,6 +78,8 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
+    "@types/winston": "^2.4.4",
+    "app-root-path": "^2.2.1",
     "bcrypt": "^3.0.3",
     "bcrypt-promise": "^2.0.0",
     "bluebird": "^3.5.3",
@@ -100,6 +105,7 @@
     "pg": "^7.8.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.42.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "winston": "^3.2.1"
   }
 }
