@@ -845,7 +845,7 @@ describe("/events", () => {
           done();
         });
     });
-    it("Should fail without created_by", done => {
+    it("Should add created_by from jwt data", done => {
       chai
         .request(server)
         .put(`${eventURI}/${id}`)
@@ -876,7 +876,7 @@ describe("/events", () => {
           done();
         });
     });
-    it("Should add created_by from jwt data", done => {
+    it("Should fail with invalid event_name type", done => {
       chai
         .request(server)
         .put(`${eventURI}/${id}`)

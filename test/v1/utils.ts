@@ -48,7 +48,7 @@ export const loginMock: auth.ILogin = {
 };
 
 export const orderMockDTO: order.IOrderDTO = {
-  user_id: "3d916bdb-fd4e-4fbd-b4fc-d05253e4ac1a",
+  user_id: "6d623d08-113c-4565-81b2-e17c90331241",
   event_id: "8c9ae830-dd56-4828-8503-c70355253de9",
   price: 20,
   order_product_id: ["48f04396-e3be-4970-87d5-be2412639303"],

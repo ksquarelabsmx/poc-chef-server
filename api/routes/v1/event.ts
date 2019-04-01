@@ -145,10 +145,10 @@ export const eventRoutes = (app: Express) => {
    * }
    */
   app.get(
-    "/v1/events/:eventId",
+    "/v1/events/:id",
     validateJWT("access"),
     filterRoles(["partner"]),
-    validation({ eventId: eventSchema.eventId }, "params"),
+    validation({ id: eventSchema.eventId }, "params"),
     eventController.getEvent
   );
 
