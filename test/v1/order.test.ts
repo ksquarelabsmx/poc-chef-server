@@ -341,7 +341,7 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail without created_by", done => {
+    it("Should add created_by from jwt data", done => {
       chai
         .request(server)
         .post(orderURI)
@@ -352,11 +352,16 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
-          expect(res.body.errors[0]).to.have.property("error", "is required");
+          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data).to.have.property("user_id", user_id);
+          expect(res.body.data).to.have.property("event_id", event_id);
+          expect(res.body.data).to.have.property("price", price);
+          expect(res.body.data).to.have.deep.property(
+            "order_product_id",
+            order_product_id
+          );
+          expect(res.body.data).to.have.property("created_by", created_by);
           done();
         });
     });
@@ -447,28 +452,6 @@ describe("/orders", () => {
           expect(res.body.errors[0]).to.have.property(
             "error",
             "must be an array"
-          );
-          done();
-        });
-    });
-    it("Should fail with invalid created_by type", done => {
-      chai
-        .request(server)
-        .post(orderURI)
-        .send({ user_id, event_id, price, order_product_id, created_by: 100 })
-        .set("Authorization", `Bearer ${token}`)
-        .end((err, res) => {
-          if (err) {
-            throw err;
-          }
-
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
-          expect(res.body.errors[0]).to.have.property(
-            "error",
-            "must be a string"
           );
           done();
         });
@@ -594,34 +577,6 @@ describe("/orders", () => {
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field");
-          expect(res.body.errors[0]).to.have.property(
-            "error",
-            "must be a valid GUID"
-          );
-          done();
-        });
-    });
-    it("Should fail with created_by no valid UUID", done => {
-      chai
-        .request(server)
-        .post(orderURI)
-        .send({
-          user_id,
-          event_id,
-          price,
-          order_product_id,
-          created_by: "1946fd04-763a-4542-b77b-05332a6c4d8"
-        })
-        .set("Authorization", `Bearer ${token}`)
-        .end((err, res) => {
-          if (err) {
-            throw err;
-          }
-
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
           expect(res.body.errors[0]).to.have.property(
             "error",
             "must be a valid GUID"
@@ -759,7 +714,7 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail without created_by", done => {
+    it("Should add created_by from jwt data", done => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
@@ -770,11 +725,16 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
-          expect(res.body.errors[0]).to.have.property("error", "is required");
+          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data).to.have.property("user_id", user_id);
+          expect(res.body.data).to.have.property("event_id", event_id);
+          expect(res.body.data).to.have.property("price", price);
+          expect(res.body.data).to.have.deep.property(
+            "order_product_id",
+            order_product_id
+          );
+          expect(res.body.data).to.have.property("created_by", created_by);
           done();
         });
     });
@@ -865,28 +825,6 @@ describe("/orders", () => {
           expect(res.body.errors[0]).to.have.property(
             "error",
             "must be an array"
-          );
-          done();
-        });
-    });
-    it("Should fail with invalid created_by type", done => {
-      chai
-        .request(server)
-        .put(`${orderURI}/${id}`)
-        .send({ user_id, event_id, price, order_product_id, created_by: 100 })
-        .set("Authorization", `Bearer ${token}`)
-        .end((err, res) => {
-          if (err) {
-            throw err;
-          }
-
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
-          expect(res.body.errors[0]).to.have.property(
-            "error",
-            "must be a string"
           );
           done();
         });
@@ -1012,34 +950,6 @@ describe("/orders", () => {
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field");
-          expect(res.body.errors[0]).to.have.property(
-            "error",
-            "must be a valid GUID"
-          );
-          done();
-        });
-    });
-    it("Should fail with created_by no valid UUID", done => {
-      chai
-        .request(server)
-        .put(`${orderURI}/${id}`)
-        .send({
-          user_id,
-          event_id,
-          price,
-          order_product_id,
-          created_by: "1946fd04-763a-4542-b77b-05332a6c4d8"
-        })
-        .set("Authorization", `Bearer ${token}`)
-        .end((err, res) => {
-          if (err) {
-            throw err;
-          }
-
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "created_by");
           expect(res.body.errors[0]).to.have.property(
             "error",
             "must be a valid GUID"
