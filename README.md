@@ -108,7 +108,17 @@ You must see the next output:
 
 ## Deploying / Publishing
 
-Add docker and deploy stuffs, for now this is empty
+- [Install docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+- [Install docker compose](https://docs.docker.com/compose/install/)
+
+Execute docker compose:
+
+```bash
+docker-compose build
+docker-compose up
+```
+
+TODO: add server configuration
 
 ## API Tests
 
