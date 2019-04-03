@@ -5,8 +5,10 @@ import * as morgan from "morgan";
 import * as helmet from "helmet";
 import * as express from "express";
 import * as bodyParser from "body-parser";
-const slash = require("express-slash");
+import slash = require("express-slash");
 import { Request, Response } from "express";
+import swaggerJSDoc = require("swagger-jsdoc");
+import * as swaggerUi from "swagger-ui-express";
 
 import {
   logErrors,
@@ -48,8 +50,47 @@ app.use(
 );
 app.use(bodyParser.json());
 
+// Swagger definition
+const swaggerDefinition = {
+  info: {
+    // API informations (required)
+    title: "Poc Chef", // Title (required)
+    version: "1.0.0", // Version (required)
+    description: "App to create food events"
+  },
+  host: "localhost:3000",
+  basePath: "/",
+  securityDefinitions: {
+    bearerAuth: {
+      type: "apiKey",
+      name: "Authorization",
+      scheme: "bearer",
+      in: "header"
+    }
+  }
+};
+
+// Options for the swagger docs
+const options = {
+  // Import swaggerDefinitions
+  swaggerDefinition,
+  // Path to the API docs
+  apis: ["./api/routes/v1/*.ts"]
+};
+
+// Initialize swagger-jsdoc -> returns validated swagger spec in json format
+const swaggerSpec = swaggerJSDoc(options);
+
+// Serve swagger docs the way you like
+app.get("/swagger.json", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerSpec);
+});
+
 // routes
 routes(app);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // v1/name/ redirect to v1/name
 app.use(slash(0));

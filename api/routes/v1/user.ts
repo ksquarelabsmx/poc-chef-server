@@ -7,47 +7,89 @@ import { userController } from "../../controllers";
 
 export const userRoutes = (app: Express) => {
   /**
-   * @api        {post}  /v1/users/register Register user
-   * @apiGroup   User
+   * @swagger
+   * definitions:
+   *   User:
+   *     required:
+   *       - name
+   *       - email
+   *       - password
+   *     properties:
+   *       name:
+   *         type: string
+   *       email:
+   *         type: string
+   *       password:
+   *         type: string
    *
-   * @apiParam   {string}    type              user role
-   *
-   * @apiParam   {Object}    user              user information
-   * @apiParam   {string}    user.name         user name
-   * @apiParam   {string}    user.password     user password
-   * @apiParam   {string}    user.email        user email
-   *
-   * @apiSuccess {Objec}     user              user information
-   * @apiSuccess {string}    user.id           user id
-   * @apiSuccess {string}    user.name         user name
-   * @apiSuccess {string}    user.password     user password
-   * @apiSuccess {string}    user.email        user email
-   * @apiSuccess {number}    user.created_at   user created epoch
-   * @apiSuccess {number}    user.update_at    user updated epoch
-   *
-   * @apiError invalidRole   role              must be one of [partner, partner admin]
-   * @apiError emailInUse    email             email already in use
-   *
-   * @apiParamExample Request
-   * {
-   *   "name": "Juan Perez",
-   *   "password": "4dm1n",
-   *   "email": "admin@ksquareinc.com",
-   *   "role": "partner"
-   * }
-   *
-   * @apiResponseExample Success
-   * HTTP 1.1 201 Created
-   * {
-   *   "id": "f70bf7b4-0274-4dbf-9943-a32a46b4048a",
-   *   "name": "Juan Perez",
-   *   "email": "admin@ksquareinc.com",
-   *   "role": "partner",
-   *   "create_at": 1552602238,
-   *   "update_at": 1552602238
-   * }
-   *
-   * @apiErrorExample invalidRole
+   *   UserDetails:
+   *     required:
+   *       - id
+   *       - name
+   *       - email
+   *       - password
+   *       - created_at
+   *       - updated_at
+   *     properties:
+   *       id:
+   *         type: string
+   *       name:
+   *         type: string
+   *       email:
+   *         type: string
+   *       password:
+   *         type: string
+   *       created_at:
+   *         type: number
+   *       updated_at:
+   *         type: number
+   */
+
+  /**
+   * @swagger
+   * tags:
+   *   name: Users
+   *   description: Users
+   */
+
+  /**
+   * @swagger
+   * /v1/users/register:
+   *   post:
+   *     description: Create user
+   *     security:
+   *       - bearerAuth: []
+   *     tags:
+   *       - Users
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - in: body
+   *         name: event
+   *         schema:
+   *           type: object
+   *           $ref: "#/definitions/User"
+   *         required: true
+   *         description: User object
+   *     responses:
+   *       200:
+   *         description: Create user
+   *         schema:
+   *           type: object
+   *           $ref: "#/definitions/UserDetails"
+   *       400:
+   *         description:
+   *           Bad Request. Role must be one of [partner, partner admin]. Email already in use.
+   *       401:
+   *         description: Access token is missing or invalid
+   *       500:
+   *         description: Internal Server Error
+   */
+
+  /**
+   * invalidRole
    * HTTP 1.1 400 Bad Request
    *
    * {
@@ -61,7 +103,7 @@ export const userRoutes = (app: Express) => {
    *   ]
    * }
    *
-   * @apiErrorExample emailInUse
+   * emailInUse
    * HTTP 1.1 400 Bad Request
    *
    * {
