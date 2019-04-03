@@ -14,44 +14,95 @@ import {
 // TODO: update docs according to the new model
 export const orderRoutes = (app: Express) => {
   /**
-   * @api        {get}  /v1/orders  Get orders
-   * @apiGroup   Orders
+   * @swagger
+   * definitions:
+   *   Order:
+   *     required:
+   *       - user_id
+   *       - event_id
+   *       - price
+   *       - order_product_id
+   *     properties:
+   *       id:
+   *         type: string
+   *       user_id:
+   *         type: string
+   *       event_id:
+   *         type: string
+   *       price:
+   *         type: number
+   *       order_product_id:
+   *         type: array
+   *         items:
+   *           type: string
    *
-   * @apiSuccess  {Object[]}      order	                                orders collection
-   * @apiSuccess  {string}	      order.id	                            order id
-   * @apiSuccess  {number}	      order.shrimp_tortas_total	            order shrimp tortas total
-   * @apiSuccess  {number}        order.shrimp_torta_unitary_price	    order shrimp torta unitary price
-   * @apiSuccess  {number}        order.poc_chuc_tortas_total		        order poc-chuc tortas total
-   * @apiSuccess  {number}        order.poc_chuc_torta_unitary_price	  order poc chuc torta unitary price
-   * @apiSuccess  {Object}	      order.event	                          event information
-   * @apiSuccess  {string}        order.event.id	                      event id
-   * @apiSuccess  {number}        order.event.createdAt	                event creation date
-   * @apiSuccess  {owner}         order.owner	Object	                  information
-   * @apiSuccess  {string}	      order.owner.id	                      owner id
-   * @apiSuccess  {string}	      order.owner.name	                    owner name
-   * @apiSuccess  {boolean}	      order.paid                            order paid status
-   * @apiSuccess  {boolean}       order.canceled	                      order canceled status
-   *
-   * @apiSuccessExample Success
-   * HTTP 1.1 200 Ok
-   *[{
-   *    "id": "25122a83-97b8-4745-aad6-26a82b1e114f",
-   *    "total": 45,
-   *    "shrimpTortasTotal": 1,
-   *    "shrimpTortaUnitaryPrice": 25,
-   *    "pocChucTortasTotal": 1,
-   *    "pocChucTortaUnitaryPrice": 20,
-   *    "event": {
-   *        "id": "404e61b8-3785-42d0-8d09-3fb0d1eb56d3",
-   *        "createdAt": 1548000000
-   *    },
-   *    "owner": {
-   *        "id": "c0353fb3-c5c9-412e-af2f-e56a5287b807",
-   *        "name": "Juan Perez"
-   *    },
-   *    "paid": false,
-   *    "canceled": false
-   *}]
+   *   OrderDetails:
+   *     required:
+   *       - id
+   *       - user_id
+   *       - event_id
+   *       - price
+   *       - order_product_id
+   *       - created_by
+   *       - paid
+   *       - cancelled
+   *       - created_at
+   *       - updated_at
+   *     properties:
+   *       id:
+   *         type: string
+   *       user_id:
+   *         type: string
+   *       event_id:
+   *         type: string
+   *       price:
+   *         type: number
+   *       order_product_id:
+   *         type: array
+   *         items:
+   *           type: string
+   *       created_by:
+   *         type: string
+   *       paid:
+   *         type: boolean
+   *       cancelled:
+   *         type: boolean
+   *       created_at:
+   *         type: number
+   *       updated_at:
+   *         type: number
+   */
+
+  /**
+   * @swagger
+   * tags:
+   *   name: Orders
+   *   description: Orders
+   */
+
+  /**
+   * @swagger
+   * /v1/orders:
+   *   get:
+   *     description: Return all orders
+   *     security:
+   *       - bearerAuth: []
+   *     tags:
+   *       - Orders
+   *     produces:
+   *       - application/json
+   *     responses:
+   *       200:
+   *         description: Get all orders
+   *         schema:
+   *           type: array
+   *           items:
+   *             type: object
+   *             $ref: "#/definitions/OrderDetails"
+   *       401:
+   *         description: Access token is missing or invalid
+   *       500:
+   *         description: Internal Server Error
    */
 
   app.get(
@@ -60,46 +111,38 @@ export const orderRoutes = (app: Express) => {
     filterRoles(["partner"]),
     orderController.getOrders
   );
+
   /**
-   * @api        {get}  /v1/orders/:id Get order
-   * @apiGroup   Orders
-   *
-   * @apiSuccess  {Object}        order	                                orders collection
-   * @apiSuccess  {string}	      order.id	                            order id
-   * @apiSuccess  {number}	      order.shrimp_tortas_total	            order shrimp tortas total
-   * @apiSuccess  {number}        order.shrimp_torta_unitary_price	    order shrimp torta unitary price
-   * @apiSuccess  {number}        order.poc_chuc_tortas_total		        order poc-chuc tortas total
-   * @apiSuccess  {number}        order.poc_chuc_torta_unitary_price	  order poc chuc torta unitary price
-   * @apiSuccess  {Object}	      order.event	                          event information
-   * @apiSuccess  {string}        order.event.id	                      event id
-   * @apiSuccess  {number}        order.event.createdAt	                event creation date
-   * @apiSuccess  {owner}         order.owner	Object	                  information
-   * @apiSuccess  {string}	      order.owner.id	                      owner id
-   * @apiSuccess  {string}	      order.owner.name	                    owner name
-   * @apiSuccess  {boolean}	      order.paid                            order paid status
-   * @apiSuccess  {boolean}       order.canceled	                      order canceled status
-   *
-   * @apiSuccessExample Success
-   * HTTP 1.1 200 Ok
-   * {
-   *    "id": "25122a83-97b8-4745-aad6-26a82b1e114f",
-   *    "total": 45,
-   *    "shrimpTortasTotal": 1,
-   *    "shrimpTortaUnitaryPrice": 25,
-   *    "pocChucTortasTotal": 1,
-   *    "pocChucTortaUnitaryPrice": 20,
-   *    "event": {
-   *        "id": "404e61b8-3785-42d0-8d09-3fb0d1eb56d3",
-   *        "createdAt": 1548000000
-   *    },
-   *    "owner": {
-   *        "id": "c0353fb3-c5c9-412e-af2f-e56a5287b807",
-   *        "name": "Juan Perez"
-   *    },
-   *    "paid": false,
-   *    "canceled": false
-   * }
+   * @swagger
+   * /v1/orders/{id}:
+   *   get:
+   *     description: Return order
+   *     security:
+   *       - bearerAuth: []
+   *     tags:
+   *       - Orders
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         type: string
+   *         required: true
+   *         description: UUID of the order to get
+   *     responses:
+   *       200:
+   *         description: Get order
+   *         schema:
+   *           type: object
+   *           $ref: "#/definitions/OrderDetails"
+   *       401:
+   *         description: Access token is missing or invalid
+   *       404:
+   *         description: Not Found
+   *       500:
+   *         description: Internal Server Error
    */
+
   app.get(
     "/v1/orders/:id",
     validateJWT("access"),
@@ -107,79 +150,42 @@ export const orderRoutes = (app: Express) => {
     validation({ id: orderSchema.orderId }, "params"),
     orderController.getOrder
   );
+
   /**
-   * @api        {post}  /v1/orders Create order
-   * @apiGroup   Orders
-   *
-   * @apiParam  {Object}        order	                                orders collection
-   * @apiParam  {number}	      order.shrimp_tortas_total	            order shrimp tortas total
-   * @apiParam  {number}        order.shrimp_torta_unitary_price	    order shrimp torta unitary price
-   * @apiParam  {number}        order.poc_chuc_tortas_total		        order poc-chuc tortas total
-   * @apiParam  {number}        order.poc_chuc_torta_unitary_price	  order poc chuc torta unitary price
-   * @apiParam  {Object}	      order.event	                          event information
-   * @apiParam  {string}        order.event.id	                      event id
-   * @apiParam  {number}        order.event.createdAt	                event creation date
-   * @apiParam  {owner}         order.owner	Object	                  information
-   * @apiParam  {string}	      order.owner.id	                      owner id
-   * @apiParam  {string}	      order.owner.name	                    owner name
-   * @apiParam  {boolean}	      order.paid                            order paid status
-   * @apiParam  {boolean}       order.canceled	                      order canceled status
-   *
-   * @apiSuccess  {Object}        order	                                orders collection
-   * @apiSuccess  {string}	      order.id	                            order id
-   * @apiSuccess  {number}	      order.shrimp_tortas_total	            order shrimp tortas total
-   * @apiSuccess  {number}        order.shrimp_torta_unitary_price	    order shrimp torta unitary price
-   * @apiSuccess  {number}        order.poc_chuc_tortas_total		        order poc-chuc tortas total
-   * @apiSuccess  {number}        order.poc_chuc_torta_unitary_price	  order poc chuc torta unitary price
-   * @apiSuccess  {Object}	      order.event	                          event information
-   * @apiSuccess  {string}        order.event.id	                      event id
-   * @apiSuccess  {number}        order.event.createdAt	                event creation date
-   * @apiSuccess  {owner}         order.owner	Object	                  information
-   * @apiSuccess  {string}	      order.owner.id	                      owner id
-   * @apiSuccess  {string}	      order.owner.name	                    owner name
-   * @apiSuccess  {boolean}	      order.paid                            order paid status
-   * @apiSuccess  {boolean}       order.canceled	                      order canceled status
-   *
-   * @apiParamExample Input
-   * {
-   *    "total": 45,
-   *    "shrimpTortasTotal": 1,
-   *    "shrimpTortaUnitaryPrice": 25,
-   *    "pocChucTortasTotal": 1,
-   *    "pocChucTortaUnitaryPrice": 20,
-   *    "event": {
-   *        "id": "404e61b8-3785-42d0-8d09-3fb0d1eb56d3",
-   *        "createdAt": 1548000000
-   *    },
-   *    "owner": {
-   *        "id": "c0353fb3-c5c9-412e-af2f-e56a5287b807",
-   *        "name": "Juan Perez"
-   *    },
-   *    "paid": false,
-   *    "canceled": false
-   * }
-   *
-   * @apiSuccessExample Success
-   * HTTP 1.1 200 Ok
-   * {
-   *    "id": "25122a83-97b8-4745-aad6-26a82b1e114f",
-   *    "total": 45,
-   *    "shrimpTortasTotal": 1,
-   *    "shrimpTortaUnitaryPrice": 25,
-   *    "pocChucTortasTotal": 1,
-   *    "pocChucTortaUnitaryPrice": 20,
-   *    "event": {
-   *        "id": "404e61b8-3785-42d0-8d09-3fb0d1eb56d3",
-   *        "createdAt": 1548000000
-   *    },
-   *    "owner": {
-   *        "id": "c0353fb3-c5c9-412e-af2f-e56a5287b807",
-   *        "name": "Juan Perez"
-   *    },
-   *    "paid": false,
-   *    "canceled": false
-   * }
+   * @swagger
+   * /v1/orders:
+   *   post:
+   *     description: Create order
+   *     security:
+   *       - bearerAuth: []
+   *     tags:
+   *       - Orders
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - in: body
+   *         name: Order
+   *         schema:
+   *           type: object
+   *           $ref: "#/definitions/Order"
+   *         required: true
+   *         description: Order object
+   *     responses:
+   *       200:
+   *         description: Create order
+   *         schema:
+   *           type: object
+   *           $ref: "#/definitions/OrderDetails"
+   *       400:
+   *         description: Bad Request. Order name is required.
+   *       401:
+   *         description: Access token is missing or invalid
+   *       500:
+   *         description: Internal Server Error
    */
+
   app.post(
     "/v1/orders",
     validateJWT("access"),
@@ -187,98 +193,96 @@ export const orderRoutes = (app: Express) => {
     validation(orderSchema.order),
     orderController.createOrder
   );
+
   /**
-   * @api        {post}  /v1/orders/actions Actions
-   * @apiGroup   Orders
+   * @swagger
+   * /v1/orders/action:
+   *   post:
+   *     description: Action order
+   *     security:
+   *       - bearerAuth: []
+   *     tags:
+   *       - Orders
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - in: body
+   *         name: Order
+   *         schema:
+   *           properties:
+   *             action:
+   *               type: string
+   *             ids:
+   *               type: array
+   *               items:
+   *                 type: string
+   *         required: true
+   *         description: Order action object
+   *     responses:
+   *       200:
+   *         description: Order Action
+   *         schema:
+   *           type: array
+   *           items:
+   *             type: string
    *
-   * @apiParam   {Object}    action            action information
-   * @apiParam   {string}    action.action     action ("mark_as_paid" | "mark_as_not_paid")
-   * @apiParam   {string[]}  action.ids        events ids
-   *
-   * @apiParamExample Input
-   * {
-   *  "action": "mark_as_paid",
-   *  "ids": ["1", "2"]
-   * }
-   *
+   *       400:
+   *         description: Bad Request. That action does not exists.
+   *       401:
+   *         description: Access token is missing or invalid
+   *       500:
+   *         description: Internal Server Error
    */
+
   app.post(
     "/v1/orders/actions",
     validateJWT("access"),
     filterRoles(["partner"]),
     orderController.handleAction
   );
+
   /**
-   * @api        {post}  /v1/orders Update order
-   * @apiGroup   Orders
-   *
-   * @apiParam  {Object}        order	                                orders collection
-   * @apiParam  {number}	      order.shrimp_tortas_total	            order shrimp tortas total
-   * @apiParam  {number}        order.shrimp_torta_unitary_price	    order shrimp torta unitary price
-   * @apiParam  {number}        order.poc_chuc_tortas_total		        order poc-chuc tortas total
-   * @apiParam  {number}        order.poc_chuc_torta_unitary_price	  order poc chuc torta unitary price
-   * @apiParam  {Object}	      order.event	                          event information
-   * @apiParam  {string}        order.event.id	                      event id
-   * @apiParam  {number}        order.event.createdAt	                event creation date
-   * @apiParam  {owner}         order.owner	Object	                  information
-   * @apiParam  {string}	      order.owner.id	                      owner id
-   * @apiParam  {string}	      order.owner.name	                    owner name
-   * @apiParam  {boolean}	      order.paid                            order paid status
-   * @apiParam  {boolean}       order.canceled	                      order canceled status
-   *
-   * @apiSuccess  {Object}      order	                                orders collection
-   * @apiSuccess  {string}	    order.id	                            order id
-   * @apiSuccess  {number}	    order.shrimp_tortas_total	            order shrimp tortas total
-   * @apiSuccess  {number}      order.shrimp_torta_unitary_price	    order shrimp torta unitary price
-   * @apiSuccess  {number}      order.poc_chuc_tortas_total		        order poc-chuc tortas total
-   * @apiSuccess  {number}      order.poc_chuc_torta_unitary_price	  order poc chuc torta unitary price
-   * @apiSuccess  {Object}	    order.event	                          event information
-   * @apiSuccess  {string}      order.event.id	                      event id
-   * @apiSuccess  {number}      order.event.createdAt	                event creation date
-   * @apiSuccess  {owner}       order.owner	Object	                  information
-   * @apiSuccess  {string}	    order.owner.id	                      owner id
-   * @apiSuccess  {string}	    order.owner.name	                    owner name
-   * @apiSuccess  {boolean}	    order.paid                            order paid status
-   * @apiSuccess  {boolean}     order.canceled	                      order canceled status
-   * @apiParamExample Input
-   * {
-   *    "total": 45,
-   *    "shrimpTortasTotal": 1,
-   *    "shrimpTortaUnitaryPrice": 25,
-   *    "pocChucTortasTotal": 1,
-   *    "pocChucTortaUnitaryPrice": 20,
-   *    "event": {
-   *        "id": "404e61b8-3785-42d0-8d09-3fb0d1eb56d3",
-   *        "createdAt": 1548000000
-   *    },
-   *    "owner": {
-   *        "id": "c0353fb3-c5c9-412e-af2f-e56a5287b807",
-   *        "name": "Juan Perez"
-   *    },
-   *    "paid": false,
-   *    "canceled": false
-   * }
-   *
-   * @apiSuccessExample Success
-   * HTTP 1.1 200 Ok
-   * {
-   *    "id": "25122a83-97b8-4745-aad6-26a82b1e114f",
-   *    "total": 45,
-   *    "shrimpTortasTotal": 1,
-   *    "shrimpTortaUnitaryPrice": 25,
-   *    "pocChucTortasTotal": 1,
-   *    "pocChucTortaUnitaryPrice": 20,
-   *    "event": {
-   *        "id": "404e61b8-3785-42d0-8d09-3fb0d1eb56d3",
-   *        "createdAt": 1548000000
-   *    },
-   *    "owner": {
-   *        "id": "c0353fb3-c5c9-412e-af2f-e56a5287b807",
-   *        "name": "Juan Perez"
-   *    },
-   *    "paid": false,
-   *    "canceled": false
-   * }
+   * @swagger
+   * /v1/orders/{id}:
+   *   put:
+   *     description: Update orders
+   *     security:
+   *       - bearerAuth: []
+   *     tags:
+   *       - Orders
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         type: string
+   *         required: true
+   *         description: UUID of the order to get
+   *       - in: body
+   *         name: Order object
+   *         schema:
+   *           type: object
+   *           $ref: "#/definitions/Order"
+   *         required: true
+   *         description: Order object
+   *     responses:
+   *       200:
+   *         description: Update Order
+   *         schema:
+   *           type: object
+   *           $ref: "#/definitions/OrderDetails"
+   *       400:
+   *         description: Bad Request. Event has already finished
+   *       401:
+   *         description: Access token is missing or invalid
+   *       404:
+   *         description: Not Found
+   *       500:
+   *         description: Internal Server Error
    */
 
   app.put(

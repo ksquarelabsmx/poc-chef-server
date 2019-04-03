@@ -6,6 +6,89 @@ import { credentialsSchema } from "../../utils/schemas";
 
 export const authRoutes = (app: Express) => {
   /**
+   * @swagger
+   * definitions:
+   *   Login:
+   *     required:
+   *       - email
+   *       - password
+   *     properties:
+   *       email:
+   *         type: string
+   *       password:
+   *         type: string
+   *   LoginResponse:
+   *     required:
+   *       - jwt
+   *       - user
+   *     properties:
+   *       jwt:
+   *         type: string
+   *       user:
+   *         type: object
+   *         properties:
+   *           id:
+   *             type: string
+   *           name:
+   *             type: string
+   *           email:
+   *             type: string
+   *           role:
+   *             type: string
+   *           auth_provider:
+   *             type: string
+   *           created_at:
+   *             type: number
+   *           updated_at:
+   *             type: number
+   */
+
+  /**
+   * @swagger
+   * tags:
+   *   name: Auth
+   *   description: Auth
+   */
+
+  /**
+   * @swagger
+   * /v1/auth/login:
+   *   post:
+   *     description: Create event
+   *     security:
+   *       - bearerAuth: []
+   *     tags:
+   *       - Auth
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - in: body
+   *         name: login
+   *         schema:
+   *           type: object
+   *           $ref: "#/definitions/Login"
+   *         required: true
+   *         description: Login object
+   *         example:
+   *           email: admin@example.com
+   *           password: adminpassword
+   *     responses:
+   *       200:
+   *         description: Login
+   *         schema:
+   *           type: object
+   *           $ref: "#/definitions/LoginResponse"
+   *       400:
+   *         description: Bad Request. Invalid email.
+   *       401:
+   *         description: Unauthorized. Invalid password
+   *       500:
+   *         description: Internal Server Error
+   */
+
+  /**
    * @api        {post}  /v1/auth/login login
    * @apiGroup   Auth
    *
@@ -31,32 +114,6 @@ export const authRoutes = (app: Express) => {
    *  "email": "admin@example.com",
    *  "role": "admin partner"
    * }
-   *
-   * @apiError  invalidEmail      invalid email
-   * @apiError  invalidPassword   invalid password
-   * 
-   * @apiErrorExample {json} invalidEmail
-   * HTTP 1.1 400 Bad Request
-   * {
-   *  "status": 400,
-   *  "message": "Bad Request",
-   *  "errors": {
-   *     "field": "email",
-   *     "error": "invalid email"
-   *   }
-   * }
-   *
-   * @apiErrorExample {json} invalidPassword
-   * HTTP 1.1 401 Unauthorized
-   * {
-   *  "status": 401,
-   *  "message": "Unauthorized",
-   *  "errors": {
-   *     "field": "password",
-   *     "error": "invalid password"
-   *   }
-   * }
-
    */
   app.post(
     "/v1/auth/login",
