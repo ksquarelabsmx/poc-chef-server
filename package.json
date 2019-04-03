@@ -58,6 +58,7 @@
     "@types/moment-timezone": "^0.5.10",
     "@types/morgan": "^1.7.35",
     "@types/uuid": "^3.4.4",
+    "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^1.5.0",
     "@typescript-eslint/parser": "^1.5.0",
     "babel-cli": "^6.26.0",
