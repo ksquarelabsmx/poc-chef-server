@@ -1,9 +1,9 @@
 import { OrdersController } from "./orders";
 import { EventsController } from "./events";
-import { eventsDataSource, ordersDataSource } from "../data-sources";
-import { ordersRepository } from "../repositories";
+import { ordersDataSource } from "../data-sources";
+import { ordersRepository, eventsRepository } from "../repositories";
 
-const eventsController = EventsController(eventsDataSource);
+const eventsController = EventsController(eventsRepository);
 const ordersController = OrdersController(ordersDataSource, ordersRepository);
 
 export { ordersController, eventsController };
