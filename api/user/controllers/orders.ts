@@ -90,3 +90,30 @@ export const updateOrderById = async (req, res) => {
     order: updateOrder
   });
 };
+
+export const cancelOrderById = async (req, res) => {
+  const docs = await ordersDataSource.find({ id: req.params.id });
+  const order = docs[0];
+
+  if (!order) {
+    return res.json({ ok: false, status: "404", message: "Not Found" });
+  }
+
+  if (order.cancelled) {
+    return res.json({
+      ok: false,
+      status: "400",
+      message: "Bad Request",
+      error: "Order already cancelled"
+    });
+  }
+
+  const updatedOrder = await ordersDataSource.update({
+    ...order,
+    cancelled: true
+  });
+
+  return res.json({
+    order: updatedOrder
+  });
+};
