@@ -18,6 +18,7 @@ import {
 } from "./middlewares";
 import routes from "./routes/v1";
 import { requestLogStream } from "./libraries/log";
+import { user } from "./user/app";
 
 const debug = Debug("chef:orders:app");
 
@@ -90,6 +91,8 @@ app.get("/swagger.json", (req, res) => {
 // routes
 routes(app);
 
+app.use("/user/api/", user);
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // v1/name/ redirect to v1/name
@@ -99,6 +102,7 @@ app.use((req: Request, res: Response) => {
   const {
     output: { statusCode, payload }
   } = boom.notFound();
+  console.log(req.path);
   res.status(statusCode).json(payload);
 });
 
