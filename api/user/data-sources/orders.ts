@@ -7,7 +7,7 @@ const orders = [
     date_created: 1554736045107,
     event_id: "1",
     products: [
-      { id: 1, name: "Poc Chuc Torta", price: 25, quantity: 2, subtotal: 50 }
+      { id: "1", name: "Poc Chuc Torta", price: 25, quantity: 2, subtotal: 50 }
     ],
     total: 50
   }
