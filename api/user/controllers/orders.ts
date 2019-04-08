@@ -1,122 +1,64 @@
-import { ordersDataSource, productsDataSource } from "../data-sources";
-
-const calculateTotal = products => {
-  return products.reduce((acc, product) => {
-    return acc + product.quantity * product.price;
-  }, 0);
-};
-
-const normalizeProducts = (records, products) => {
-  return records
-    .map(docs => docs[0])
-    .map(prod => {
-      const rawProduct = products.filter(rawProd => rawProd.id === prod.id)[0];
-
-      return {
-        ...prod,
-        quantity: rawProduct.quantity
-      };
-    });
-};
-
-export const OrdersController = ordersDataSource => {
+export const OrdersController = (ordersDataSource, ordersRepository) => {
   const getAll = async (_req, res) => {
-    const orders = await ordersDataSource.find();
+    const orders = await ordersRepository.getAll();
     res.json({ orders });
   };
 
   const createOrder = async (req, res) => {
-    const payload = req.body;
-
-    const records = await Promise.all(
-      payload.products.map(async order =>
-        productsDataSource.find({ id: order.id })
-      )
-    );
-
-    const products = normalizeProducts(records, payload.products);
-
-    const order = await ordersDataSource.save({
-      ...payload,
-      products
-    });
-
+    const order = await ordersRepository.createOne(req.body);
     res.json({
       order
     });
   };
 
   const updateOrderById = async (req, res) => {
-    const payload = req.body;
-    const records = await ordersDataSource.find({ id: req.params.id });
-    const order = records[0];
+    try {
+      const order = await ordersRepository.updateOneById(
+        req.params.id,
+        req.body
+      );
+      return res.json({
+        order
+      });
+    } catch (err) {
+      if (err.type === "ORDER_NOT_FOUND") {
+        return res.json({ ok: false, status: "404", message: "Not Found" });
+      }
 
-    if (!order) {
-      return res.json({ ok: false, status: "404", message: "Not Found" });
+      return res.json({
+        ok: false,
+        status: "500",
+        message: "Internal Server Error"
+      });
     }
-
-    const updatedProducts = order.products
-      .filter(product => {
-        return (
-          order.products.findIndex(oldProduct => {
-            return oldProduct.id === product.id;
-          }) !== -1
-        );
-      })
-      .map(product => {
-        const index = payload.products.findIndex(raw => raw.id === product.id);
-
-        if (index == -1) {
-          return null;
-        }
-
-        const quantity = payload.products[index].quantity;
-        const price = product.price;
-
-        return {
-          ...product,
-          quantity,
-          subtotal: quantity * price
-        };
-      })
-      .filter(product => product);
-
-    const updateOrder = await ordersDataSource.update({
-      ...order,
-      products: updatedProducts,
-      total: calculateTotal(updatedProducts)
-    });
-
-    return res.json({
-      order: updateOrder
-    });
   };
 
   const cancelOrderById = async (req, res) => {
-    const docs = await ordersDataSource.find({ id: req.params.id });
-    const order = docs[0];
+    try {
+      const order = await ordersRepository.cancelOrderById(req.params.id);
+      return res.json({
+        order
+      });
+    } catch (err) {
+      if (err.type === "ORDER_ALREADY_CANCELLED") {
+        return res.json({
+          ok: false,
+          status: "400",
+          message: "Bad Request",
+          error: "Order already cancelled"
+        });
+      }
 
-    if (!order) {
-      return res.json({ ok: false, status: "404", message: "Not Found" });
-    }
+      if (err.type === "ORDER_NOT_FOUND") {
+        return res.json({ ok: false, status: "404", message: "Not Found" });
+      }
 
-    if (order.cancelled) {
       return res.json({
         ok: false,
-        status: "400",
-        message: "Bad Request",
-        error: "Order already cancelled"
+        status: "500",
+        message: "Internal Server Error"
       });
     }
-
-    const updatedOrder = await ordersDataSource.update({
-      ...order,
-      cancelled: true
-    });
-
-    return res.json({
-      order: updatedOrder
-    });
   };
 
   return {
