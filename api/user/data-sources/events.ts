@@ -4,14 +4,24 @@ const events = [
     name: "Tortas",
     date_created: 1554736045107,
     expiration_date: 1554763958293,
-    orders: [{ id: 1, name: "Poc Chuc Torta", price: 25 }]
+    orders: [
+      {
+        id: 1,
+        products: [{ id: 1, name: "Poc Chuc Torta", price: 25 }]
+      }
+    ]
   },
   {
     id: "2",
     name: "Fondita Rubí",
     date_created: 1555763958293,
     expiration_date: 1555763958293,
-    orders: [{ id: 1, name: "Frijol Con Puerco", price: 25 }]
+    orders: [
+      {
+        id: 2,
+        products: [{ id: 1, name: "Frijol Con Puerco", price: 25 }]
+      }
+    ]
   }
 ];
 
