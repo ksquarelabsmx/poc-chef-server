@@ -1,4 +1,4 @@
-export const OrdersController = (ordersDataSource, ordersRepository) => {
+export const OrdersController = ordersRepository => {
   const getAll = async (_req, res) => {
     const orders = await ordersRepository.getAll();
     res.json({ orders });
