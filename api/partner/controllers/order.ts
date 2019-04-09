@@ -2,10 +2,10 @@ import chalk from "chalk";
 import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
-import { uriBuilder, response } from "./../utils";
-import { orderMapper } from "./../mappers";
-import { orderRepository } from "./../repository";
-import { order } from "./../interfaces";
+import { uriBuilder, response } from "../utils";
+import { orderMapper } from "../mappers";
+import { orderRepository } from "../repository";
+import { order } from "../interfaces";
 
 const debug = Debug("chef:orders:controller:orders");
 

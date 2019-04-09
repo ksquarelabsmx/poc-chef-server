@@ -1,8 +1,8 @@
 import * as fp from "lodash";
 
 import { ISession } from "../interfaces/auth";
-import { authErrors } from "./../utils/errors";
-import { response, uriBuilder } from "./../utils";
+import { authErrors } from "../utils/errors";
+import { response, uriBuilder } from "../utils";
 import { Request, Response, NextFunction } from "express";
 
 export const filterRoles = (roles: string[]) => (

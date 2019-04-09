@@ -2,7 +2,7 @@ import * as boom from "boom";
 import * as Joi from "joi";
 import { Request, Response, NextFunction } from "express";
 
-import { hasKey } from "./../utils";
+import { hasKey } from "../utils";
 
 interface IError {
   field: string;

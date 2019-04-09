@@ -1,7 +1,7 @@
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 
-import { event } from "./../interfaces";
+import { event } from "../interfaces";
 
 const events: event.IEventDetails[] = [
   {

@@ -1,9 +1,9 @@
 import * as fp from "lodash/fp";
 import * as boom from "boom";
 
-import { error, response } from "./../utils";
-import { order, event } from "./../interfaces";
-import { ordersDataSource, eventsDataSource } from "./../data-source";
+import { error, response } from "../utils";
+import { order, event } from "../interfaces";
+import { ordersDataSource, eventsDataSource } from "../data-source";
 
 const getOrders = async (): Promise<order.IOrderDetails[]> => {
   return Promise.resolve(ordersDataSource.find());

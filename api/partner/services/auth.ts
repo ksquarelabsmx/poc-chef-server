@@ -9,11 +9,11 @@ import {
   TokenPayload
 } from "google-auth-library/build/src/auth/loginticket";
 
-import { config } from "../../config";
-import { error, response } from "../partner/utils";
-import { user, auth } from "../partner/interfaces";
-import { usersDataSource, authDataSource } from "../partner/data-source";
-import { userMapper } from "../partner/mappers";
+import { config } from "../../../config";
+import { error, response } from "../utils";
+import { user, auth } from "../interfaces";
+import { usersDataSource, authDataSource } from "../data-source";
+import { userMapper } from "../mappers";
 
 // TODO: add encrypt decrypt
 const authenticate = (password: string, userPassword: string) => {

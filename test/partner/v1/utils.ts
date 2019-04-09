@@ -1,7 +1,7 @@
 import * as moment from "moment";
 
-import { event, order, user, auth } from "./../../api/interfaces";
-import { authService } from "../../api/services";
+import { event, order, auth } from "../../../api/partner/interfaces";
+import { authService } from "../../../api/partner/services";
 
 export const server: string = "http://localhost:3000";
 export const healthURI: string = "/v1/ping";

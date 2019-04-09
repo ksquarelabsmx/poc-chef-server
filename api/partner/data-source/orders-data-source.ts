@@ -1,7 +1,7 @@
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 
-import { order } from "./../interfaces";
+import { order } from "../interfaces";
 
 const orders: order.IOrderDetails[] = [
   {

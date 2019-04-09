@@ -1,6 +1,6 @@
 import { Express } from "express";
 
-import { authController } from "./../../controllers";
+import { authController } from "../../controllers";
 import { validation } from "../../middlewares";
 import { credentialsSchema } from "../../utils/schemas";
 
