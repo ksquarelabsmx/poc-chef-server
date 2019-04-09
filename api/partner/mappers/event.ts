@@ -1,29 +1,37 @@
-import { event } from "./../interfaces";
+import { IEvent, IEventDTO } from "../../common/models/event";
+import { orderMapper } from "./order";
 
-const toEntity = (eventDTO: event.IEventDTO): event.IEvent => {
+const toEntity = (eventDTO: IEventDTO): IEvent => {
   return {
     id: eventDTO.id,
-    eventName: eventDTO.event_name,
+    name: eventDTO.name,
     startDate: eventDTO.start_date,
     expirationDate: eventDTO.expiration_date,
     startHour: eventDTO.start_hour,
     endHour: eventDTO.end_hour,
-    createdBy: eventDTO.created_by
+    createdBy: eventDTO.created_by,
+    total: eventDTO.total,
+    markedAsFinished: eventDTO.marked_as_finished,
+    cancelled: eventDTO.cancelled,
+    orders: eventDTO.orders.map(orderMapper.toEntity),
+    createdAt: eventDTO.created_at,
+    updatedAt: eventDTO.updated_at
   };
 };
 
-const toDTO = (eventEntity: event.IEventDetails): event.IEventDetailsDTO => {
+const toDTO = (eventEntity: IEvent): IEventDTO => {
   return {
     id: eventEntity.id,
-    event_name: eventEntity.eventName,
+    name: eventEntity.name,
     start_date: eventEntity.startDate,
     expiration_date: eventEntity.expirationDate,
     start_hour: eventEntity.startHour,
     end_hour: eventEntity.endHour,
     total: eventEntity.total,
     created_by: eventEntity.createdBy,
-    finished: eventEntity.finished,
+    marked_as_finished: eventEntity.markedAsFinished,
     cancelled: eventEntity.cancelled,
+    orders: eventEntity.orders.map(orderMapper.toDTO),
     created_at: eventEntity.createdAt,
     updated_at: eventEntity.updatedAt
   };

@@ -1,28 +1,33 @@
-import { order } from "./../interfaces";
+import { IOrder, IOrderDto } from "../../common/models/order";
+import { orderProductMapper } from "./order-product";
 
-const toEntity = (orderDTO: order.IOrderDTO): order.IOrder => {
+const toEntity = (orderDTO: IOrderDto): IOrder => {
   return {
     id: orderDTO.id,
     userId: orderDTO.user_id,
     eventId: orderDTO.event_id,
-    price: orderDTO.price,
-    orderProductId: orderDTO.order_product_id,
-    createdBy: orderDTO.created_by
+    total: orderDTO.total,
+    createdBy: orderDTO.created_by,
+    products: orderDTO.products.map(orderProductMapper.toEntity),
+    paid: orderDTO.paid,
+    cancelled: orderDTO.cancelled,
+    createdAt: orderDTO.created_at,
+    updatedAt: orderDTO.updated_at
   };
 };
 
-const toDTO = (orderEntity: order.IOrderDetails): order.IOrderDetailsDTO => {
+const toDTO = (orderEntity: IOrder): IOrderDto => {
   return {
     id: orderEntity.id,
     user_id: orderEntity.userId,
     event_id: orderEntity.eventId,
-    price: orderEntity.price,
-    order_product_id: orderEntity.orderProductId,
-    created_at: orderEntity.createdAt,
-    updated_at: orderEntity.updatedAt,
+    total: orderEntity.total,
     created_by: orderEntity.createdBy,
     paid: orderEntity.paid,
-    cancelled: orderEntity.cancelled
+    products: orderEntity.products.map(orderProductMapper.toDTO),
+    cancelled: orderEntity.cancelled,
+    created_at: orderEntity.createdAt,
+    updated_at: orderEntity.updatedAt
   };
 };
 

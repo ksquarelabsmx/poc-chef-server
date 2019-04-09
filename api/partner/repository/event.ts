@@ -2,17 +2,22 @@ import * as fp from "lodash/fp";
 import * as boom from "boom";
 
 import { error, response } from "../utils";
-import { event, order } from "../interfaces";
+import { IOrder } from "../../common/models/order";
+import { IEvent } from "../../common/models/event";
 import { eventsDataSource, ordersDataSource } from "../data-source";
 
+const isFinished = (event: IEvent) => {
+  return event.expirationDate < Date.now() || event.markedAsFinished;
+};
+
 // TODO: Define returns
-const getEvents = async (): Promise<event.IEventDetails[]> => {
+const getEvents = async (): Promise<IEvent[]> => {
   return Promise.resolve(eventsDataSource.find());
 };
 
 const getCurrentEvents = async (): Promise<any> => {
   try {
-    const events: event.IEventDetails[] = await eventsDataSource.find({
+    const events: IEvent[] = await eventsDataSource.find({
       finished: false
     });
 
@@ -24,7 +29,7 @@ const getCurrentEvents = async (): Promise<any> => {
 
 const getPastEvents = async (): Promise<any> => {
   try {
-    const events: event.IEventDetails[] = await eventsDataSource.find({
+    const events: IEvent[] = await eventsDataSource.find({
       finished: true
     });
 
@@ -36,15 +41,15 @@ const getPastEvents = async (): Promise<any> => {
 
 const getEventOrderById = async (id: string): Promise<any> => {
   try {
-    const event: event.IEventDetails[] = await eventsDataSource.find({ id });
+    const event: IEvent[] = await eventsDataSource.find({ id });
 
     if (fp.isEmpty(event)) {
       return Promise.reject(boom.notFound("Not Found"));
     }
-    const orders: order.IOrderDetails[] = ordersDataSource.find({
+    const orders: IOrder[] = ordersDataSource.find({
       eventId: id
     });
-    const eventOrders: event.IEventOrders = { ...event[0], orders: orders };
+    const eventOrders = { ...event[0], orders: orders };
 
     return Promise.resolve(eventOrders);
   } catch (err) {
@@ -52,11 +57,9 @@ const getEventOrderById = async (id: string): Promise<any> => {
   }
 };
 
-const createEvent = async (event: event.IEvent): Promise<any> => {
+const createEvent = async (event: IEvent): Promise<any> => {
   try {
-    const createdEvent: event.IEventDetails = await eventsDataSource.save(
-      event
-    );
+    const createdEvent: IEvent = await eventsDataSource.save(event);
 
     return Promise.resolve(createdEvent);
   } catch (err) {
@@ -64,15 +67,15 @@ const createEvent = async (event: event.IEvent): Promise<any> => {
   }
 };
 
-const updateEvent = async (event: event.IEvent): Promise<any> => {
+const updateEvent = async (event: IEvent): Promise<any> => {
   try {
     const { id } = event;
-    const eventFinded: event.IEventDetails[] = eventsDataSource.find({ id });
+    const eventFinded: IEvent[] = eventsDataSource.find({ id });
 
     if (fp.isEmpty(eventFinded)) {
       return Promise.reject(boom.notFound("Not Found"));
     }
-    if (eventFinded[0].finished) {
+    if (isFinished(eventFinded[0])) {
       return Promise.reject(response.badRequest(error.eventIsFinished));
     }
 

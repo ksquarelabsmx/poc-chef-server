@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import { uriBuilder, response } from "../utils";
 import { orderMapper } from "../mappers";
 import { orderRepository } from "../repository";
-import { order } from "../interfaces";
+import { IOrder, IOrderDto } from "../../common/models/order";
 
 const debug = Debug("chef:orders:controller:orders");
 
@@ -44,9 +44,9 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     debug(`OrderController: ${chalk.green("creating order")}`);
 
     const source: string = uriBuilder(req);
-    const order: order.IOrder = orderMapper.toEntity(req.body);
+    const order: IOrder = orderMapper.toEntity(req.body);
     const createOrder = await orderRepository.createOrder(order);
-    const orderDTO: order.IOrderDetailsDTO = orderMapper.toDTO(createOrder);
+    const orderDTO: IOrderDto = orderMapper.toDTO(createOrder);
 
     res.send(response.success(orderDTO, 201, source));
   } catch (err) {
@@ -60,12 +60,12 @@ const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
     debug(`EventController: ${chalk.green("getting events")}`);
 
     const source: string = uriBuilder(req);
-    const event: order.IOrder = orderMapper.toEntity({
+    const event: IOrder = orderMapper.toEntity({
       id: req.params.id,
       ...req.body
     });
     const updatedEvent = await orderRepository.updateOrder(event);
-    const orderDTO: order.IOrderDetailsDTO = orderMapper.toDTO(updatedEvent);
+    const orderDTO: IOrderDto = orderMapper.toDTO(updatedEvent);
 
     res.send(response.success(orderDTO, 201, source));
   } catch (err) {
