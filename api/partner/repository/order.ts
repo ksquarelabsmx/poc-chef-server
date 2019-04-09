@@ -7,7 +7,7 @@ import { IEvent } from "../../common/models/event";
 import { ordersDataSource, eventsDataSource } from "../data-source";
 
 const isFinished = (event: IEvent): boolean => {
-  return event.expirationDate < Date.now();
+  return event.expirationDate < Date.now() || event.markedAsFinished;
 };
 
 const getOrders = async (): Promise<IOrder[]> => {

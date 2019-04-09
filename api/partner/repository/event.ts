@@ -7,7 +7,7 @@ import { IEvent } from "../../common/models/event";
 import { eventsDataSource, ordersDataSource } from "../data-source";
 
 const isFinished = (event: IEvent) => {
-  return event.expirationDate < Date.now();
+  return event.expirationDate < Date.now() || event.markedAsFinished;
 };
 
 // TODO: Define returns
