@@ -2,7 +2,7 @@ import * as boom from "boom";
 
 import { error, response } from "../utils";
 import { user, auth } from "../interfaces";
-import { usersDataSource, authDataSource } from "../data-source";
+import { usersDataSource, authDataSource } from "../../common/data-sources";
 
 const registerPartner = async (user: user.IUser): Promise<any> => {
   try {

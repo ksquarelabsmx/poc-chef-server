@@ -4,7 +4,7 @@ import * as boom from "boom";
 import { error, response } from "../utils";
 import { IOrder } from "../../common/models/order";
 import { IEvent } from "../../common/models/event";
-import { ordersDataSource, eventsDataSource } from "../data-source";
+import { ordersDataSource, eventsDataSource } from "../../common/data-sources";
 
 const isFinished = (event: IEvent): boolean => {
   return event.expirationDate < Date.now() || event.markedAsFinished;
