@@ -3,8 +3,8 @@ import * as boom from "boom";
 import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
-import { config } from "../../config";
-import { logger } from "./../libraries/log";
+import { config } from "../../../config";
+import { logger } from "../../libraries/log";
 import { badRequestFormated } from "./utils";
 
 const debug = Debug("chef:orders:controller:orders");

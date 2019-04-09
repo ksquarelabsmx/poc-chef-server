@@ -2,10 +2,10 @@ import chalk from "chalk";
 import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
-import { uriBuilder, response } from "./../utils";
-import { eventMapper } from "./../mappers";
-import { eventRepository } from "./../repository";
-import { event } from "./../interfaces";
+import { uriBuilder, response } from "../utils";
+import { eventMapper } from "../mappers";
+import { eventRepository } from "../repository";
+import { event } from "../interfaces";
 
 const debug = Debug("chef:events:controller:events");
 

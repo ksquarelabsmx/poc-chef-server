@@ -4,8 +4,8 @@ import { Response, Request, NextFunction } from "express";
 
 import { uriBuilder, response } from "../utils";
 import { user } from "../interfaces";
-import { userMapper } from "./../mappers";
-import { userRepository } from "./../repository";
+import { userMapper } from "../mappers";
+import { userRepository } from "../repository";
 
 const debug = Debug("chef:events:controller:user");
 

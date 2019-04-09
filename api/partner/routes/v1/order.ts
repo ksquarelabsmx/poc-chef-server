@@ -1,15 +1,15 @@
 import { Express } from "express";
 
-import { orderController } from "../../partner/controllers";
-import { ordersDataSource } from "./../../partner/data-source";
-import { validation } from "../../partner/middlewares";
-import { orderSchema } from "../../partner/utils/schemas";
+import { orderController } from "../../controllers";
+import { ordersDataSource } from "../../data-source";
+import { validation } from "../../middlewares";
+import { orderSchema } from "../../utils/schemas";
 import {
   validateJWT,
   onlyOwner,
   filterRoles,
   appendUser
-} from "../../partner/policies";
+} from "../../policies";
 
 // TODO: update docs according to the new model
 export const orderRoutes = (app: Express) => {

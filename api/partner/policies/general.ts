@@ -3,9 +3,9 @@ import * as jwt from "jsonwebtoken";
 import * as fp from "lodash/fp";
 import { Request, Response, NextFunction } from "express";
 
-import { config } from "../../config";
-import { uriBuilder, response } from "./../utils";
-import { authErrors } from "./../utils/errors";
+import { config } from "../../../config";
+import { uriBuilder, response } from "../utils";
+import { authErrors } from "../utils/errors";
 import { user, error } from "../interfaces";
 
 // check if the authorization header is correct, return

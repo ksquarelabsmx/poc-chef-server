@@ -1,6 +1,6 @@
 import { Request } from "express";
 import * as core from "express-serve-static-core";
-import { ISession } from "api/interfaces/auth";
+import { ISession } from "api/partner/interfaces/auth";
 
 // add jwt payload
 declare module "express" {

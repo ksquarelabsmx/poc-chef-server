@@ -1,9 +1,9 @@
 import { Express } from "express";
 
-import { userSchema } from "../../partner/utils/schemas";
-import { validateJWT } from "../../partner/policies";
-import { validation } from "../../partner/middlewares";
-import { userController } from "../../partner/controllers";
+import { userSchema } from "../../utils/schemas";
+import { validateJWT } from "../../policies";
+import { validation } from "../../middlewares";
+import { userController } from "../../controllers";
 
 export const userRoutes = (app: Express) => {
   /**

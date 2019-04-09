@@ -15,8 +15,8 @@ import {
   wrapErrors,
   clientErrorHandler,
   errorHandler
-} from "./middlewares";
-import routes from "./routes/v1";
+} from "./partner/middlewares";
+import routes from "./partner/routes/v1";
 import { requestLogStream } from "./libraries/log";
 import { user } from "./user/app";
 

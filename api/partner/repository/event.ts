@@ -1,9 +1,9 @@
 import * as fp from "lodash/fp";
 import * as boom from "boom";
 
-import { error, response } from "./../utils";
-import { event, order } from "./../interfaces";
-import { eventsDataSource, ordersDataSource } from "./../data-source";
+import { error, response } from "../utils";
+import { event, order } from "../interfaces";
+import { eventsDataSource, ordersDataSource } from "../data-source";
 
 // TODO: Define returns
 const getEvents = async (): Promise<event.IEventDetails[]> => {
