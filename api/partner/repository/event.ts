@@ -4,14 +4,17 @@ import * as boom from "boom";
 import { error, response } from "../utils";
 import { IOrder } from "../../common/models/order";
 import { IEvent } from "../../common/models/event";
-import { ordersDataSource } from "../../common/data-sources";
 import { IEventsDataSource } from "../../common/data-sources/events-data-source";
+import { IOrdersDataSource } from "api/common/data-sources/orders-data-source";
 
 const isFinished = (event: IEvent) => {
   return event.expirationDate < Date.now() || event.markedAsFinished;
 };
 
-export const EventsRepository = (eventsDataSource: IEventsDataSource) => {
+export const EventsRepository = (
+  eventsDataSource: IEventsDataSource,
+  ordersDataSource: IOrdersDataSource
+) => {
   const getEvents = async (): Promise<IEvent[]> => {
     return Promise.resolve(eventsDataSource.find());
   };

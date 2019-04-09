@@ -3,7 +3,7 @@ import { Express } from "express";
 
 import { validateJWT, filterRoles, onlyOwner } from "../../policies";
 
-import { eventsDataSource } from "../../data-source";
+import { eventsMemoryDataSource } from "../../../common/data-sources/events-memory-data-source";
 import { eventController } from "../../controllers";
 import { validation } from "../../middlewares";
 import { eventSchema } from "../../utils/schemas";
@@ -258,7 +258,7 @@ export const eventRoutes = (app: Express) => {
     "/v1/events/:id",
     validateJWT("access"),
     filterRoles(["partner"]),
-    onlyOwner(eventsDataSource),
+    onlyOwner(eventsMemoryDataSource),
     appendUser(),
     validation({ id: eventSchema.eventId }, "params"),
     validation(eventSchema.event),
