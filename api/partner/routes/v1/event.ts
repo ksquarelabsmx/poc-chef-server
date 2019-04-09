@@ -1,12 +1,12 @@
-import { appendUser } from "../../partner/policies/access-control";
+import { appendUser } from "../../policies/access-control";
 import { Express } from "express";
 
-import { validateJWT, filterRoles, onlyOwner } from "../../partner/policies";
+import { validateJWT, filterRoles, onlyOwner } from "../../policies";
 
-import { eventsDataSource } from "./../../partner/data-source";
-import { eventController } from "../../partner/controllers";
-import { validation } from "../../partner/middlewares";
-import { eventSchema } from "../../partner/utils/schemas";
+import { eventsDataSource } from "../../data-source";
+import { eventController } from "../../controllers";
+import { validation } from "../../middlewares";
+import { eventSchema } from "../../utils/schemas";
 
 export const eventRoutes = (app: Express) => {
   /**

@@ -1,3 +1,8 @@
-import * as ordersController from "./orders";
+import { OrdersController } from "./orders";
+import { EventsController } from "./events";
+import { ordersRepository, eventsRepository } from "../repositories";
 
-export { ordersController };
+const eventsController = EventsController(eventsRepository);
+const ordersController = OrdersController(ordersRepository);
+
+export { ordersController, eventsController };
