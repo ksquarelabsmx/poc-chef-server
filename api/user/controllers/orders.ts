@@ -1,3 +1,5 @@
+import { errorStrategy } from "../strategies";
+
 export const OrdersController = ordersRepository => {
   const getAll = async (_req, res) => {
     const orders = await ordersRepository.getAll();
@@ -21,15 +23,7 @@ export const OrdersController = ordersRepository => {
         order
       });
     } catch (err) {
-      if (err.type === "ORDER_NOT_FOUND") {
-        return res.json({ ok: false, status: "404", message: "Not Found" });
-      }
-
-      return res.json({
-        ok: false,
-        status: "500",
-        message: "Internal Server Error"
-      });
+      return res.json(errorStrategy.handle(err));
     }
   };
 
@@ -40,24 +34,7 @@ export const OrdersController = ordersRepository => {
         order
       });
     } catch (err) {
-      if (err.type === "ORDER_ALREADY_CANCELLED") {
-        return res.json({
-          ok: false,
-          status: "400",
-          message: "Bad Request",
-          error: "Order already cancelled"
-        });
-      }
-
-      if (err.type === "ORDER_NOT_FOUND") {
-        return res.json({ ok: false, status: "404", message: "Not Found" });
-      }
-
-      return res.json({
-        ok: false,
-        status: "500",
-        message: "Internal Server Error"
-      });
+      return res.json(errorStrategy.handle(err));
     }
   };
 
