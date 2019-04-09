@@ -7,3 +7,9 @@ export interface IEvent {
   expiration_date: number;
   orders: IOrder[];
 }
+
+export interface IEventDetails {
+  event_id: string;
+  name: string;
+  created_at: number;
+}

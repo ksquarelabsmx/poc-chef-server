@@ -1,11 +1,15 @@
 import * as cuid from "cuid";
+import { IOrderDetails } from "../models/order";
 
-const orders = [
+const orders: IOrderDetails[] = [
   {
     id: "1",
-    name: "Tortas",
-    date_created: 1554736045107,
-    event_id: "1",
+    created_at: 1554736045107,
+    event: {
+      event_id: "1",
+      name: "Tortas",
+      created_at: 1554736045101
+    },
     products: [
       { id: "1", name: "Poc Chuc Torta", price: 25, quantity: 2, subtotal: 50 }
     ],
@@ -14,8 +18,12 @@ const orders = [
   },
   {
     id: "2",
-    event_id: "1",
-    date_created: 1554736045107,
+    event: {
+      event_id: "2",
+      name: "Fondita Rubí",
+      created_at: 1554736045101
+    },
+    created_at: 1554736045107,
     products: [
       { id: "1", name: "Poc Chuc Torta", price: 25, quantity: 2, subtotal: 50 },
       { id: "2", name: "Shrimp Torta", price: 25, quantity: 2, subtotal: 50 }
@@ -29,7 +37,7 @@ interface IFindQuery {
   id?: string;
 }
 
-export const find = (query: IFindQuery = {}) => {
+export const find = (query: IFindQuery = {}): Promise<IOrderDetails[]> => {
   if (query.id) {
     const docs = orders.filter(order => order.id === query.id);
     return Promise.resolve(docs);
@@ -38,7 +46,7 @@ export const find = (query: IFindQuery = {}) => {
   return Promise.resolve(orders);
 };
 
-export const save = order => {
+export const save = (order: IOrderDetails): Promise<IOrderDetails> => {
   const newOrder = {
     ...order,
     id: cuid()
@@ -47,7 +55,7 @@ export const save = order => {
   return Promise.resolve(newOrder);
 };
 
-export const update = order => {
+export const update = (order: IOrderDetails): Promise<IOrderDetails> => {
   const index = orders.findIndex(oldOrder => {
     return oldOrder.id === order.id;
   });
