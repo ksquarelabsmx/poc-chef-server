@@ -1,16 +1,10 @@
-import { IProduct, IProductDetails } from "./product";
-import { IEventDetails } from "./event";
+import { IOrderProduct } from "./order-product";
 
 export interface IOrder {
   id: string;
-  products: IProduct[];
-}
-
-export interface IOrderDetails {
-  id: string;
+  event_id: string;
   created_at: number;
-  event: IEventDetails;
-  products: IProductDetails[];
-  total: number;
+  products: IOrderProduct[];
   cancelled: boolean;
+  total: number;
 }

@@ -1,10 +1,6 @@
 export interface IProduct {
   id: string;
   name: string;
+  created_at: number;
   price: number;
-}
-
-export interface IProductDetails extends IProduct {
-  quantity: number;
-  subtotal: number;
 }

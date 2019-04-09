@@ -9,7 +9,20 @@ const events: IEvent[] = [
     orders: [
       {
         id: "1",
-        products: [{ id: "1", name: "Poc Chuc Torta", price: 25 }]
+        event_id: "1",
+        created_at: 1554736045107,
+        products: [
+          {
+            id: "1",
+            name: "Poc Chuc Torta",
+            price: 25,
+            created_at: 1554736045107,
+            quantity: 2,
+            subtotal: 50
+          }
+        ],
+        cancelled: false,
+        total: 50
       }
     ]
   },
@@ -21,7 +34,20 @@ const events: IEvent[] = [
     orders: [
       {
         id: "2",
-        products: [{ id: "1", name: "Frijol Con Puerco", price: 25 }]
+        event_id: "2",
+        created_at: 1554736045107,
+        products: [
+          {
+            id: "2",
+            name: "Frijol Con Puerco",
+            price: 50,
+            created_at: 1554736045107,
+            quantity: 1,
+            subtotal: 50
+          }
+        ],
+        cancelled: false,
+        total: 50
       }
     ]
   }
