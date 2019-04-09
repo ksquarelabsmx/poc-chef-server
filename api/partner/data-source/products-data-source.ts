@@ -1,9 +1,8 @@
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
+import { IProduct } from "../../common/models/product";
 
-import { product } from "../interfaces";
-
-const products: product.IProductDetails[] = [
+const products: IProduct[] = [
   {
     id: "faa65af2-ac6d-4404-9d9d-7423f04eb740",
     name: "Poc Chuc Torta",
@@ -14,19 +13,17 @@ const products: product.IProductDetails[] = [
   }
 ];
 
-const find = (query?: any): product.IProductDetails[] => {
+const find = (query?: any): IProduct[] => {
   if (query) {
     const [key]: string[] = Object.keys(query);
-    return products.filter(
-      (user: product.IProductDetails) => user[key] === query[key]
-    );
+    return products.filter((user: IProduct) => user[key] === query[key]);
   }
   return products;
 };
 
-const save = (product: product.IProduct): product.IProductDetails => {
+const save = (product: IProduct): IProduct => {
   product.id = uuid();
-  const result: product.IProductDetails = {
+  const result: IProduct = {
     ...product,
     createdAt: moment()
       .utc()
@@ -39,9 +36,9 @@ const save = (product: product.IProduct): product.IProductDetails => {
   return result;
 };
 
-const update = (product: product.IProduct): product.IProductDetails => {
+const update = (product: IProduct): IProduct => {
   const index: number = products.findIndex(
-    (p: product.IProductDetails) => p.id === product.id
+    (p: IProduct) => p.id === product.id
   );
   products[index] = { ...products[index], ...product };
   return products[index];

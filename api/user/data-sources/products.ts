@@ -1,17 +1,21 @@
-import { IProduct } from "../models/product";
+import { IProduct } from "../../common/models/product";
 
 const products: IProduct[] = [
   {
     id: "1",
     name: "Poc Chuc Torta",
-    created_at: 1554736045100,
-    price: 25
+    description: "Delicious",
+    price: 25,
+    createdAt: 1554736045100,
+    updatedAt: 1554736045100
   },
   {
     id: "2",
     name: "Shrimp Torta",
-    created_at: 1554736045100,
-    price: 25
+    description: "Delicious",
+    price: 25,
+    createdAt: 1554736045100,
+    updatedAt: 1554736045100
   }
 ];
 
