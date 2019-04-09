@@ -2,10 +2,15 @@ import * as fp from "lodash/fp";
 import * as boom from "boom";
 
 import { error, response } from "../utils";
-import { order, event } from "../interfaces";
+import { IOrder } from "../../common/models/order";
+import { IEvent } from "../../common/models/event";
 import { ordersDataSource, eventsDataSource } from "../data-source";
 
-const getOrders = async (): Promise<order.IOrderDetails[]> => {
+const isFinished = (event: IEvent): boolean => {
+  return event.expirationDate < Date.now();
+};
+
+const getOrders = async (): Promise<IOrder[]> => {
   return Promise.resolve(ordersDataSource.find());
 };
 
@@ -23,16 +28,17 @@ const getOrderById = async (id: number): Promise<any> => {
   }
 };
 
-const createOrder = async (order: order.IOrder): Promise<any> => {
+const createOrder = async (order: IOrder): Promise<any> => {
   try {
-    const eventFinded: event.IEventDetails[] = eventsDataSource.find({
+    const eventFinded: IEvent[] = eventsDataSource.find({
       id: order.eventId
     });
 
     if (fp.isEmpty(eventFinded)) {
       return Promise.reject(response.badRequest(error.eventNotExist));
     }
-    if (eventFinded[0].finished) {
+
+    if (isFinished(eventFinded[0])) {
       return Promise.reject(response.badRequest(error.eventIsFinished));
     }
 
@@ -43,7 +49,7 @@ const createOrder = async (order: order.IOrder): Promise<any> => {
   }
 };
 
-const updateOrder = async (order: order.IOrder): Promise<any> => {
+const updateOrder = async (order: IOrder): Promise<any> => {
   try {
     const { id } = order;
     const orderFinded = ordersDataSource.find({ id });
@@ -55,9 +61,11 @@ const updateOrder = async (order: order.IOrder): Promise<any> => {
     if (orderFinded[0].eventId !== order.eventId) {
       return Promise.reject(response.badRequest(error.orderEventDifferent));
     }
+
     if (orderFinded[0].cancelled) {
       return Promise.reject(response.badRequest(error.orderIsCancelled));
     }
+
     if (orderFinded[0].paid) {
       return Promise.reject(response.badRequest(error.orderIsPaid));
     }
@@ -71,7 +79,7 @@ const updateOrder = async (order: order.IOrder): Promise<any> => {
 const markManyAsPaid = async (orderIds: string[]): Promise<string[]> => {
   try {
     const orderStatus = orderIds.map((id: string) => {
-      const order: order.IOrderDetails[] = ordersDataSource.find({ id });
+      const order: IOrder[] = ordersDataSource.find({ id });
       if (fp.isEmpty(order)) {
         return `order ${id} not found`;
       }
@@ -83,6 +91,7 @@ const markManyAsPaid = async (orderIds: string[]): Promise<string[]> => {
       ordersDataSource.update(order);
       return `order ${id} successfully modified`;
     });
+
     return Promise.resolve(orderStatus);
   } catch (err) {
     return Promise.reject(boom.internal("Internal Server Error"));
@@ -92,7 +101,7 @@ const markManyAsPaid = async (orderIds: string[]): Promise<string[]> => {
 const markManyAsNotPaid = async (orderIds: string[]): Promise<string[]> => {
   try {
     const orderStatus: string[] = orderIds.map((id: any) => {
-      const order: order.IOrderDetails[] = ordersDataSource.find({ id });
+      const order: IOrder[] = ordersDataSource.find({ id });
       if (fp.isEmpty(order)) {
         return `order ${id} not found`;
       }
@@ -103,6 +112,7 @@ const markManyAsNotPaid = async (orderIds: string[]): Promise<string[]> => {
       ordersDataSource.update(order);
       return `order ${id} successfully modified`;
     });
+
     return Promise.resolve(orderStatus);
   } catch (err) {
     return Promise.reject(boom.internal("Internal Server Error"));

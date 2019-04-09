@@ -1,52 +1,40 @@
-import { IEvent } from "../models/event";
+import { IEvent } from "../../common/models/event";
 
 const events: IEvent[] = [
   {
     id: "1",
     name: "Tortas",
-    created_at: 1554736045107,
-    expiration_date: 1554763958293,
+    expirationDate: 1554763958293,
+    startDate: 1554763958291,
+    startHour: 1554763958291,
+    endHour: 1554763958291,
+    markedAsFinished: false,
+    total: 50,
+    createdBy: "1",
+    cancelled: false,
+    updatedAt: 1554736045107,
+    createdAt: 1554736045107,
     orders: [
       {
         id: "1",
-        event_id: "1",
-        created_at: 1554736045107,
+        eventId: "1",
+        userId: "1",
+        createdBy: "1",
+        createdAt: 1554736045107,
+        updatedAt: 1554736045107,
         products: [
           {
             id: "1",
             name: "Poc Chuc Torta",
             price: 25,
-            created_at: 1554736045107,
+            createdAt: 1554736045107,
+            updatedAt: 1554736045107,
             quantity: 2,
             subtotal: 50
           }
         ],
         cancelled: false,
-        total: 50
-      }
-    ]
-  },
-  {
-    id: "2",
-    name: "Fondita Rubí",
-    created_at: 1555763958293,
-    expiration_date: 1555763958293,
-    orders: [
-      {
-        id: "2",
-        event_id: "2",
-        created_at: 1554736045107,
-        products: [
-          {
-            id: "2",
-            name: "Frijol Con Puerco",
-            price: 50,
-            created_at: 1554736045107,
-            quantity: 1,
-            subtotal: 50
-          }
-        ],
-        cancelled: false,
+        paid: false,
         total: 50
       }
     ]

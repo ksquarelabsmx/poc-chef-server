@@ -1,7 +1,5 @@
 export interface IOrderProduct {
   id?: string;
-  orderId: string;
-  productId: string;
   name: string;
   price: number;
   quantity: number;
@@ -12,8 +10,7 @@ export interface IOrderProduct {
 
 export interface IOrderProductDto {
   id?: string;
-  orderId: string;
-  productId: string;
+  name: string;
   price: number;
   quantity: number;
   subtotal: number;

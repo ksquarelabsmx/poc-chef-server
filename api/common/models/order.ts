@@ -1,30 +1,25 @@
+import { IOrderProduct, IOrderProductDto } from "./order-product";
+
 export interface IOrder {
   id?: string;
   userId: string;
   eventId: string;
-  price: number;
-  orderProductId: string[];
+  products: IOrderProduct[];
+  total: number;
   createdBy: string;
+  paid: boolean;
+  cancelled: boolean;
+  createdAt: number;
+  updatedAt: number;
 }
 
-export interface IOrderDTO {
+export interface IOrderDto {
   id?: string;
   user_id: string;
   event_id: string;
-  price: number;
-  order_product_id: string[];
+  total: number;
+  products: IOrderProductDto[];
   created_by: string;
-}
-
-export interface IOrderDetails extends IOrder {
-  createdAt: number;
-  updatedAt: number;
-  paid: boolean;
-  cancelled: boolean;
-  [key: string]: any;
-}
-
-export interface IOrderDetailsDTO extends IOrderDTO {
   created_at: number;
   updated_at: number;
   paid: boolean;

@@ -1,49 +1,43 @@
-import { IOrderDetailsDTO, IOrderDetails } from "./order";
+import { IOrderDto, IOrder } from "./order";
 
 // interfaces for update event and create event
 export interface IEvent {
   id?: string;
-  eventName: string;
+  name: string;
   startDate: number;
   expirationDate: number;
   startHour: number;
   endHour: number;
   createdBy: string;
+  total: number;
+  markedAsFinished: boolean;
+  orders: IOrder[];
+  cancelled: boolean;
+  createdAt: number;
+  updatedAt: number;
 }
 
 export interface IEventDTO {
   id?: string;
-  event_name: string;
+  name: string;
   start_date: number;
   expiration_date: number;
   start_hour: number;
   end_hour: number;
   created_by: string;
-}
-
-// interface for get all events
-export interface IEventDetails extends IEvent {
   total: number;
-  finished: boolean;
-  cancelled: boolean;
-  createdAt: number;
-  updatedAt: number;
-  [key: string]: any;
-}
-
-export interface IEventDetailsDTO extends IEventDTO {
-  total: number;
-  finished: boolean;
+  orders: IOrderDto[];
+  marked_as_finished: boolean;
   cancelled: boolean;
   created_at: number;
   updated_at: number;
 }
 
 // interfaces for get event with orders details
-export interface IEventOrdersDTO extends IEventDetailsDTO {
-  orders: IOrderDetailsDTO[];
+export interface IEventOrdersDTO extends IEventDTO {
+  orders: IOrderDto[];
 }
 
-export interface IEventOrders extends IEventDetails {
-  orders: IOrderDetails[];
+export interface IEventOrders extends IEvent {
+  orders: IOrder[];
 }

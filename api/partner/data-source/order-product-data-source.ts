@@ -9,8 +9,6 @@ import {
 const orderProducts: IOrderProduct[] = [
   {
     id: "606ffa47-a941-4982-b929-1a900273997c",
-    orderId: "fefcd99e-d7fb-4189-9e8f-c9395bea5fa7",
-    productId: "faa65af2-ac6d-4404-9d9d-7423f04eb740",
     name: "Poc Chef Torta",
     price: 50,
     quantity: 2,
