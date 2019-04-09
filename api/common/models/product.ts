@@ -3,22 +3,15 @@ export interface IProduct {
   name: string;
   description: string;
   price: number;
+  createdAt: number;
+  updatedAt: number;
 }
 
-export interface IProductDTO {
+export interface IProductDto {
   id?: string;
   name: string;
   description: string;
   price: number;
-}
-
-export interface IProductDetails extends IProduct {
-  createdAt: number;
-  updatedAt: number;
-  [key: string]: any;
-}
-
-export interface IProductDetailsDTO extends IProductDTO {
   created_at: number;
   updated_at: number;
 }

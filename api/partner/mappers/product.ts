@@ -1,17 +1,17 @@
-import { product } from "./../interfaces";
+import { IProduct, IProductDto } from "./../../common/models/product";
 
-const toEntity = (productDTO: product.IProductDTO): product.IProduct => {
+const toEntity = (productDTO: IProductDto): IProduct => {
   return {
     id: productDTO.id,
     name: productDTO.name,
     description: productDTO.description,
-    price: productDTO.price
+    price: productDTO.price,
+    createdAt: productDTO.created_at,
+    updatedAt: productDTO.updated_at
   };
 };
 
-const toDTO = (
-  productEntity: product.IProductDetails
-): product.IProductDetailsDTO => {
+const toDTO = (productEntity: IProduct): IProductDto => {
   return {
     id: productEntity.id,
     name: productEntity.name,
