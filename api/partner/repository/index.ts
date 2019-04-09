@@ -1,3 +1,7 @@
-export { userRepository } from "./user";
-export { orderRepository } from "./order";
-export { eventRepository } from "./event";
+import { EventsRepository } from "./event";
+import { OrdersRepository } from "./order";
+import { UserRepository } from "./user";
+
+export const ordersRepository = OrdersRepository();
+export const eventRepository = EventsRepository();
+export const userRepository = UserRepository();
