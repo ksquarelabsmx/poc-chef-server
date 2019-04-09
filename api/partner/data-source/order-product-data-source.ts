@@ -1,34 +1,38 @@
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 
-import { orderProduct } from "../interfaces";
+import {
+  IOrderProduct,
+  IOrderProductDto
+} from "../../common/models/order-product";
 
-const orderProducts: orderProduct.IOrderProductDetails[] = [
+const orderProducts: IOrderProduct[] = [
   {
     id: "606ffa47-a941-4982-b929-1a900273997c",
     orderId: "fefcd99e-d7fb-4189-9e8f-c9395bea5fa7",
     productId: "faa65af2-ac6d-4404-9d9d-7423f04eb740",
-    quantity: 20,
+    name: "Poc Chef Torta",
+    price: 50,
+    quantity: 2,
+    subtotal: 100,
     createdAt: 1548000000,
     updatedAt: 1548000000
   }
 ];
 
-const find = (query?: any): orderProduct.IOrderProductDetails[] => {
+const find = (query?: any): IOrderProduct[] => {
   if (query) {
     const [key]: string[] = Object.keys(query);
     return orderProducts.filter(
-      (user: orderProduct.IOrderProductDetails) => user[key] === query[key]
+      (user: IOrderProduct) => user[key] === query[key]
     );
   }
   return orderProducts;
 };
 
-const save = (
-  orderProduct: orderProduct.IOrderProduct
-): orderProduct.IOrderProductDetails => {
+const save = (orderProduct: IOrderProduct): IOrderProduct => {
   orderProduct.id = uuid();
-  const result: orderProduct.IOrderProductDetails = {
+  const result: IOrderProduct = {
     ...orderProduct,
     createdAt: moment()
       .utc()
@@ -41,11 +45,9 @@ const save = (
   return result;
 };
 
-const update = (
-  orderProduct: orderProduct.IOrderProduct
-): orderProduct.IOrderProductDetails => {
+const update = (orderProduct: IOrderProduct): IOrderProduct => {
   const index: number = orderProducts.findIndex(
-    (p: orderProduct.IOrderProductDetails) => p.id === orderProduct.id
+    (p: IOrderProduct) => p.id === orderProduct.id
   );
   orderProducts[index] = {
     ...orderProducts[index],

@@ -2,23 +2,21 @@ export interface IOrderProduct {
   id?: string;
   orderId: string;
   productId: string;
+  name: string;
+  price: number;
   quantity: number;
-}
-
-export interface IOrderProductDTO {
-  id?: string;
-  order_id: string;
-  product_id: string;
-  quantity: number;
-}
-
-export interface IOrderProductDetails extends IOrderProduct {
+  subtotal: number;
   createdAt: number;
   updatedAt: number;
-  [key: string]: any;
 }
 
-export interface IOrderProductDetailsDTO extends IOrderProductDTO {
+export interface IOrderProductDto {
+  id?: string;
+  orderId: string;
+  productId: string;
+  price: number;
+  quantity: number;
+  subtotal: number;
   created_at: number;
   updated_at: number;
 }

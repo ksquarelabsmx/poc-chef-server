@@ -9,9 +9,12 @@ const orders: IOrder[] = [
     products: [
       {
         id: "1",
+        orderId: "1",
+        productId: "1",
         name: "Poc Chuc Torta",
         price: 25,
-        created_at: 1554736045107,
+        createdAt: 1554736045107,
+        updatedAt: 1554736045107,
         quantity: 2,
         subtotal: 50
       }
@@ -25,18 +28,24 @@ const orders: IOrder[] = [
     created_at: 1554736045107,
     products: [
       {
-        id: "1",
+        id: "2",
+        orderId: "2",
+        productId: "2",
         name: "Poc Chuc Torta",
         price: 25,
-        created_at: 1554736045107,
+        createdAt: 1554736045107,
+        updatedAt: 1554736045107,
         quantity: 2,
         subtotal: 50
       },
       {
-        id: "2",
+        id: "3",
+        orderId: "2",
+        productId: "2",
         name: "Shrimp Torta",
         price: 25,
-        created_at: 1554736045107,
+        createdAt: 1554736045107,
+        updatedAt: 1554736045107,
         quantity: 2,
         subtotal: 50
       }
