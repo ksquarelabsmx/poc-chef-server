@@ -12,7 +12,7 @@ import {
 import { config } from "../../../config";
 import { error, response } from "../utils";
 import { user, auth } from "../interfaces";
-import { usersDataSource, authDataSource } from "../../common/data-sources";
+import { usersDataSource, authRepository } from "../../common/repositories";
 import { userMapper } from "../mappers";
 
 // TODO: add encrypt decrypt
@@ -59,7 +59,7 @@ const handlerGoogleUser = async (
     }
 
     // create a user and return it
-    const authProvider: auth.IAuthProviderDao = await authDataSource.findByName(
+    const authProvider: auth.IAuthProviderDao = await authRepository.findByName(
       "google"
     );
 

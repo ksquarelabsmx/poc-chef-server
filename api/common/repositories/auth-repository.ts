@@ -25,7 +25,7 @@ const findByName = (name: string): auth.IAuthProviderDao =>
     authProviders
   ) || authProviders[0];
 
-export const authDataSource = {
+export const authRepository = {
   authProviders,
   findByName
 };

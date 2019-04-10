@@ -4,8 +4,8 @@ import { Request, Response, NextFunction } from "express";
 
 import { uriBuilder, response } from "../utils";
 import { eventMapper } from "../mappers";
-import { eventRepository } from "../repository";
-import { IEvent, IEventDTO } from "../../common/models/event";
+import { eventService } from "../services";
+import { IEvent, IEventDto } from "../../common/models/event";
 
 const debug = Debug("chef:events:controller:events");
 
@@ -29,7 +29,7 @@ const getEvent = async (req: Request, res: Response, next: NextFunction) => {
 
     const id = req.params.id;
     const source: string = uriBuilder(req);
-    const event = await eventRepository.getEventOrderById(id);
+    const event = await eventService.getEventOrderById(id);
 
     res.send(response.success(event, 200, source));
   } catch (err) {
@@ -44,7 +44,7 @@ const getEvents = async (req: Request, res: Response, next: NextFunction) => {
 
     const query = req.query.type;
     const source: string = uriBuilder(req);
-    const events = await eventStrategy(eventRepository, query);
+    const events = await eventStrategy(eventService, query);
 
     res.send(response.success(events, 200, source));
   } catch (err) {
@@ -62,8 +62,8 @@ const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
       id: req.params.id,
       ...req.body
     });
-    const updatedEvent = await eventRepository.updateEvent(event);
-    const eventDTO: IEventDTO = eventMapper.toDTO(updatedEvent);
+    const updatedEvent = await eventService.updateEvent(event);
+    const eventDTO: IEventDto = eventMapper.toDTO(updatedEvent);
 
     res.send(response.success(eventDTO, 201, source));
   } catch (err) {
@@ -78,8 +78,8 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
 
     const source: string = uriBuilder(req);
     const event: IEvent = eventMapper.toEntity(req.body);
-    const createdEvent = await eventRepository.createEvent(event);
-    const eventDTO: IEventDTO = eventMapper.toDTO(createdEvent);
+    const createdEvent = await eventService.createEvent(event);
+    const eventDTO: IEventDto = eventMapper.toDTO(createdEvent);
 
     res.send(response.success(eventDTO, 201, source));
   } catch (err) {

@@ -1,10 +1,9 @@
 import * as boom from "boom";
-
 import { error, response } from "../utils";
 import { user, auth } from "../interfaces";
-import { usersDataSource, authDataSource } from "../../common/data-sources";
+import { usersDataSource, authRepository } from "../../common/repositories";
 
-export const UserRepository = () => {
+export const UserService = () => {
   const registerPartner = async (user: user.IUser): Promise<any> => {
     try {
       const userDao: user.IUserDao | undefined = usersDataSource.findByEmail(
@@ -17,7 +16,7 @@ export const UserRepository = () => {
 
       const authProvider:
         | auth.IAuthProviderDao
-        | undefined = await authDataSource.findByName("custom");
+        | undefined = await authRepository.findByName("custom");
 
       if (!authProvider) {
         // TODO: use another status code

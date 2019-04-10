@@ -1,13 +1,13 @@
-import { IEventsDataSource } from "api/common/data-sources/events-data-source";
+import { IEventRepository } from "api/common/repositories/event-repository";
 import { IEvent } from "api/common/models/event";
 
-export const EventsRepository = (eventsDataSource: IEventsDataSource) => {
+export const EventService = (eventRepoistory: IEventRepository) => {
   const getCurrentEvents = (): Promise<IEvent[]> => {
-    return eventsDataSource.find();
+    return eventRepoistory.find();
   };
 
   const getPastEvents = async (): Promise<IEvent[]> => {
-    const events = await eventsDataSource.find();
+    const events = await eventRepoistory.find();
     return Promise.resolve(
       events.filter((event: IEvent) => {
         return event.expirationDate < Date.now() || event.markedAsFinished;

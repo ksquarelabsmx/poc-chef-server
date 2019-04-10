@@ -1,10 +1,6 @@
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
-
-import {
-  IOrderProduct,
-  IOrderProductDto
-} from "../../common/models/order-product";
+import { IOrderProduct } from "../models/order-product";
 
 const orderProducts: IOrderProduct[] = [
   {
@@ -54,4 +50,4 @@ const update = (orderProduct: IOrderProduct): IOrderProduct => {
   return orderProducts[index];
 };
 
-export const orderProductsDataSource = { find, save, update };
+export const orderProductsRepository = { find, save, update };

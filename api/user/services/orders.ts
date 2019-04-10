@@ -1,5 +1,5 @@
-import { IOrdersDataSource } from "api/common/data-sources/orders-data-source";
-import { IProductsDataSource } from "api/common/data-sources/products-data-source";
+import { IOrderRepository } from "api/common/repositories/order-repository";
+import { IProductRepository } from "api/common/repositories/product-repository";
 
 const normalizeProducts = (records, products) => {
   return records
@@ -20,31 +20,29 @@ const calculateTotal = products => {
   }, 0);
 };
 
-export const OrdersRepository = (
-  ordersDataSource: IOrdersDataSource,
-  productsDataSource: IProductsDataSource
+export const OrderService = (
+  orderRepository: IOrderRepository,
+  productRepository: IProductRepository
 ) => {
   const getAll = () => {
-    return ordersDataSource.find();
+    return orderRepository.find();
   };
 
   const createOne = async data => {
     const records = await Promise.all(
-      data.products.map(async order =>
-        productsDataSource.find({ id: order.id })
-      )
+      data.products.map(async order => productRepository.find({ id: order.id }))
     );
 
     const products = normalizeProducts(records, data.products);
 
-    return ordersDataSource.save({
+    return orderRepository.save({
       ...data,
       products
     });
   };
 
   const updateOneById = async (id, order) => {
-    const records = await ordersDataSource.find({ id });
+    const records = await orderRepository.find({ id });
     const oldOrder = records[0];
 
     if (!oldOrder) {
@@ -79,7 +77,7 @@ export const OrdersRepository = (
       })
       .filter(product => product);
 
-    return ordersDataSource.update({
+    return orderRepository.update({
       ...order,
       products: updatedProducts,
       total: calculateTotal(updatedProducts)
@@ -87,7 +85,7 @@ export const OrdersRepository = (
   };
 
   const cancelOrderById = async id => {
-    const docs = await ordersDataSource.find({ id });
+    const docs = await orderRepository.find({ id });
     const order = docs[0];
 
     if (!order) {
@@ -102,7 +100,7 @@ export const OrdersRepository = (
       });
     }
 
-    return ordersDataSource.update({
+    return orderRepository.update({
       ...order,
       cancelled: true
     });

@@ -1,7 +1,7 @@
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
-import { IProduct } from "../../common/models/product";
-import { IProductsDataSource } from "./products-data-source";
+import { IProduct } from "../models/product";
+import { IProductRepository } from "./product-repository";
 
 const products: IProduct[] = [
   {
@@ -60,7 +60,7 @@ const update = (product: IProduct): Promise<IProduct> => {
   return Promise.resolve(products[index]);
 };
 
-export const productsMemoryDataSource: IProductsDataSource = {
+export const productMemoryRepository: IProductRepository = {
   find,
   save,
   update

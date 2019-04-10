@@ -1,41 +1,20 @@
-import { errorStrategy } from "../strategies";
+import { IOrder } from "../../common/models/order";
 
-export const OrdersController = ordersRepository => {
-  const getAll = async (_req, res) => {
-    const orders = await ordersRepository.getAll();
-    res.json({ orders });
+export const OrdersController = orderService => {
+  const getAll = (): Promise<IOrder[]> => {
+    return orderService.getAll();
   };
 
-  const createOrder = async (req, res) => {
-    const order = await ordersRepository.createOne(req.body);
-    res.json({
-      order
-    });
+  const createOrder = (order: IOrder): Promise<IOrder> => {
+    return orderService.createOne(order);
   };
 
-  const updateOrderById = async (req, res) => {
-    try {
-      const order = await ordersRepository.updateOneById(
-        req.params.id,
-        req.body
-      );
-      return res.json({
-        order
-      });
-    } catch (err) {
-      return res.json(errorStrategy.handle(err));
-    }
+  const updateOrderById = (id: string, order: IOrder): Promise<IOrder> => {
+    return orderService.updateOneById(id, order);
   };
 
-  const cancelOrderById = async (req, res) => {
-    try {
-      const order = await ordersRepository.cancelOrderById(req.params.id);
-      return res.json({
-        order
-      });
-    } catch (err) {
-      return res.json(errorStrategy.handle(err));
-    }
+  const cancelOrderById = (id: string): Promise<IOrder> => {
+    return orderService.cancelOrderById(id);
   };
 
   return {
