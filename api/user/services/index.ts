@@ -1,13 +1,13 @@
-import { OrdersRepository } from "./orders";
+import { OrderService } from "./orders";
 import { ordersMemoryDataSource } from "../../common/data-sources/orders-memory-data-source";
 import { productsMemoryDataSource } from "../../common/data-sources/products-memory-data-source";
 import { eventsMemoryDataSource } from "../../common/data-sources/events-memory-data-source";
-import { EventsRepository } from "./events";
+import { EventService } from "./events";
 
-const ordersRepository = OrdersRepository(
+const orderService = OrderService(
   ordersMemoryDataSource,
   productsMemoryDataSource
 );
-const eventsRepository = EventsRepository(eventsMemoryDataSource);
+const eventService = EventService(eventsMemoryDataSource);
 
-export { ordersRepository, eventsRepository };
+export { orderService, eventService };

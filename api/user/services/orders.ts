@@ -20,7 +20,7 @@ const calculateTotal = products => {
   }, 0);
 };
 
-export const OrdersRepository = (
+export const OrderService = (
   ordersDataSource: IOrdersDataSource,
   productsDataSource: IProductsDataSource
 ) => {

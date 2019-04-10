@@ -1,20 +1,20 @@
 import { IOrder } from "../../common/models/order";
 
-export const OrdersController = ordersRepository => {
+export const OrdersController = orderService => {
   const getAll = (): Promise<IOrder[]> => {
-    return ordersRepository.getAll();
+    return orderService.getAll();
   };
 
   const createOrder = (order: IOrder): Promise<IOrder> => {
-    return ordersRepository.createOne(order);
+    return orderService.createOne(order);
   };
 
   const updateOrderById = (id: string, order: IOrder): Promise<IOrder> => {
-    return ordersRepository.updateOneById(id, order);
+    return orderService.updateOneById(id, order);
   };
 
   const cancelOrderById = (id: string): Promise<IOrder> => {
-    return ordersRepository.cancelOrderById(id);
+    return orderService.cancelOrderById(id);
   };
 
   return {

@@ -1,7 +1,7 @@
 import { IEventsDataSource } from "api/common/data-sources/events-data-source";
 import { IEvent } from "api/common/models/event";
 
-export const EventsRepository = (eventsDataSource: IEventsDataSource) => {
+export const EventService = (eventsDataSource: IEventsDataSource) => {
   const getCurrentEvents = (): Promise<IEvent[]> => {
     return eventsDataSource.find();
   };
