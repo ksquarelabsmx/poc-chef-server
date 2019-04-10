@@ -1,7 +1,7 @@
 import * as express from "express";
 import { ordersController } from "../../controllers/";
-import * as orderMapper from "api/common/mappers/order";
-import { errorStrategy } from "api/user/strategies";
+import * as orderMapper from "../../../common/mappers/order";
+import { errorStrategy } from "../../strategies";
 
 const ordersRouter = express.Router();
 

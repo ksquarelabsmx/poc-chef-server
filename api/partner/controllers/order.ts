@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 
 import { uriBuilder, response } from "../utils";
 import { orderMapper } from "../mappers";
-import { ordersRepository } from "../repository";
+import { orderService } from "../services";
 import { IOrder, IOrderDto } from "../../common/models/order";
 
 const debug = Debug("chef:orders:controller:orders");
@@ -15,7 +15,7 @@ const getOrders = async (req: Request, res: Response, next: NextFunction) => {
 
     //const query = req.query.eventId;
     const source: string = uriBuilder(req);
-    const orders = await ordersRepository.getOrders();
+    const orders = await orderService.getOrders();
 
     res.send(response.success(orders, 200, source));
   } catch (err) {
@@ -30,7 +30,7 @@ const getOrder = async (req: Request, res: Response, next: NextFunction) => {
 
     const id = req.params.id;
     const source: string = uriBuilder(req);
-    const order = await ordersRepository.getOrderById(id);
+    const order = await orderService.getOrderById(id);
 
     res.send(response.success(order, 200, source));
   } catch (err) {
@@ -45,7 +45,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 
     const source: string = uriBuilder(req);
     const order: IOrder = orderMapper.toEntity(req.body);
-    const createOrder = await ordersRepository.createOrder(order);
+    const createOrder = await orderService.createOrder(order);
     const orderDTO: IOrderDto = orderMapper.toDTO(createOrder);
 
     res.send(response.success(orderDTO, 201, source));
@@ -64,7 +64,7 @@ const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
       id: req.params.id,
       ...req.body
     });
-    const updatedEvent = await ordersRepository.updateOrder(event);
+    const updatedEvent = await orderService.updateOrder(event);
     const orderDTO: IOrderDto = orderMapper.toDTO(updatedEvent);
 
     res.send(response.success(orderDTO, 201, source));
@@ -87,12 +87,12 @@ const handleAction = async (
 
     switch (action) {
       case "mark_as_paid": {
-        const results = await ordersRepository.markManyAsPaid(req.body.ids);
+        const results = await orderService.markManyAsPaid(req.body.ids);
         res.send(response.success(results, 200, source));
         break;
       }
       case "mark_as_not_paid": {
-        const results = await ordersRepository.markManyAsNotPaid(req.body.ids);
+        const results = await orderService.markManyAsNotPaid(req.body.ids);
         res.send(response.success(results, 200, source));
         break;
       }

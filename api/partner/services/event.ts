@@ -10,7 +10,7 @@ const isFinished = (event: IEvent) => {
   return event.expirationDate < Date.now() || event.markedAsFinished;
 };
 
-export const EventsRepository = (
+export const EventService = (
   eventsDataSource: IEventRepository,
   ordersDataSource: IOrderRepository
 ) => {

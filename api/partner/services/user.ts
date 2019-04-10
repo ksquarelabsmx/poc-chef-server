@@ -3,7 +3,7 @@ import { error, response } from "../utils";
 import { user, auth } from "../interfaces";
 import { usersDataSource, authRepository } from "../../common/repositories";
 
-export const UserRepository = () => {
+export const UserService = () => {
   const registerPartner = async (user: user.IUser): Promise<any> => {
     try {
       const userDao: user.IUserDao | undefined = usersDataSource.findByEmail(

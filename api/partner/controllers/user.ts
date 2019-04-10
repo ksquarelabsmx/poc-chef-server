@@ -5,7 +5,7 @@ import { Response, Request, NextFunction } from "express";
 import { uriBuilder, response } from "../utils";
 import { user } from "../interfaces";
 import { userMapper } from "../mappers";
-import { userRepository } from "../repository";
+import { userService } from "../services";
 
 const debug = Debug("chef:events:controller:user");
 
@@ -19,7 +19,7 @@ const registerPartner = async (
     const source: string = uriBuilder(req);
     const user: user.IUser = { ...req.body };
 
-    const createdUser = await userRepository.registerPartner(user);
+    const createdUser = await userService.registerPartner(user);
     const userDto: user.IUserDto = userMapper.toDto(createdUser);
 
     res.send(response.success(userDto, 201, source));
