@@ -1,7 +1,7 @@
 import { IEvent, IEventDto } from "../../common/models/event";
 import { orderMapper } from "./order";
 
-const toEntity = (eventDTO: IEventDto): IEvent => {
+const toModel = (eventDTO: IEventDto): IEvent => {
   return {
     id: eventDTO.id,
     name: eventDTO.name,
@@ -13,7 +13,7 @@ const toEntity = (eventDTO: IEventDto): IEvent => {
     total: eventDTO.total,
     markedAsFinished: eventDTO.marked_as_finished,
     cancelled: eventDTO.cancelled,
-    orders: eventDTO.orders.map(orderMapper.toEntity),
+    orders: eventDTO.orders.map(orderMapper.toModel),
     createdAt: eventDTO.created_at,
     updatedAt: eventDTO.updated_at
   };
@@ -38,6 +38,6 @@ const toDTO = (eventEntity: IEvent): IEventDto => {
 };
 
 export const eventMapper = {
-  toEntity,
+  toModel,
   toDTO
 };

@@ -5,6 +5,11 @@ import { eventMemoryRepository } from "../../../common/repositories/event-memory
 import { eventController } from "../../controllers";
 import { validation } from "../../middlewares";
 import { eventSchema } from "../../utils/schemas";
+import { uriBuilder } from "api/partner/utils/uri";
+import { response } from "api/partner/utils/response";
+import debug = require("debug");
+import chalk from "chalk";
+import { eventMapper } from "api/partner/mappers/event";
 
 export const eventRoutes = (app: Express) => {
   /**
@@ -150,7 +155,19 @@ export const eventRoutes = (app: Express) => {
     "/v1/events",
     validateJWT("access"),
     filterRoles(["user", "partner"]),
-    eventController.getEvents
+    async (req, res) => {
+      try {
+        const events = await eventController.getEvents(req.query.type);
+        const source: string = uriBuilder(req);
+        res.send(response.success(events, 200, source));
+      } catch (err) {
+        debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
+        res.json({
+          status: 500,
+          message: "Internal Server Error"
+        });
+      }
+    }
   );
 
   /**
@@ -207,7 +224,19 @@ export const eventRoutes = (app: Express) => {
     validateJWT("access"),
     filterRoles(["partner"]),
     validation({ id: eventSchema.eventId }, "params"),
-    eventController.getEvent
+    async (req, res) => {
+      try {
+        const event = await eventController.getEventById(req.params.id);
+        const source: string = uriBuilder(req);
+        res.send(response.success(event, 200, source));
+      } catch (err) {
+        debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
+        res.send({
+          status: 500,
+          message: "Internal Server Error"
+        });
+      }
+    }
   );
 
   /**
@@ -260,7 +289,23 @@ export const eventRoutes = (app: Express) => {
     appendUser(),
     validation({ id: eventSchema.eventId }, "params"),
     validation(eventSchema.event),
-    eventController.updateEvent
+    async (req, res) => {
+      try {
+        const source = uriBuilder(req);
+        const event = await eventController.updateEvent(
+          req.params.id,
+          eventMapper.toModel(req.body)
+        );
+        const eventDTO = eventMapper.toDTO(event);
+        res.send(response.success(eventDTO, 201, source));
+      } catch (err) {
+        debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
+        res.json({
+          status: 500,
+          message: "Internal Server Error"
+        });
+      }
+    }
   );
 
   /**
@@ -303,6 +348,20 @@ export const eventRoutes = (app: Express) => {
     filterRoles(["partner"]),
     appendUser(),
     validation(eventSchema.event),
-    eventController.createEvent
+    async (req, res) => {
+      try {
+        const source: string = uriBuilder(req);
+        const data = eventMapper.toModel(req.body);
+        const event = await eventController.createEvent(data);
+        const eventDTO = eventMapper.toDTO(event);
+        res.send(response.success(eventDTO, 201, source));
+      } catch (err) {
+        debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
+        res.json({
+          status: 500,
+          message: "Internal Server Error"
+        });
+      }
+    }
   );
 };
