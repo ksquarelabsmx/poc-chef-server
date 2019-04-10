@@ -2,6 +2,7 @@ import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 
 import { IOrder } from "../../common/models/order";
+import { IOrdersDataSource } from "./orders-data-source";
 
 const orders: IOrder[] = [
   {
@@ -81,15 +82,17 @@ const orders: IOrder[] = [
   }
 ];
 
-const find = (query?: any): IOrder[] => {
+const find = (query?: any): Promise<IOrder[]> => {
   if (query) {
     const [key]: string[] = Object.keys(query);
-    return orders.filter((order: IOrder) => order[key] === query[key]);
+    return Promise.resolve(
+      orders.filter((order: IOrder) => order[key] === query[key])
+    );
   }
-  return orders;
+  return Promise.resolve(orders);
 };
 
-const save = (order: IOrder): IOrder => {
+const save = (order: IOrder): Promise<IOrder> => {
   order.id = uuid();
   const result: IOrder = {
     ...order,
@@ -103,13 +106,13 @@ const save = (order: IOrder): IOrder => {
       .unix()
   };
   orders.push(result);
-  return result;
+  return Promise.resolve(result);
 };
 
-const update = (order: any): IOrder => {
+const update = (order: any): Promise<IOrder> => {
   const index: number = orders.findIndex((ord: IOrder) => ord.id === order.id);
   orders[index] = { ...orders[index], ...order };
-  return orders[index];
+  return Promise.resolve(orders[index]);
 };
 
-export const ordersMemoryDataSource = { find, save, update };
+export const ordersMemoryDataSource: IOrdersDataSource = { find, save, update };

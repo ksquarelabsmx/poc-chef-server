@@ -21,7 +21,7 @@ export const OrdersRepository = (
 
   const getOrderById = async (id: number): Promise<any> => {
     try {
-      const order = ordersDataSource.find({ id });
+      const order = await ordersDataSource.find({ id });
 
       if (fp.isEmpty(order)) {
         return Promise.reject(boom.notFound("Not Found"));
@@ -61,6 +61,7 @@ export const OrdersRepository = (
       if (fp.isEmpty(orderFinded)) {
         return Promise.reject(boom.notFound("Not Found"));
       }
+
       //validate if the request order.eventId is the same as the existing order.eventId
       if (orderFinded[0].eventId !== order.eventId) {
         return Promise.reject(response.badRequest(error.orderEventDifferent));
@@ -82,19 +83,26 @@ export const OrdersRepository = (
 
   const markManyAsPaid = async (orderIds: string[]): Promise<string[]> => {
     try {
-      const orderStatus = orderIds.map((id: string) => {
-        const order: IOrder[] = ordersDataSource.find({ id });
-        if (fp.isEmpty(order)) {
-          return `order ${id} not found`;
-        }
-        if (order[0].paid) {
-          return `order ${id} was already marked as paid`;
-        }
+      const orderStatus = await Promise.all(
+        orderIds.map(
+          async (id: string): Promise<string> => {
+            const order = await ordersDataSource.find({ id });
 
-        order[0].paid = true;
-        ordersDataSource.update(order);
-        return `order ${id} successfully modified`;
-      });
+            if (fp.isEmpty(order)) {
+              return Promise.resolve(`order ${id} not found`);
+            }
+
+            if (order[0].paid) {
+              return Promise.resolve(`order ${id} was already marked as paid`);
+            }
+
+            order[0].paid = true;
+            ordersDataSource.update(order);
+
+            return Promise.resolve(`order ${id} successfully modified`);
+          }
+        )
+      );
 
       return Promise.resolve(orderStatus);
     } catch (err) {
@@ -104,18 +112,23 @@ export const OrdersRepository = (
 
   const markManyAsNotPaid = async (orderIds: string[]): Promise<string[]> => {
     try {
-      const orderStatus: string[] = orderIds.map((id: any) => {
-        const order: IOrder[] = ordersDataSource.find({ id });
-        if (fp.isEmpty(order)) {
-          return `order ${id} not found`;
-        }
-        if (!order[0].paid) {
-          return `order ${id} has not been marked as paid`;
-        }
-        order[0].paid = false;
-        ordersDataSource.update(order);
-        return `order ${id} successfully modified`;
-      });
+      const orderStatus = await Promise.all(
+        orderIds.map(async (id: any) => {
+          const order = await ordersDataSource.find({ id });
+          if (fp.isEmpty(order)) {
+            return Promise.resolve(`order ${id} not found`);
+          }
+
+          if (!order[0].paid) {
+            return Promise.resolve(`order ${id} has not been marked as paid`);
+          }
+
+          order[0].paid = false;
+          ordersDataSource.update(order);
+
+          return Promise.resolve(`order ${id} successfully modified`);
+        })
+      );
 
       return Promise.resolve(orderStatus);
     } catch (err) {

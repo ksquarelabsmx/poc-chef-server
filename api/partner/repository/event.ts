@@ -50,7 +50,7 @@ export const EventsRepository = (
       if (fp.isEmpty(event)) {
         return Promise.reject(boom.notFound("Not Found"));
       }
-      const orders: IOrder[] = ordersDataSource.find({
+      const orders = await ordersDataSource.find({
         eventId: id
       });
       const eventOrders = { ...event[0], orders: orders };

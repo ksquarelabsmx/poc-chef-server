@@ -1,7 +1,7 @@
 import { IOrder } from "../models/order";
 
 export interface IOrdersDataSource {
-  find: (query?: any) => IOrder[];
-  save: (order: IOrder) => IOrder;
-  update: (order: any) => IOrder;
+  find: (query?: any) => Promise<IOrder[]>;
+  save: (order: IOrder) => Promise<IOrder>;
+  update: (order: any) => Promise<IOrder>;
 }
