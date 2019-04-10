@@ -9,6 +9,7 @@ export const toDto = (order: IOrder): IOrderDto => ({
   products: order.products.map(orderProductMapper.toDto),
   user_id: order.userId,
   event_id: order.eventId,
+  event_name: order.eventName,
   created_by: order.createdBy,
   created_at: order.createdAt,
   updated_at: order.updatedAt
@@ -22,6 +23,7 @@ export const toModel = (order: IOrderDto): IOrder => ({
   products: order.products.map(orderProductMapper.toModel),
   userId: order.user_id,
   eventId: order.event_id,
+  eventName: order.event_name,
   createdBy: order.created_by,
   createdAt: order.created_at,
   updatedAt: order.updated_at
