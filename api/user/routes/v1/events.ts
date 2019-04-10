@@ -5,7 +5,9 @@ import { eventsController } from "../../controllers/";
 const eventsRouter = express.Router();
 
 eventsRouter.get("/", async (req, res) => {
-  const events = await eventsController.getEvents({ pastEvents: true });
+  const events = await eventsController.getEvents({
+    pastEvents: req.params.past !== undefined
+  });
   const eventsDto = events.map(eventMapper.toDto);
   return res.json({
     events: eventsDto
