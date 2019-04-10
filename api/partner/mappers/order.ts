@@ -1,14 +1,14 @@
 import { IOrder, IOrderDto } from "../../common/models/order";
 import { orderProductMapper } from "./order-product";
 
-const toEntity = (orderDTO: IOrderDto): IOrder => {
+const toModel = (orderDTO: IOrderDto): IOrder => {
   return {
     id: orderDTO.id,
     userId: orderDTO.user_id,
     eventId: orderDTO.event_id,
     total: orderDTO.total,
     createdBy: orderDTO.created_by,
-    products: orderDTO.products.map(orderProductMapper.toEntity),
+    products: orderDTO.products.map(orderProductMapper.toModel),
     paid: orderDTO.paid,
     cancelled: orderDTO.cancelled,
     createdAt: orderDTO.created_at,
@@ -32,6 +32,6 @@ const toDTO = (orderEntity: IOrder): IOrderDto => {
 };
 
 export const orderMapper = {
-  toEntity,
+  toModel,
   toDTO
 };

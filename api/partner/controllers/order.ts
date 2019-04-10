@@ -44,7 +44,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     debug(`OrderController: ${chalk.green("creating order")}`);
 
     const source: string = uriBuilder(req);
-    const order: IOrder = orderMapper.toEntity(req.body);
+    const order: IOrder = orderMapper.toModel(req.body);
     const createOrder = await orderService.createOrder(order);
     const orderDTO: IOrderDto = orderMapper.toDTO(createOrder);
 
@@ -60,7 +60,7 @@ const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
     debug(`EventController: ${chalk.green("getting events")}`);
 
     const source: string = uriBuilder(req);
-    const event: IOrder = orderMapper.toEntity({
+    const event: IOrder = orderMapper.toModel({
       id: req.params.id,
       ...req.body
     });
