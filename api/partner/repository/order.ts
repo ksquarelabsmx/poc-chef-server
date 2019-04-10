@@ -35,7 +35,7 @@ export const OrdersRepository = (
 
   const createOrder = async (order: IOrder): Promise<any> => {
     try {
-      const eventFinded: IEvent[] = eventsDataSource.find({
+      const eventFinded = await eventsDataSource.find({
         id: order.eventId
       });
 
@@ -47,8 +47,7 @@ export const OrdersRepository = (
         return Promise.reject(response.badRequest(error.eventIsFinished));
       }
 
-      const createdOrder = ordersDataSource.save(order);
-      return Promise.resolve(createdOrder);
+      return ordersDataSource.save(order);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
     }

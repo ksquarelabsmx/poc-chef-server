@@ -51,15 +51,17 @@ const events: IEvent[] = [
   }
 ];
 
-const find = (query?: any): IEvent[] => {
+const find = (query?: any): Promise<IEvent[]> => {
   if (query) {
     const [key]: string[] = Object.keys(query);
-    return events.filter((order: IEvent) => order[key] === query[key]);
+    return Promise.resolve(
+      events.filter((order: IEvent) => order[key] === query[key])
+    );
   }
-  return events;
+  return Promise.resolve(events);
 };
 
-const save = (event: IEvent): IEvent => {
+const save = (event: IEvent): Promise<IEvent> => {
   event.id = uuid();
   const result: IEvent = {
     ...event,
@@ -74,15 +76,15 @@ const save = (event: IEvent): IEvent => {
       .unix()
   };
   events.push(result);
-  return result;
+  return Promise.resolve(result);
 };
 
-const update = (event: IEvent): IEvent => {
+const update = (event: IEvent): Promise<IEvent> => {
   const index: number = events.findIndex(
     (even: IEvent) => even.id === event.id
   );
   events[index] = { ...events[index], ...event };
-  return events[index];
+  return Promise.resolve(events[index]);
 };
 
 export const eventsMemoryDataSource: IEventsDataSource = { find, save, update };

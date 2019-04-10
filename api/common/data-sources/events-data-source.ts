@@ -1,7 +1,7 @@
 import { IEvent } from "../models/event";
 
 export interface IEventsDataSource {
-  update: (event: IEvent) => IEvent;
-  save: (event: IEvent) => IEvent;
-  find: (query?: any) => IEvent[];
+  find: (query?: any) => Promise<IEvent[]>;
+  update: (event: IEvent) => Promise<IEvent>;
+  save: (event: IEvent) => Promise<IEvent>;
 }

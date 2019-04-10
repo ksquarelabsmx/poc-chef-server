@@ -16,7 +16,7 @@ export const EventsRepository = (
   ordersDataSource: IOrdersDataSource
 ) => {
   const getEvents = async (): Promise<IEvent[]> => {
-    return Promise.resolve(eventsDataSource.find());
+    return eventsDataSource.find();
   };
 
   const getCurrentEvents = async (): Promise<any> => {
@@ -74,16 +74,17 @@ export const EventsRepository = (
   const updateEvent = async (event: IEvent): Promise<any> => {
     try {
       const { id } = event;
-      const eventFinded: IEvent[] = eventsDataSource.find({ id });
+      const eventFinded = await eventsDataSource.find({ id });
 
       if (fp.isEmpty(eventFinded)) {
         return Promise.reject(boom.notFound("Not Found"));
       }
+
       if (isFinished(eventFinded[0])) {
         return Promise.reject(response.badRequest(error.eventIsFinished));
       }
 
-      return Promise.resolve(eventsDataSource.update(event));
+      return eventsDataSource.update(event);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
     }
