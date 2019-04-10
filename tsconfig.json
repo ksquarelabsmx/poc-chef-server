@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "strict": true,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "moduleResolution": "node",
+    "outDir": "build",
+    "baseUrl": ".",
+    "lib": ["es6", "dom"]
+  },
+  "include": ["api/**/*", "test/**/*"],
+  "exclude": ["node_modules"],
+  "files": ["api/typings/declarations.d.ts"]
+}

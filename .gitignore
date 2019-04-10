@@ -1,0 +1,18 @@
+node_modules/
+.nyc_output
+.DS_Store
+DS_STORE
+.env
+.vscode/
+
+# compiled tsc
+build
+
+# docs services
+public/apidoc
+
+# nyc coverage
+coverage
+
+# logs
+.poc-chef-server-logs
