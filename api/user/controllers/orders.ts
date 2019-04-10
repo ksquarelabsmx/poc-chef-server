@@ -1,46 +1,20 @@
-import { errorStrategy } from "../strategies";
-import * as orderMapper from "../../common/mappers/order";
+import { IOrder } from "../../common/models/order";
 
 export const OrdersController = ordersRepository => {
-  const getAll = async (_req, res) => {
-    const orders = await ordersRepository.getAll();
-    const ordersDto = orders.map(orderMapper.toDto);
-    res.json({ orders: ordersDto });
+  const getAll = (): Promise<IOrder[]> => {
+    return ordersRepository.getAll();
   };
 
-  const createOrder = async (req, res) => {
-    const order = await ordersRepository.createOne(req.body);
-    const orderDto = orderMapper.toDto(order);
-    res.json({
-      order: orderDto
-    });
+  const createOrder = (order: IOrder): Promise<IOrder> => {
+    return ordersRepository.createOne(order);
   };
 
-  const updateOrderById = async (req, res) => {
-    try {
-      const order = await ordersRepository.updateOneById(
-        req.params.id,
-        req.body
-      );
-      const orderDto = orderMapper.toDto(order);
-      return res.json({
-        order: orderDto
-      });
-    } catch (err) {
-      return res.json(errorStrategy.handle(err));
-    }
+  const updateOrderById = (id: string, order: IOrder): Promise<IOrder> => {
+    return ordersRepository.updateOneById(id, order);
   };
 
-  const cancelOrderById = async (req, res) => {
-    try {
-      const order = await ordersRepository.cancelOrderById(req.params.id);
-      const orderDto = orderMapper.toDto(order);
-      return res.json({
-        order: orderDto
-      });
-    } catch (err) {
-      return res.json(errorStrategy.handle(err));
-    }
+  const cancelOrderById = (id: string): Promise<IOrder> => {
+    return ordersRepository.cancelOrderById(id);
   };
 
   return {
