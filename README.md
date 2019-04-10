@@ -1,8 +1,17 @@
-# POC CHEF
+# Poc Chef Server
 
-Just a fancy app for order poc chuc tortas.
+Server application to order tortas
 
-## Installing / Getting started
+## Table of contents
+
+1. [Instalation](#installation)
+2. [Develop](#develop)
+3. [Deploy](#deploy)
+4. [Docs](#docs)
+5. [Tests](#tests)
+6. [License](#license)
+
+## Installation
 
 ### Useful scripts
 
@@ -36,7 +45,7 @@ Generate documentation:
 npm run apidoc
 ```
 
-## Developing
+## Develop
 
 ### Built With
 
@@ -82,7 +91,7 @@ printf "%s\n" $(openssl rand -base64 32 | tr -dc 0-9A-Za-z | head -c 40)
 
 [Generate google oauth2 credentials](https://developers.google.com/adwords/api/docs/guides/authentication)
 
-### Building
+### Build
 
 Execute project in localhost:
 
@@ -106,7 +115,7 @@ You must see the next output:
 
 ```
 
-## Deploying / Publishing
+## Deploy
 
 - [Install docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 - [Install docker compose](https://docs.docker.com/compose/install/)
@@ -120,12 +129,12 @@ docker-compose up
 
 TODO: add server configuration
 
-## API Tests
+## Tests
 
 Run project first: `npm run start-dev` or `npm run production`
 Run test: `npm run test`
 
-## API Refence
+## Docs
 
 You can see the API documentation in dev mode following the next steps:
 
@@ -138,4 +147,4 @@ See documentation: `localhost:3000/apidoc`, if you are running your project in p
 
 ## License
 
-Add license here
+[MIT](https://github.com/ksquareincmx/poc-chef-server/blob/master/LICENSE)
