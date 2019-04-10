@@ -9,7 +9,10 @@ import { IEvent, IEventDto } from "../../common/models/event";
 
 const debug = Debug("chef:events:controller:events");
 
-const eventStrategy = (eventService: any, query: string = "") => {
+const eventStrategy = (
+  eventService: any,
+  query: string = ""
+): Promise<IEvent[]> => {
   switch (query) {
     case "current": {
       return eventService.getCurrentEvents();
@@ -23,17 +26,17 @@ const eventStrategy = (eventService: any, query: string = "") => {
   }
 };
 
-const getEventById = async (id: string) => {
+const getEventById = async (id: string): Promise<IEvent> => {
   debug(`EventController: ${chalk.green("getting event")}`);
   return eventService.getEventOrderById(id);
 };
 
-const getEvents = async (type: string) => {
+const getEvents = async (type: string): Promise<IEvent[]> => {
   debug(`EventController: ${chalk.green("getting events")}`);
   return eventStrategy(eventService, type);
 };
 
-const updateEvent = async (id: string, data: IEvent) => {
+const updateEvent = async (id: string, data: IEvent): Promise<IEvent> => {
   debug(`EventController: ${chalk.green("getting events")}`);
   return eventService.updateEvent({
     ...data,
@@ -41,7 +44,7 @@ const updateEvent = async (id: string, data: IEvent) => {
   });
 };
 
-const createEvent = async (data: IEvent) => {
+const createEvent = async (data: IEvent): Promise<IEvent> => {
   debug(`EventController: ${chalk.green("creating events")}`);
   return eventService.createEvent(data);
 };
