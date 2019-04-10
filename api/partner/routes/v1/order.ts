@@ -1,7 +1,7 @@
 import { Express } from "express";
 
 import { orderController } from "../../controllers";
-import { ordersDataSource } from "../../data-source";
+import { ordersMemoryDataSource } from "../../../common/data-sources/orders-memory-data-source";
 import { validation } from "../../middlewares";
 import { orderSchema } from "../../utils/schemas";
 import {
@@ -146,7 +146,7 @@ export const orderRoutes = (app: Express) => {
   app.get(
     "/v1/orders/:id",
     validateJWT("access"),
-    onlyOwner(ordersDataSource),
+    onlyOwner(ordersMemoryDataSource),
     validation({ id: orderSchema.orderId }, "params"),
     orderController.getOrder
   );

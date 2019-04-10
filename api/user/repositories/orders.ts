@@ -1,3 +1,6 @@
+import { IOrdersDataSource } from "api/common/data-sources/orders-data-source";
+import { IProductsDataSource } from "api/common/data-sources/products-data-source";
+
 const normalizeProducts = (records, products) => {
   return records
     .map(docs => docs[0])
@@ -17,7 +20,10 @@ const calculateTotal = products => {
   }, 0);
 };
 
-export const OrdersRepository = (ordersDataSource, productsDataSource) => {
+export const OrdersRepository = (
+  ordersDataSource: IOrdersDataSource,
+  productsDataSource: IProductsDataSource
+) => {
   const getAll = () => {
     return ordersDataSource.find();
   };

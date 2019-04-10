@@ -1,6 +1,7 @@
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 import { IProduct } from "../../common/models/product";
+import { IProductsDataSource } from "./products-data-source";
 
 const products: IProduct[] = [
   {
@@ -10,18 +11,29 @@ const products: IProduct[] = [
     price: 25,
     createdAt: 1548000000,
     updatedAt: 1548000000
+  },
+  {
+    id: "faa65af2-ac6d-4404-9d9d-7423f04eb740",
+    name: "Shrimp Torta",
+    description: "Is a Poc Chuc Torta",
+    price: 25,
+    createdAt: 1548000000,
+    updatedAt: 1548000000
   }
 ];
 
-const find = (query?: any): IProduct[] => {
+const find = (query?: any): Promise<IProduct[]> => {
   if (query) {
     const [key]: string[] = Object.keys(query);
-    return products.filter((user: IProduct) => user[key] === query[key]);
+    return Promise.resolve(
+      products.filter((user: IProduct) => user[key] === query[key])
+    );
   }
-  return products;
+
+  return Promise.resolve(products);
 };
 
-const save = (product: IProduct): IProduct => {
+const save = (product: IProduct): Promise<IProduct> => {
   product.id = uuid();
   const result: IProduct = {
     ...product,
@@ -32,16 +44,24 @@ const save = (product: IProduct): IProduct => {
       .utc()
       .unix()
   };
+
   products.push(result);
-  return result;
+
+  return Promise.resolve(result);
 };
 
-const update = (product: IProduct): IProduct => {
+const update = (product: IProduct): Promise<IProduct> => {
   const index: number = products.findIndex(
     (p: IProduct) => p.id === product.id
   );
+
   products[index] = { ...products[index], ...product };
-  return products[index];
+
+  return Promise.resolve(products[index]);
 };
 
-export const productsDataSource = { find, save, update };
+export const productsMemoryDataSource: IProductsDataSource = {
+  find,
+  save,
+  update
+};

@@ -12,7 +12,7 @@ import {
 import { config } from "../../../config";
 import { error, response } from "../utils";
 import { user, auth } from "../interfaces";
-import { usersDataSource, authDataSource } from "../data-source";
+import { usersDataSource, authDataSource } from "../../common/data-sources";
 import { userMapper } from "../mappers";
 
 // TODO: add encrypt decrypt
