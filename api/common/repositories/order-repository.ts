@@ -1,6 +1,6 @@
 import { IOrder } from "../models/order";
 
-export interface IOrdersDataSource {
+export interface IOrderRepository {
   find: (query?: any) => Promise<IOrder[]>;
   save: (order: IOrder) => Promise<IOrder>;
   update: (order: any) => Promise<IOrder>;

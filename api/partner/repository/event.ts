@@ -2,18 +2,17 @@ import * as fp from "lodash/fp";
 import * as boom from "boom";
 
 import { error, response } from "../utils";
-import { IOrder } from "../../common/models/order";
 import { IEvent } from "../../common/models/event";
-import { IEventsDataSource } from "../../common/data-sources/events-data-source";
-import { IOrdersDataSource } from "api/common/data-sources/orders-data-source";
+import { IEventRepository } from "../../common/repositories/event-repository";
+import { IOrderRepository } from "api/common/repositories/order-repository";
 
 const isFinished = (event: IEvent) => {
   return event.expirationDate < Date.now() || event.markedAsFinished;
 };
 
 export const EventsRepository = (
-  eventsDataSource: IEventsDataSource,
-  ordersDataSource: IOrdersDataSource
+  eventsDataSource: IEventRepository,
+  ordersDataSource: IOrderRepository
 ) => {
   const getEvents = async (): Promise<IEvent[]> => {
     return eventsDataSource.find();

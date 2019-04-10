@@ -1,15 +1,15 @@
 import { EventsRepository } from "./event";
 import { OrdersRepository } from "./order";
 import { UserRepository } from "./user";
-import { eventsMemoryDataSource } from "../../common/data-sources/events-memory-data-source";
-import { ordersMemoryDataSource } from "../../common/data-sources/orders-memory-data-source";
+import { eventMemoryRepository } from "../../common/repositories/event-memory-repository";
+import { orderMemoryRepository } from "../../common/repositories/order-memory-repository";
 
 export const ordersRepository = OrdersRepository(
-  ordersMemoryDataSource,
-  eventsMemoryDataSource
+  orderMemoryRepository,
+  eventMemoryRepository
 );
 export const eventRepository = EventsRepository(
-  eventsMemoryDataSource,
-  ordersMemoryDataSource
+  eventMemoryRepository,
+  orderMemoryRepository
 );
 export const userRepository = UserRepository();

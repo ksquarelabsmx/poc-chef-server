@@ -1,8 +1,8 @@
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 
-import { IOrder } from "../../common/models/order";
-import { IOrdersDataSource } from "./orders-data-source";
+import { IOrder } from "../models/order";
+import { IOrderRepository } from "./order-repository";
 
 const orders: IOrder[] = [
   {
@@ -115,4 +115,4 @@ const update = (order: any): Promise<IOrder> => {
   return Promise.resolve(orders[index]);
 };
 
-export const ordersMemoryDataSource: IOrdersDataSource = { find, save, update };
+export const orderMemoryRepository: IOrderRepository = { find, save, update };

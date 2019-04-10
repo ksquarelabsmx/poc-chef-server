@@ -1,9 +1,7 @@
 import { appendUser } from "../../policies/access-control";
 import { Express } from "express";
-
 import { validateJWT, filterRoles, onlyOwner } from "../../policies";
-
-import { eventsMemoryDataSource } from "../../../common/data-sources/events-memory-data-source";
+import { eventMemoryRepository } from "../../../common/repositories/event-memory-repository";
 import { eventController } from "../../controllers";
 import { validation } from "../../middlewares";
 import { eventSchema } from "../../utils/schemas";
@@ -258,7 +256,7 @@ export const eventRoutes = (app: Express) => {
     "/v1/events/:id",
     validateJWT("access"),
     filterRoles(["partner"]),
-    onlyOwner(eventsMemoryDataSource),
+    onlyOwner(eventMemoryRepository),
     appendUser(),
     validation({ id: eventSchema.eventId }, "params"),
     validation(eventSchema.event),

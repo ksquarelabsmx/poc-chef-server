@@ -1,7 +1,7 @@
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
-import { IEventsDataSource } from "./events-data-source";
-import { IEvent } from "../../common/models/event";
+import { IEventRepository } from "./event-repository";
+import { IEvent } from "../models/event";
 
 const events: IEvent[] = [
   {
@@ -87,4 +87,4 @@ const update = (event: IEvent): Promise<IEvent> => {
   return Promise.resolve(events[index]);
 };
 
-export const eventsMemoryDataSource: IEventsDataSource = { find, save, update };
+export const eventMemoryRepository: IEventRepository = { find, save, update };
