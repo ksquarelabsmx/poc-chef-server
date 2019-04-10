@@ -1,7 +1,7 @@
-import { IEvent, IEventDTO } from "../../common/models/event";
+import { IEvent, IEventDto } from "../../common/models/event";
 import { orderMapper } from "./order";
 
-const toEntity = (eventDTO: IEventDTO): IEvent => {
+const toEntity = (eventDTO: IEventDto): IEvent => {
   return {
     id: eventDTO.id,
     name: eventDTO.name,
@@ -19,7 +19,7 @@ const toEntity = (eventDTO: IEventDTO): IEvent => {
   };
 };
 
-const toDTO = (eventEntity: IEvent): IEventDTO => {
+const toDTO = (eventEntity: IEvent): IEventDto => {
   return {
     id: eventEntity.id,
     name: eventEntity.name,

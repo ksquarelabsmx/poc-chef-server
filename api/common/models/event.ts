@@ -17,7 +17,7 @@ export interface IEvent {
   updatedAt: number;
 }
 
-export interface IEventDTO {
+export interface IEventDto {
   id?: string;
   name: string;
   start_date: number;
@@ -34,7 +34,7 @@ export interface IEventDTO {
 }
 
 // interfaces for get event with orders details
-export interface IEventOrdersDTO extends IEventDTO {
+export interface IEventOrdersDTO extends IEventDto {
   orders: IOrderDto[];
 }
 

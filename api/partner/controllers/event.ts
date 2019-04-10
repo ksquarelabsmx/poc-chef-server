@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import { uriBuilder, response } from "../utils";
 import { eventMapper } from "../mappers";
 import { eventRepository } from "../repository";
-import { IEvent, IEventDTO } from "../../common/models/event";
+import { IEvent, IEventDto } from "../../common/models/event";
 
 const debug = Debug("chef:events:controller:events");
 
@@ -63,7 +63,7 @@ const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
       ...req.body
     });
     const updatedEvent = await eventRepository.updateEvent(event);
-    const eventDTO: IEventDTO = eventMapper.toDTO(updatedEvent);
+    const eventDTO: IEventDto = eventMapper.toDTO(updatedEvent);
 
     res.send(response.success(eventDTO, 201, source));
   } catch (err) {
@@ -79,7 +79,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     const source: string = uriBuilder(req);
     const event: IEvent = eventMapper.toEntity(req.body);
     const createdEvent = await eventRepository.createEvent(event);
-    const eventDTO: IEventDTO = eventMapper.toDTO(createdEvent);
+    const eventDTO: IEventDto = eventMapper.toDTO(createdEvent);
 
     res.send(response.success(eventDTO, 201, source));
   } catch (err) {
