@@ -5,11 +5,11 @@ import { eventMemoryRepository } from "../../../common/repositories/event-memory
 import { eventController } from "../../controllers";
 import { validation } from "../../middlewares";
 import { eventSchema } from "../../utils/schemas";
-import { uriBuilder } from "api/partner/utils/uri";
-import { response } from "api/partner/utils/response";
 import debug = require("debug");
 import chalk from "chalk";
-import { eventMapper } from "api/partner/mappers/event";
+import { uriBuilder } from "../../utils/uri";
+import { eventMapper } from "../../mappers/event";
+import { response } from "../../utils/response";
 
 export const eventRoutes = (app: Express) => {
   /**
