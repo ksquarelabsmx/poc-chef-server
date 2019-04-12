@@ -1,25 +1,25 @@
 import { IEvent, IEventDto } from "../../common/models/event";
 import { orderMapper } from "./order";
 
-const toModel = (eventDTO: IEventDto): IEvent => {
+const toModel = (eventDto: IEventDto): IEvent => {
   return {
-    id: eventDTO.id,
-    name: eventDTO.name,
-    startDate: eventDTO.start_date,
-    expirationDate: eventDTO.expiration_date,
-    startHour: eventDTO.start_hour,
-    endHour: eventDTO.end_hour,
-    createdBy: eventDTO.created_by,
-    total: eventDTO.total,
-    markedAsFinished: eventDTO.marked_as_finished,
-    cancelled: eventDTO.cancelled,
-    orders: eventDTO.orders.map(orderMapper.toModel),
-    createdAt: eventDTO.created_at,
-    updatedAt: eventDTO.updated_at
+    id: eventDto.id,
+    name: eventDto.name,
+    startDate: eventDto.start_date,
+    expirationDate: eventDto.expiration_date,
+    startHour: eventDto.start_hour,
+    endHour: eventDto.end_hour,
+    createdBy: eventDto.created_by,
+    total: eventDto.total,
+    markedAsFinished: eventDto.marked_as_finished,
+    cancelled: eventDto.cancelled,
+    orders: eventDto.orders.map(orderMapper.toModel),
+    createdAt: eventDto.created_at,
+    updatedAt: eventDto.updated_at
   };
 };
 
-const toDTO = (eventEntity: IEvent): IEventDto => {
+const toDto = (eventEntity: IEvent): IEventDto => {
   return {
     id: eventEntity.id,
     name: eventEntity.name,
@@ -31,7 +31,7 @@ const toDTO = (eventEntity: IEvent): IEventDto => {
     created_by: eventEntity.createdBy,
     marked_as_finished: eventEntity.markedAsFinished,
     cancelled: eventEntity.cancelled,
-    orders: eventEntity.orders.map(orderMapper.toDTO),
+    orders: eventEntity.orders.map(orderMapper.toDto),
     created_at: eventEntity.createdAt,
     updated_at: eventEntity.updatedAt
   };
@@ -39,5 +39,5 @@ const toDTO = (eventEntity: IEvent): IEventDto => {
 
 export const eventMapper = {
   toModel,
-  toDTO
+  toDto
 };

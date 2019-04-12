@@ -6,19 +6,33 @@ const order = {
   user_id: Joi.string()
     .uuid()
     .required(),
+
   event_id: Joi.string()
     .uuid()
     .required(),
-  price: Joi.number()
+
+  event_name: Joi.string().required(),
+
+  total: Joi.number()
     .positive()
     .min(0)
     .required(),
-  order_product_id: Joi.array()
+
+  products: Joi.array()
     .items(Joi.string().uuid())
     .required(),
+
   created_by: Joi.string()
     .uuid()
-    .required()
+    .required(),
+
+  paid: Joi.boolean().required(),
+
+  cancelled: Joi.boolean().required(),
+
+  created_at: Joi.number().required(),
+
+  updated_at: Joi.number().required()
 };
 
 export const orderSchema = { orderId, order };

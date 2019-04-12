@@ -3,19 +3,19 @@ import {
   IOrderProductDto
 } from "../../common/models/order-product";
 
-const toModel = (orderProductDTO: IOrderProductDto): IOrderProduct => {
+const toModel = (orderProductDto: IOrderProductDto): IOrderProduct => {
   return {
-    id: orderProductDTO.id,
-    name: orderProductDTO.name,
-    quantity: orderProductDTO.quantity,
-    price: orderProductDTO.price,
-    subtotal: orderProductDTO.subtotal,
-    createdAt: orderProductDTO.created_at,
-    updatedAt: orderProductDTO.updated_at
+    id: orderProductDto.id,
+    name: orderProductDto.name,
+    quantity: orderProductDto.quantity,
+    price: orderProductDto.price,
+    subtotal: orderProductDto.subtotal,
+    createdAt: orderProductDto.created_at,
+    updatedAt: orderProductDto.updated_at
   };
 };
 
-const toDTO = (orderEntity: IOrderProduct): IOrderProductDto => {
+const toDto = (orderEntity: IOrderProduct): IOrderProductDto => {
   return {
     id: orderEntity.id,
     name: orderEntity.name,
@@ -27,4 +27,4 @@ const toDTO = (orderEntity: IOrderProduct): IOrderProductDto => {
   };
 };
 
-export const orderProductMapper = { toModel, toDTO };
+export const orderProductMapper = { toModel, toDto };

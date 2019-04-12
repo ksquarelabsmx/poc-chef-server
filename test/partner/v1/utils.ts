@@ -1,7 +1,9 @@
 import * as moment from "moment";
 
-import { event, order, auth } from "../../../api/partner/interfaces";
+import { IEventDto } from "../../../api/common/models/event";
+import { IOrderDto } from "../../../api/common/models/order";
 import { authService } from "../../../api/partner/services";
+import { ILogin } from "../../../api/partner/interfaces/auth";
 
 export const server: string = "http://localhost:3000";
 export const healthURI: string = "/v1/ping";
@@ -17,22 +19,19 @@ const futureDate = (days: number, hours: number): number =>
     .add(hours, "hour")
     .unix();
 
-export const eventMockDTO: event.IEventDto = {
-  event_name: "Tortastic",
+export const eventMockDto: IEventDto = {
+  name: "Tortastic",
   start_date: futureDate(1, 0), // epoch
   expiration_date: futureDate(1, 2), // epoch
   start_hour: 800,
   end_hour: 1200,
-  created_by: "6d623d08-113c-4565-81b2-e17c90331241"
-};
-
-export const eventMock: event.IEvent = {
-  eventName: "Tortastic",
-  startDate: futureDate(1, 0), // epoch
-  expirationDate: futureDate(1, 2), // epoch
-  startHour: 800,
-  endHour: 1200,
-  createdBy: "6d623d08-113c-4565-81b2-e17c90331241"
+  created_by: "6d623d08-113c-4565-81b2-e17c90331241",
+  total: 10,
+  orders: [],
+  marked_as_finished: false,
+  cancelled: false,
+  created_at: 1548000000,
+  updated_at: 1548000000
 };
 
 export const userMock = {
@@ -42,17 +41,22 @@ export const userMock = {
   role: "admin partner"
 };
 
-export const loginMock: auth.ILogin = {
+export const loginMock: ILogin = {
   email: "admin@example.com",
   password: "4dm1n"
 };
 
-export const orderMockDTO: order.IOrderDTO = {
+export const orderMockDto: IOrderDto = {
   user_id: "6d623d08-113c-4565-81b2-e17c90331241",
   event_id: "8c9ae830-dd56-4828-8503-c70355253de9",
-  price: 20,
-  order_product_id: ["48f04396-e3be-4970-87d5-be2412639303"],
-  created_by: "6d623d08-113c-4565-81b2-e17c90331241"
+  event_name: "Tortastic",
+  total: 10,
+  products: [],
+  created_by: "6d623d08-113c-4565-81b2-e17c90331241",
+  paid: false,
+  cancelled: false,
+  created_at: 1548000000,
+  updated_at: 1548000000
 };
 
 // pending promise

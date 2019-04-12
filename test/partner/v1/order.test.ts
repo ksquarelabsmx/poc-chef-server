@@ -6,7 +6,7 @@ import chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 const { expect } = chai;
 
-import { orderURI, server, orderMockDTO, jwt } from "./utils";
+import { orderURI, server, orderMockDto, jwt } from "./utils";
 
 describe("/orders", () => {
   let token: string;
@@ -25,7 +25,7 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res).to.have.status(200);
+          expect(res).to.have.property("statusCode", 200);
           expect(res.body).to.have.property("data");
 
           expect(res.body.data[0]).to.have.property(
@@ -36,11 +36,12 @@ describe("/orders", () => {
             "eventId",
             "8c9ae830-dd56-4828-8503-c70355253de9"
           );
-          expect(res.body.data[0]).to.have.property("price", 45);
-          expect(res.body.data[0]).to.have.deep.property("orderProductId", [
-            "606ffa47-a941-4982-b929-1a900273997c",
-            "fc6a2b09-f797-460f-8ab3-8c221f4f6211"
-          ]);
+          expect(res.body.data[0]).to.have.property(
+            "eventName",
+            "Aún más tortas"
+          );
+          expect(res.body.data[0]).to.have.property("total", 100);
+          expect(res.body.data[0]).to.have.deep.property("products");
           expect(res.body.data[0]).to.have.property(
             "createdBy",
             "6d623d08-113c-4565-81b2-e17c90331241"
@@ -58,11 +59,9 @@ describe("/orders", () => {
             "eventId",
             "8c9ae830-dd56-4828-8503-c70355253de9"
           );
-          expect(res.body.data[1]).to.have.property("price", 60);
-          expect(res.body.data[1]).to.have.deep.property("orderProductId", [
-            "bfca1b12-567c-4ae7-8f60-45563b28af36",
-            "13e3d6e4-64fe-4467-ae82-7112d709d252"
-          ]);
+          expect(res.body.data[1]).to.have.property("eventName", "Más tortas");
+          expect(res.body.data[1]).to.have.property("total", 50);
+          expect(res.body.data[1]).to.have.deep.property("products");
           expect(res.body.data[1]).to.have.property(
             "createdBy",
             "6d623d08-113c-4565-81b2-e17c90331241"
@@ -80,11 +79,12 @@ describe("/orders", () => {
             "eventId",
             "92c483f9-87cb-4715-b563-093f91703f63"
           );
-          expect(res.body.data[2]).to.have.property("price", 90);
-          expect(res.body.data[2]).to.have.deep.property("orderProductId", [
-            "b931dcdb-c833-4e3b-b156-cade380bc5eb",
-            "f5d6cc72-da67-4d2a-b3eb-c7a2878aea23"
-          ]);
+          expect(res.body.data[2]).to.have.property(
+            "eventName",
+            "Tortas para la oficina"
+          );
+          expect(res.body.data[2]).to.have.property("total", 50);
+          expect(res.body.data[2]).to.have.deep.property("products");
           expect(res.body.data[2]).to.have.property(
             "createdBy",
             "6d623d08-113c-4565-81b2-e17c90331241"
@@ -101,32 +101,49 @@ describe("/orders", () => {
     const {
       user_id,
       event_id,
-      price,
-      order_product_id,
-      created_by
-    } = orderMockDTO;
+      event_name,
+      total,
+      products,
+      created_by,
+      paid,
+      cancelled,
+      created_at,
+      updated_at
+    } = orderMockDto;
 
     it("Should post an order", done => {
       chai
         .request(server)
         .post(orderURI)
-        .send({ user_id, event_id, price, order_product_id, created_by })
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data).to.have.property("user_id", user_id);
           expect(res.body.data).to.have.property("event_id", event_id);
-          expect(res.body.data).to.have.property("price", price);
-          expect(res.body.data).to.have.deep.property(
-            "order_product_id",
-            order_product_id
-          );
+          expect(res.body.data).to.have.property("total", total);
+          expect(res.body.data).to.have.deep.property("products", products);
           expect(res.body.data).to.have.property("created_by", created_by);
+          expect(res.body.data).to.have.property("paid", paid);
+          expect(res.body.data).to.have.property("cancelled", cancelled);
+          expect(res.body.data).to.have.property("created_at", updated_at);
+          expect(res.body.data).to.have.property("updated_at", updated_at);
           done();
         });
     });
@@ -144,7 +161,7 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 200);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data[0]).to.deep.equal(
             "order fefcd99e-d7fb-4189-9e8f-c9395bea5fa7 successfully modified"
@@ -166,7 +183,7 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 200);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data[0]).to.deep.equal(
             "order cd639768-37fc-4386-8fc8-f93c2327ebf1 was already marked as paid"
@@ -188,7 +205,7 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 200);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data[0]).to.deep.equal(
             "order 9a640c51-276a-4c95-a44b-ff47e2702663 not found"
@@ -210,7 +227,7 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 200);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data[0]).to.deep.equal(
             "order fefcd99e-d7fb-4189-9e8f-c9395bea5fa7 successfully modified"
@@ -232,7 +249,7 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 200);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data[0]).to.deep.equal(
             "order 93d1d016-6a24-4680-ae80-a558176aba37 has not been marked as paid"
@@ -254,10 +271,166 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 200);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data[0]).to.deep.equal(
             "order 9a640c51-276a-4c95-a44b-ff47e2702663 not found"
+          );
+          done();
+        });
+    });
+    it("Should handle action mark order not cancelled", done => {
+      chai
+        .request(server)
+        .post(`${orderURI}/actions`)
+        .send({
+          action: "mark_as_not_cancelled",
+          ids: ["fefcd99e-d7fb-4189-9e8f-c9395bea5fa7"]
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data[0]).to.deep.equal(
+            "order fefcd99e-d7fb-4189-9e8f-c9395bea5fa7 successfully modified"
+          );
+          done();
+        });
+    });
+    it("Should handle action mark order not cancelled not marked as cancelled", done => {
+      chai
+        .request(server)
+        .post(`${orderURI}/actions`)
+        .send({
+          action: "mark_as_not_cancelled",
+          ids: ["cd639768-37fc-4386-8fc8-f93c2327ebf1"]
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data[0]).to.deep.equal(
+            "order cd639768-37fc-4386-8fc8-f93c2327ebf1 has not been marked as cancelled"
+          );
+          done();
+        });
+    });
+    it("Should handle action mark order not cancelled not found", done => {
+      chai
+        .request(server)
+        .post(`${orderURI}/actions`)
+        .send({
+          action: "mark_as_not_paid",
+          ids: ["9a640c51-276a-4c95-a44b-ff47e2702663"]
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data[0]).to.deep.equal(
+            "order 9a640c51-276a-4c95-a44b-ff47e2702663 not found"
+          );
+          done();
+        });
+    });
+    it("Should handle action mark orders as cancelled", done => {
+      chai
+        .request(server)
+        .post(`${orderURI}/actions`)
+        .send({
+          action: "mark_as_paid",
+          ids: ["fefcd99e-d7fb-4189-9e8f-c9395bea5fa7"]
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data[0]).to.deep.equal(
+            "order fefcd99e-d7fb-4189-9e8f-c9395bea5fa7 successfully modified"
+          );
+          done();
+        });
+    });
+    it("Should handle action mark orders as cancelled already marked as cancelled", done => {
+      chai
+        .request(server)
+        .post(`${orderURI}/actions`)
+        .send({
+          action: "mark_as_paid",
+          ids: ["fefcd99e-d7fb-4189-9e8f-c9395bea5fa7"]
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data[0]).to.deep.equal(
+            "order fefcd99e-d7fb-4189-9e8f-c9395bea5fa7 was already marked as paid"
+          );
+          done();
+        });
+    });
+    it("Should handle action mark orders as cancelled not found", done => {
+      chai
+        .request(server)
+        .post(`${orderURI}/actions`)
+        .send({
+          action: "mark_as_paid",
+          ids: ["9a640c51-276a-4c95-a44b-ff47e2702663"]
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 201);
+          expect(res.body).to.have.property("data");
+          expect(res.body.data[0]).to.deep.equal(
+            "order 9a640c51-276a-4c95-a44b-ff47e2702663 not found"
+          );
+          done();
+        });
+    });
+    it("Should fail without existing action", done => {
+      chai
+        .request(server)
+        .post(`${orderURI}/actions`)
+        .send({
+          action: "mark_as_finish",
+          ids: ["9a640c51-276a-4c95-a44b-ff47e2702663"]
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("data");
+          expect(res.body.data).to.have.property("statusCode", 400);
+          expect(res.body.data).to.have.property("title", "Bad Request");
+          expect(res.body.data).to.have.property(
+            "message",
+            "That action does not exists"
           );
           done();
         });
@@ -266,14 +439,24 @@ describe("/orders", () => {
       chai
         .request(server)
         .post(orderURI)
-        .send({ event_id, price, order_product_id, created_by })
+        .send({
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "user_id");
@@ -285,14 +468,24 @@ describe("/orders", () => {
       chai
         .request(server)
         .post(orderURI)
-        .send({ user_id, price, order_product_id, created_by })
+        .send({
+          user_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "event_id");
@@ -300,43 +493,205 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail without price", done => {
+    it("Should fail without event_name", done => {
       chai
         .request(server)
         .post(orderURI)
-        .send({ user_id, event_id, order_product_id, created_by })
+        .send({
+          user_id,
+          event_id,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "price");
+          expect(res.body.errors[0]).to.have.property("field", "event_name");
           expect(res.body.errors[0]).to.have.property("error", "is required");
           done();
         });
     });
-    it("Should fail without order_product_id", done => {
+    it("Should fail without total", done => {
       chai
         .request(server)
         .post(orderURI)
-        .send({ user_id, event_id, price, created_by })
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property(
-            "field",
-            "order_product_id"
-          );
+          expect(res.body.errors[0]).to.have.property("field", "total");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
+          done();
+        });
+    });
+    it("Should fail without products", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "products");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
+          done();
+        });
+    });
+    it("Should fail without paid", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          cancelled,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "paid");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
+          done();
+        });
+    });
+    it("Should fail without cancelled", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "cancelled");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
+          done();
+        });
+    });
+    it("Should fail without created_at", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "created_at");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
+          done();
+        });
+    });
+    it("Should fail without updated_at", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "updated_at");
           expect(res.body.errors[0]).to.have.property("error", "is required");
           done();
         });
@@ -345,22 +700,29 @@ describe("/orders", () => {
       chai
         .request(server)
         .post(orderURI)
-        .send({ user_id, event_id, price, order_product_id })
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data).to.have.property("user_id", user_id);
           expect(res.body.data).to.have.property("event_id", event_id);
-          expect(res.body.data).to.have.property("price", price);
-          expect(res.body.data).to.have.deep.property(
-            "order_product_id",
-            order_product_id
-          );
+          expect(res.body.data).to.have.property("total", total);
+          expect(res.body.data).to.have.deep.property("products", products);
           expect(res.body.data).to.have.property("created_by", created_by);
           done();
         });
@@ -369,14 +731,25 @@ describe("/orders", () => {
       chai
         .request(server)
         .post(orderURI)
-        .send({ user_id: 100, event_id, price, order_product_id, created_by })
+        .send({
+          user_id: 100,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "user_id");
@@ -391,14 +764,25 @@ describe("/orders", () => {
       chai
         .request(server)
         .post(orderURI)
-        .send({ user_id, event_id: 100, price, order_product_id, created_by })
+        .send({
+          user_id,
+          event_id: 100,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "event_id");
@@ -409,21 +793,65 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail with invalid price type", done => {
+    it("Should fail with invalid event_name type", done => {
       chai
         .request(server)
         .post(orderURI)
-        .send({ user_id, event_id, price: "40", order_product_id, created_by })
+        .send({
+          user_id,
+          event_id,
+          event_name: 100,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "price");
+          expect(res.body.errors[0]).to.have.property("field", "event_name");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a string"
+          );
+          done();
+        });
+    });
+    it("Should fail with invalid total type", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total: "40",
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "total");
           expect(res.body.errors[0]).to.have.property(
             "error",
             "must be a number"
@@ -431,24 +859,32 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail with invalid order_product_id type", done => {
+    it("Should fail with invalid products type", done => {
       chai
         .request(server)
         .post(orderURI)
-        .send({ user_id, event_id, price, order_product_id: 100, created_by })
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products: 100,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property(
-            "field",
-            "order_product_id"
-          );
+          expect(res.body.errors[0]).to.have.property("field", "products");
           expect(res.body.errors[0]).to.have.property(
             "error",
             "must be an array"
@@ -456,18 +892,161 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail with invalid order_product_id elements type", done => {
+    it("Should fail with invalid paid type", done => {
       chai
         .request(server)
         .post(orderURI)
-        .send({ user_id, event_id, price, order_product_id: [100], created_by })
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid: "true",
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "paid");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a boolean"
+          );
+          done();
+        });
+    });
+    it("Should fail with invalid cancelled type", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled: "true",
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "cancelled");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a boolean"
+          );
+          done();
+        });
+    });
+    it("Should fail with invalid created_at type", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at: "1548000000",
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "created_at");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a number"
+          );
+          done();
+        });
+    });
+    it("Should fail with invalid updated_at type", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at: "1548000000"
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "updated_at");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a number"
+          );
+          done();
+        });
+    });
+    it("Should fail with invalid products elements type", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products: [100],
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field");
@@ -486,16 +1065,21 @@ describe("/orders", () => {
         .send({
           user_id: "1946fd04-763a-4542-b77b-05332a6c4d8",
           event_id,
-          price,
-          order_product_id,
-          created_by
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
         })
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "user_id");
@@ -513,9 +1097,14 @@ describe("/orders", () => {
         .send({
           user_id,
           event_id: "1946fd04-763a-4542-b77b-05332a6c4d8",
-          price,
-          order_product_id,
-          created_by
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
         })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
@@ -523,7 +1112,7 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "event_id");
@@ -534,38 +1123,21 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail with price not positive", done => {
-      chai
-        .request(server)
-        .post(orderURI)
-        .send({ user_id, event_id, price: -40, order_product_id, created_by })
-        .set("Authorization", `Bearer ${token}`)
-        .end((err, res) => {
-          if (err) {
-            throw err;
-          }
-
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "price");
-          expect(res.body.errors[0]).to.have.property(
-            "error",
-            "must be a positive number"
-          );
-          done();
-        });
-    });
-    it("Should fail with order_product_id no valid UUID", done => {
+    it("Should fail with total not positive", done => {
       chai
         .request(server)
         .post(orderURI)
         .send({
           user_id,
           event_id,
-          price,
-          order_product_id: ["1946fd04-763a-4542-b77b-05332a6c4d8"],
-          created_by
+          event_name,
+          total: -40,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
         })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
@@ -573,7 +1145,40 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "total");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a positive number"
+          );
+          done();
+        });
+    });
+    it("Should fail with products no valid UUID", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products: ["1946fd04-763a-4542-b77b-05332a6c4d8"],
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field");
@@ -596,9 +1201,14 @@ describe("/orders", () => {
           .send({
             user_id,
             event_id,
-            price,
-            order_product_id,
-            created_by
+            event_name,
+            total,
+            products,
+            created_by,
+            paid,
+            cancelled,
+            created_at,
+            updated_at
           });
         id = createdOrder.body.data.id;
       } catch (error) {}
@@ -606,32 +1216,49 @@ describe("/orders", () => {
     const {
       user_id,
       event_id,
-      price,
-      order_product_id,
-      created_by
-    } = orderMockDTO;
+      event_name,
+      total,
+      products,
+      created_by,
+      paid,
+      cancelled,
+      created_at,
+      updated_at
+    } = orderMockDto;
 
     it("Should edit an order", done => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
-        .send({ user_id, event_id, price, order_product_id, created_by })
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data).to.have.property("user_id", user_id);
           expect(res.body.data).to.have.property("event_id");
-          expect(res.body.data).to.have.property("price", price);
-          expect(res.body.data).to.have.deep.property(
-            "order_product_id",
-            order_product_id
-          );
+          expect(res.body.data).to.have.property("total", total);
+          expect(res.body.data).to.have.deep.property("products", products);
           expect(res.body.data).to.have.property("created_by", created_by);
+          expect(res.body.data).to.have.property("paid", paid);
+          expect(res.body.data).to.have.property("cancelled", cancelled);
+          expect(res.body.data).to.have.property("created_at", updated_at);
+          expect(res.body.data).to.have.property("updated_at", updated_at);
           done();
         });
     });
@@ -639,14 +1266,24 @@ describe("/orders", () => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
-        .send({ event_id, price, order_product_id, created_by })
+        .send({
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "user_id");
@@ -658,14 +1295,24 @@ describe("/orders", () => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
-        .send({ user_id, price, order_product_id, created_by })
+        .send({
+          user_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "event_id");
@@ -673,43 +1320,205 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail without price", done => {
+    it("Should fail without event_name", done => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
-        .send({ user_id, event_id, order_product_id, created_by })
+        .send({
+          user_id,
+          event_id,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "price");
+          expect(res.body.errors[0]).to.have.property("field", "event_name");
           expect(res.body.errors[0]).to.have.property("error", "is required");
           done();
         });
     });
-    it("Should fail without order_product_id", done => {
+    it("Should fail without total", done => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
-        .send({ user_id, event_id, price, created_by })
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property(
-            "field",
-            "order_product_id"
-          );
+          expect(res.body.errors[0]).to.have.property("field", "total");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
+          done();
+        });
+    });
+    it("Should fail without products", done => {
+      chai
+        .request(server)
+        .put(`${orderURI}/${id}`)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "products");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
+          done();
+        });
+    });
+    it("Should fail without paid", done => {
+      chai
+        .request(server)
+        .put(`${orderURI}/${id}`)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          cancelled,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "paid");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
+          done();
+        });
+    });
+    it("Should fail without cancelled", done => {
+      chai
+        .request(server)
+        .put(`${orderURI}/${id}`)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "cancelled");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
+          done();
+        });
+    });
+    it("Should fail without created_at", done => {
+      chai
+        .request(server)
+        .put(`${orderURI}/${id}`)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "created_at");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
+          done();
+        });
+    });
+    it("Should fail without updated_at", done => {
+      chai
+        .request(server)
+        .put(`${orderURI}/${id}`)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "updated_at");
           expect(res.body.errors[0]).to.have.property("error", "is required");
           done();
         });
@@ -718,22 +1527,29 @@ describe("/orders", () => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
-        .send({ user_id, event_id, price, order_product_id })
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data).to.have.property("user_id", user_id);
           expect(res.body.data).to.have.property("event_id", event_id);
-          expect(res.body.data).to.have.property("price", price);
-          expect(res.body.data).to.have.deep.property(
-            "order_product_id",
-            order_product_id
-          );
+          expect(res.body.data).to.have.property("total", total);
+          expect(res.body.data).to.have.deep.property("products", products);
           expect(res.body.data).to.have.property("created_by", created_by);
           done();
         });
@@ -742,14 +1558,25 @@ describe("/orders", () => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
-        .send({ user_id: 100, event_id, price, order_product_id, created_by })
+        .send({
+          user_id: 100,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "user_id");
@@ -764,14 +1591,25 @@ describe("/orders", () => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
-        .send({ user_id, event_id: 100, price, order_product_id, created_by })
+        .send({
+          user_id,
+          event_id: 100,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "event_id");
@@ -782,21 +1620,65 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail with invalid price type", done => {
+    it("Should fail with invalid event_name type", done => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
-        .send({ user_id, event_id, price: "40", order_product_id, created_by })
+        .send({
+          user_id,
+          event_id,
+          event_name: 100,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "price");
+          expect(res.body.errors[0]).to.have.property("field", "event_name");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a string"
+          );
+          done();
+        });
+    });
+    it("Should fail with invalid total type", done => {
+      chai
+        .request(server)
+        .put(`${orderURI}/${id}`)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total: "40",
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "total");
           expect(res.body.errors[0]).to.have.property(
             "error",
             "must be a number"
@@ -804,24 +1686,32 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail with invalid order_product_id type", done => {
+    it("Should fail with invalid products type", done => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
-        .send({ user_id, event_id, price, order_product_id: 100, created_by })
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products: 100,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property(
-            "field",
-            "order_product_id"
-          );
+          expect(res.body.errors[0]).to.have.property("field", "products");
           expect(res.body.errors[0]).to.have.property(
             "error",
             "must be an array"
@@ -829,18 +1719,161 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail with invalid order_product_id elements type", done => {
+    it("Should fail with invalid paid type", done => {
       chai
         .request(server)
-        .put(`${orderURI}/${id}`)
-        .send({ user_id, event_id, price, order_product_id: [100], created_by })
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid: "true",
+          cancelled,
+          created_at,
+          updated_at
+        })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           if (err) {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "paid");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a boolean"
+          );
+          done();
+        });
+    });
+    it("Should fail with invalid cancelled type", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled: "true",
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "cancelled");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a boolean"
+          );
+          done();
+        });
+    });
+    it("Should fail with invalid created_at type", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at: "1548000000",
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "created_at");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a number"
+          );
+          done();
+        });
+    });
+    it("Should fail with invalid updated_at type", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at: "1548000000"
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
+          expect(res.body).to.have.property("message", "Bad Request");
+          expect(res.body).to.have.property("errors");
+          expect(res.body.errors[0]).to.have.property("field", "updated_at");
+          expect(res.body.errors[0]).to.have.property(
+            "error",
+            "must be a number"
+          );
+          done();
+        });
+    });
+    it("Should fail with invalid products elements type", done => {
+      chai
+        .request(server)
+        .put(`${orderURI}/${id}`)
+        .send({
+          user_id,
+          event_id,
+          event_name,
+          total,
+          products: [100],
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field");
@@ -858,9 +1891,14 @@ describe("/orders", () => {
         .send({
           user_id: "1946fd04-763a-4542-b77b-05332a6c4d8",
           event_id,
-          price,
-          order_product_id,
-          created_by
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
         })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
@@ -868,7 +1906,7 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "user_id");
@@ -886,9 +1924,14 @@ describe("/orders", () => {
         .send({
           user_id,
           event_id: "1946fd04-763a-4542-b77b-05332a6c4d8",
-          price,
-          order_product_id,
-          created_by
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
         })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
@@ -896,7 +1939,7 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "event_id");
@@ -907,38 +1950,21 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail with price not positive", done => {
-      chai
-        .request(server)
-        .put(`${orderURI}/${id}`)
-        .send({ user_id, event_id, price: -40, order_product_id, created_by })
-        .set("Authorization", `Bearer ${token}`)
-        .end((err, res) => {
-          if (err) {
-            throw err;
-          }
-
-          expect(res.body).to.have.status(400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field", "price");
-          expect(res.body.errors[0]).to.have.property(
-            "error",
-            "must be a positive number"
-          );
-          done();
-        });
-    });
-    it("Should fail with order_product_id no valid UUID", done => {
+    it("Should fail with total not positive", done => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)
         .send({
           user_id,
           event_id,
-          price,
-          order_product_id: ["1946fd04-763a-4542-b77b-05332a6c4d8"],
-          created_by
+          event_name,
+          total: -40,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
         })
         .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
@@ -946,13 +1972,13 @@ describe("/orders", () => {
             throw err;
           }
 
-          expect(res.body).to.have.status(400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[0]).to.have.property("field");
+          expect(res.body.errors[0]).to.have.property("field", "total");
           expect(res.body.errors[0]).to.have.property(
             "error",
-            "must be a valid GUID"
+            "must be a positive number"
           );
           done();
         });

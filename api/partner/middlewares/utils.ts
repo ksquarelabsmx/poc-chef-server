@@ -8,7 +8,7 @@ const badRequestStrategy = (
   if (stack) {
     // used to show errors in Request Validation Middleware
     return {
-      status: statusCode,
+      statusCode,
       message: error,
       errors: JSON.parse(message),
       stack
@@ -18,14 +18,14 @@ const badRequestStrategy = (
   switch (message) {
     case "Event has already finished":
       return {
-        status: statusCode,
+        statusCode,
         message: error,
         reason: message
       };
     // used to show errors in Request Validation Middleware
     default:
       return {
-        status: statusCode,
+        statusCode,
         message: error,
         errors: JSON.parse(message)
       };

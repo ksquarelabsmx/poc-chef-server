@@ -18,7 +18,7 @@ describe("/health", () => {
           throw err;
         }
 
-        expect(res).to.have.status(200);
+        expect(res).to.have.property("statusCode", 200);
         expect(res.body).to.have.property("message", "pong");
         done();
       });

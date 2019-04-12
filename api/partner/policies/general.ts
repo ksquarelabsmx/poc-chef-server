@@ -69,8 +69,8 @@ export const validateJWT = (type: string) => (
 
   // check authorization header errors
   if (authzError) {
-    const { title, detail, status } = authzError;
-    return res.send(response.error(title, status, source, detail));
+    const { title, detail, statusCode } = authzError;
+    return res.send(response.error(title, statusCode, source, detail));
   }
 
   const token: string = authorization.split(" ")[1];
@@ -78,8 +78,8 @@ export const validateJWT = (type: string) => (
 
   // check jwt errors
   if (tokenError) {
-    const { title, detail, status } = tokenError;
-    return res.send(response.error(title, status, source, detail));
+    const { title, detail, statusCode } = tokenError;
+    return res.send(response.error(title, statusCode, source, detail));
   }
 
   const decodedjwt: any = jwt.decode(token);

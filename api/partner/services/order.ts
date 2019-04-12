@@ -1,5 +1,6 @@
 import * as fp from "lodash/fp";
 import * as boom from "boom";
+import * as moment from "moment";
 
 import { error, response } from "../utils";
 import { IOrder } from "../../common/models/order";
@@ -8,7 +9,13 @@ import { IOrderRepository } from "../../common/repositories/order-repository";
 import { IEventRepository } from "api/common/repositories/event-repository";
 
 const isFinished = (event: IEvent): boolean => {
-  return event.expirationDate < Date.now() || event.markedAsFinished;
+  return (
+    event.markedAsFinished ||
+    event.expirationDate <
+      moment()
+        .utc()
+        .unix()
+  );
 };
 
 export const OrderService = (
@@ -19,9 +26,9 @@ export const OrderService = (
     return Promise.resolve(ordersDataSource.find());
   };
 
-  const getOrderById = async (id: number): Promise<any> => {
+  const getOrderById = async (id: string): Promise<any> => {
     try {
-      const order = await ordersDataSource.find({ id });
+      const order: IOrder[] = await ordersDataSource.find({ id });
 
       if (fp.isEmpty(order)) {
         return Promise.reject(boom.notFound("Not Found"));
@@ -42,7 +49,6 @@ export const OrderService = (
       if (fp.isEmpty(eventFinded)) {
         return Promise.reject(response.badRequest(error.eventNotExist));
       }
-
       if (isFinished(eventFinded[0])) {
         return Promise.reject(response.badRequest(error.eventIsFinished));
       }
@@ -56,21 +62,18 @@ export const OrderService = (
   const updateOrder = async (order: IOrder): Promise<any> => {
     try {
       const { id } = order;
-      const orderFinded = ordersDataSource.find({ id });
+      const orderFinded = await ordersDataSource.find({ id });
 
       if (fp.isEmpty(orderFinded)) {
         return Promise.reject(boom.notFound("Not Found"));
       }
-
       //validate if the request order.eventId is the same as the existing order.eventId
       if (orderFinded[0].eventId !== order.eventId) {
         return Promise.reject(response.badRequest(error.orderEventDifferent));
       }
-
       if (orderFinded[0].cancelled) {
         return Promise.reject(response.badRequest(error.orderIsCancelled));
       }
-
       if (orderFinded[0].paid) {
         return Promise.reject(response.badRequest(error.orderIsPaid));
       }
@@ -86,24 +89,21 @@ export const OrderService = (
       const orderStatus = await Promise.all(
         orderIds.map(
           async (id: string): Promise<string> => {
-            const order = await ordersDataSource.find({ id });
+            const [order]: IOrder[] = await ordersDataSource.find({ id });
 
             if (fp.isEmpty(order)) {
               return Promise.resolve(`order ${id} not found`);
             }
 
-            if (order[0].paid) {
+            if (order.paid) {
               return Promise.resolve(`order ${id} was already marked as paid`);
             }
-
-            order[0].paid = true;
+            order.paid = true;
             ordersDataSource.update(order);
-
             return Promise.resolve(`order ${id} successfully modified`);
           }
         )
       );
-
       return Promise.resolve(orderStatus);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
@@ -114,22 +114,73 @@ export const OrderService = (
     try {
       const orderStatus = await Promise.all(
         orderIds.map(async (id: any) => {
-          const order = await ordersDataSource.find({ id });
+          const [order]: IOrder[] = await ordersDataSource.find({ id });
+
           if (fp.isEmpty(order)) {
             return Promise.resolve(`order ${id} not found`);
           }
-
-          if (!order[0].paid) {
+          if (!order.paid) {
             return Promise.resolve(`order ${id} has not been marked as paid`);
           }
-
-          order[0].paid = false;
+          order.paid = false;
           ordersDataSource.update(order);
-
           return Promise.resolve(`order ${id} successfully modified`);
         })
       );
+      return Promise.resolve(orderStatus);
+    } catch (err) {
+      return Promise.reject(boom.internal("Internal Server Error"));
+    }
+  };
 
+  const markManyAsCancelled = async (orderIds: string[]): Promise<string[]> => {
+    try {
+      const orderStatus = await Promise.all(
+        orderIds.map(
+          async (id: string): Promise<string> => {
+            const [order]: IOrder[] = await ordersDataSource.find({ id });
+
+            if (fp.isEmpty(order)) {
+              return Promise.resolve(`order ${id} not found`);
+            }
+            if (order.cancelled) {
+              return Promise.resolve(
+                `order ${id} was already marked as cancelled`
+              );
+            }
+            order.cancelled = true;
+            ordersDataSource.update(order);
+            return Promise.resolve(`order ${id} successfully modified`);
+          }
+        )
+      );
+      return Promise.resolve(orderStatus);
+    } catch (err) {
+      return Promise.reject(boom.internal("Internal Server Error"));
+    }
+  };
+
+  const markManyAsNotCancelled = async (
+    orderIds: string[]
+  ): Promise<string[]> => {
+    try {
+      const orderStatus = await Promise.all(
+        orderIds.map(async (id: any) => {
+          const [order]: IOrder[] = await ordersDataSource.find({ id });
+
+          if (fp.isEmpty(order)) {
+            return Promise.resolve(`order ${id} not found`);
+          }
+          if (!order.cancelled) {
+            return Promise.resolve(
+              `order ${id} has not been marked as cancelled`
+            );
+          }
+          order.cancelled = false;
+          ordersDataSource.update(order);
+          return Promise.resolve(`order ${id} successfully modified`);
+        })
+      );
       return Promise.resolve(orderStatus);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
@@ -142,6 +193,8 @@ export const OrderService = (
     createOrder,
     updateOrder,
     markManyAsPaid,
-    markManyAsNotPaid
+    markManyAsNotPaid,
+    markManyAsCancelled,
+    markManyAsNotCancelled
   };
 };

@@ -2,12 +2,12 @@ import * as boom from "boom";
 
 import { IDomainValidationError } from "../interfaces/error";
 
-const success = (data: any, code: any, url: any) => {
+const success = (data: any, statusCode: any, url: any) => {
   return {
     request: new Date().getTime(), // timestamp
-    url: url,
-    data: data,
-    code: code
+    url,
+    data,
+    statusCode
   };
 };
 
@@ -17,13 +17,13 @@ const errors = (errors: any) => {
   };
 };
 
-const error = (title: any, status: any, url: any, message: any) => {
+const error = (title: any, statusCode: any, url: any, message: any) => {
   return {
     request: new Date().getTime(), // timestamp
-    status: status,
+    statusCode,
     source: url,
-    title: title,
-    detail: message
+    title,
+    message
   };
 };
 

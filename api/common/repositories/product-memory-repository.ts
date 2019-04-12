@@ -35,18 +35,8 @@ const find = (query?: any): Promise<IProduct[]> => {
 
 const save = (product: IProduct): Promise<IProduct> => {
   product.id = uuid();
-  const result: IProduct = {
-    ...product,
-    createdAt: moment()
-      .utc()
-      .unix(),
-    updatedAt: moment()
-      .utc()
-      .unix()
-  };
-
+  const result: IProduct = { ...product };
   products.push(result);
-
   return Promise.resolve(result);
 };
 
@@ -54,9 +44,7 @@ const update = (product: IProduct): Promise<IProduct> => {
   const index: number = products.findIndex(
     (p: IProduct) => p.id === product.id
   );
-
-  products[index] = { ...products[index], ...product };
-
+  products[index] = { ...product };
   return Promise.resolve(products[index]);
 };
 

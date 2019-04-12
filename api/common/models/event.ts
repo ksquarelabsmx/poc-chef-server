@@ -10,8 +10,8 @@ export interface IEvent {
   endHour: number;
   createdBy: string;
   total: number;
-  markedAsFinished: boolean;
   orders: IOrder[];
+  markedAsFinished: boolean;
   cancelled: boolean;
   createdAt: number;
   updatedAt: number;
@@ -34,7 +34,7 @@ export interface IEventDto {
 }
 
 // interfaces for get event with orders details
-export interface IEventOrdersDTO extends IEventDto {
+export interface IEventOrdersDto extends IEventDto {
   orders: IOrderDto[];
 }
 

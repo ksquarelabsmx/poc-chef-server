@@ -98,23 +98,15 @@ const find = (query?: any): Promise<IOrder[]> => {
 const save = (order: IOrder): Promise<IOrder> => {
   order.id = uuid();
   const result: IOrder = {
-    ...order,
-    paid: false,
-    cancelled: false,
-    createdAt: moment()
-      .utc()
-      .unix(),
-    updatedAt: moment()
-      .utc()
-      .unix()
+    ...order
   };
   orders.push(result);
   return Promise.resolve(result);
 };
 
-const update = (order: any): Promise<IOrder> => {
+const update = (order: IOrder): Promise<IOrder> => {
   const index: number = orders.findIndex((ord: IOrder) => ord.id === order.id);
-  orders[index] = { ...orders[index], ...order };
+  orders[index] = { ...order };
   return Promise.resolve(orders[index]);
 };
 

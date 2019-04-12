@@ -15,28 +15,8 @@ export const eventRoutes = (app: Express) => {
   /**
    * @swagger
    * definitions:
-   *   Event:
-   *     required:
-   *       - event_name
-   *       - start_date
-   *       - expiration_date
-   *       - start_hour
-   *       - end_hour
-   *     properties:
-   *       id:
-   *         type: string
-   *       event_name:
-   *         type: string
-   *       start_date:
-   *         type: number
-   *       expiration_date:
-   *         type: number
-   *       start_hour:
-   *         type: number
-   *       end_hour:
-   *         type: number
    *
-   *   EventDetails:
+   *   Event:
    *     required:
    *       - id
    *       - event_name
@@ -46,7 +26,7 @@ export const eventRoutes = (app: Express) => {
    *       - end_hour
    *       - created_by
    *       - total
-   *       - finished
+   *       - marked_as_finished
    *       - cancelled
    *       - created_at
    *       - updated_at
@@ -67,7 +47,7 @@ export const eventRoutes = (app: Express) => {
    *         type: string
    *       total:
    *         type: number
-   *       finished:
+   *       marked_as_finished:
    *         type: boolean
    *       cancelled:
    *         type: boolean
@@ -144,7 +124,7 @@ export const eventRoutes = (app: Express) => {
    *           type: array
    *           items:
    *             type: object
-   *             $ref: "#/definitions/EventDetails"
+   *             $ref: "#/definitions/Event"
    *       401:
    *         description: Access token is missing or invalid
    *       500:
@@ -163,7 +143,7 @@ export const eventRoutes = (app: Express) => {
       } catch (err) {
         debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
         res.json({
-          status: 500,
+          statusCode: 500,
           message: "Internal Server Error"
         });
       }
@@ -232,7 +212,7 @@ export const eventRoutes = (app: Express) => {
       } catch (err) {
         debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
         res.send({
-          status: 500,
+          statusCode: 500,
           message: "Internal Server Error"
         });
       }
@@ -270,7 +250,7 @@ export const eventRoutes = (app: Express) => {
    *         description: Update event
    *         schema:
    *           type: object
-   *           $ref: "#/definitions/EventDetails"
+   *           $ref: "#/definitions/Event"
    *       400:
    *         description: Bad Request. Event has already finished
    *       401:
@@ -296,12 +276,12 @@ export const eventRoutes = (app: Express) => {
           req.params.id,
           eventMapper.toModel(req.body)
         );
-        const eventDTO = eventMapper.toDTO(event);
-        res.send(response.success(eventDTO, 201, source));
+        const eventDto = eventMapper.toDto(event);
+        res.send(response.success(eventDto, 201, source));
       } catch (err) {
         debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
         res.json({
-          status: 500,
+          statusCode: 500,
           message: "Internal Server Error"
         });
       }
@@ -334,7 +314,7 @@ export const eventRoutes = (app: Express) => {
    *         description: Create event
    *         schema:
    *           type: object
-   *           $ref: "#/definitions/EventDetails"
+   *           $ref: "#/definitions/Event"
    *       400:
    *         description: Bad Request. Event name is required.
    *       401:
@@ -353,12 +333,72 @@ export const eventRoutes = (app: Express) => {
         const source: string = uriBuilder(req);
         const data = eventMapper.toModel(req.body);
         const event = await eventController.createEvent(data);
-        const eventDTO = eventMapper.toDTO(event);
-        res.send(response.success(eventDTO, 201, source));
+        const eventDto = eventMapper.toDto(event);
+        res.send(response.success(eventDto, 201, source));
       } catch (err) {
         debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
         res.json({
-          status: 500,
+          statusCode: 500,
+          message: "Internal Server Error"
+        });
+      }
+    }
+  );
+  /**
+   * @swagger
+   * /v1/events/action:
+   *   post:
+   *     description: Action order
+   *     security:
+   *       - bearerAuth: []
+   *     tags:
+   *       - Events
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - in: body
+   *         name: Events
+   *         schema:
+   *           properties:
+   *             action:
+   *               type: string
+   *             ids:
+   *               type: array
+   *               items:
+   *                 type: string
+   *         required: true
+   *         description: mark_as_finish, mark_as_not_finish, mark_as_cancelled, mark_as_not_cancelled
+   *     responses:
+   *       200:
+   *         description: Event Action
+   *         schema:
+   *           type: array
+   *           items:
+   *             type: string
+   *
+   *       400:
+   *         description: Bad Request. That action does not exists.
+   *       401:
+   *         description: Access token is missing or invalid
+   *       500:
+   *         description: Internal Server Error
+   */
+  app.post(
+    "/v1/events/actions",
+    validateJWT("access"),
+    filterRoles(["partner"]),
+    async (req, res) => {
+      try {
+        const source = uriBuilder(req);
+        const order = await eventController.handleAction(req.body);
+        res.send(response.success(order, 201, source));
+      } catch (err) {
+        console.log(err);
+        debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
+        res.json({
+          statusCode: 500,
           message: "Internal Server Error"
         });
       }

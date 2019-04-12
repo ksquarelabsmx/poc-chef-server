@@ -12,7 +12,7 @@ export interface IErrorWithStack {
 
 export interface IBadRequest {
   message: string;
-  status: number;
+  statusCode: number;
   stack?: any;
   errors?: IDomainValidationError;
   reason?: string;
@@ -21,5 +21,5 @@ export interface IBadRequest {
 export interface IError {
   title: string;
   detail: string;
-  status: number;
+  statusCode: number;
 }

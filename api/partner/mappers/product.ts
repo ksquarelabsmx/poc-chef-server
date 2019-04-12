@@ -1,17 +1,17 @@
 import { IProduct, IProductDto } from "./../../common/models/product";
 
-const toModel = (productDTO: IProductDto): IProduct => {
+const toModel = (productDto: IProductDto): IProduct => {
   return {
-    id: productDTO.id,
-    name: productDTO.name,
-    description: productDTO.description,
-    price: productDTO.price,
-    createdAt: productDTO.created_at,
-    updatedAt: productDTO.updated_at
+    id: productDto.id,
+    name: productDto.name,
+    description: productDto.description,
+    price: productDto.price,
+    createdAt: productDto.created_at,
+    updatedAt: productDto.updated_at
   };
 };
 
-const toDTO = (productEntity: IProduct): IProductDto => {
+const toDto = (productEntity: IProduct): IProductDto => {
   return {
     id: productEntity.id,
     name: productEntity.name,
@@ -22,4 +22,4 @@ const toDTO = (productEntity: IProduct): IProductDto => {
   };
 };
 
-export const productMapper = { toModel, toDTO };
+export const productMapper = { toModel, toDto };
