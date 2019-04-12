@@ -1,4 +1,3 @@
-import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 import { IOrderProduct } from "../models/order-product";
 
@@ -26,15 +25,7 @@ const find = (query?: any): IOrderProduct[] => {
 
 const save = (orderProduct: IOrderProduct): IOrderProduct => {
   orderProduct.id = uuid();
-  const result: IOrderProduct = {
-    ...orderProduct,
-    createdAt: moment()
-      .utc()
-      .unix(),
-    updatedAt: moment()
-      .utc()
-      .unix()
-  };
+  const result: IOrderProduct = { ...orderProduct };
   orderProducts.push(result);
   return result;
 };
@@ -43,10 +34,7 @@ const update = (orderProduct: IOrderProduct): IOrderProduct => {
   const index: number = orderProducts.findIndex(
     (p: IOrderProduct) => p.id === orderProduct.id
   );
-  orderProducts[index] = {
-    ...orderProducts[index],
-    ...orderProduct
-  };
+  orderProducts[index] = { ...orderProduct };
   return orderProducts[index];
 };
 

@@ -1,25 +1,25 @@
 export interface IErrorResponse {
   ok: boolean;
-  status: string;
+  statusCode: string;
   message: string;
   reason?: string;
 }
 
 export const badRequest = (reason: string): IErrorResponse => ({
   ok: false,
-  status: "400",
+  statusCode: "400",
   message: "Bad Request",
   reason: reason
 });
 
 export const notFound = (): IErrorResponse => ({
   ok: false,
-  status: "404",
+  statusCode: "404",
   message: "Not Found"
 });
 
 export const internalServerError = (): IErrorResponse => ({
   ok: false,
-  status: "500",
+  statusCode: "500",
   message: "Internal Server Error"
 });

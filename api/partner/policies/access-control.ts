@@ -1,4 +1,5 @@
 import * as fp from "lodash";
+import * as boom from "boom";
 
 import { ISession } from "../interfaces/auth";
 import { authErrors } from "../utils/errors";
@@ -14,51 +15,55 @@ export const filterRoles = (roles: string[]) => (
   const user: ISession | undefined = req["session"];
 
   if (!user) {
-    const { title, status, detail } = authErrors.notRoleAuthorization;
-    return res.send(response.error(title, status, source, detail));
+    const { title, statusCode, detail } = authErrors.notRoleAuthorization;
+    return res.send(response.error(title, statusCode, source, detail));
   }
 
   const { role } = user;
 
   // role without privileges
   if (!fp.includes(roles, role)) {
-    const { title, status, detail } = authErrors.notRoleAuthorization;
-    return res.send(response.error(title, status, source, detail));
+    const { title, statusCode, detail } = authErrors.notRoleAuthorization;
+    return res.send(response.error(title, statusCode, source, detail));
   }
 
   next();
 };
 
-export const onlyOwner = (dataSource: any) => (
+export const onlyOwner = (dataSource: any) => async (
   req: Request,
   res: Response,
   next: NextFunction
-): Response | undefined => {
-  const source: string = uriBuilder(req);
-  const user: ISession | undefined = req["session"];
-  const paramsId = req.params.id;
+): Promise<Response | undefined> => {
+  try {
+    const source: string = uriBuilder(req);
+    const user: ISession | undefined = req["session"];
+    const paramsId = req.params.id;
 
-  if (!user) {
-    const { title, status, detail } = authErrors.notUserAuthorization;
-    return res.send(response.error(title, status, source, detail));
+    if (!user) {
+      const { title, statusCode, detail } = authErrors.notUserAuthorization;
+      return res.send(response.error(title, statusCode, source, detail));
+    }
+
+    // get entity (order event, etc) and check owner
+    const { id } = user;
+    const [entity]: any = await dataSource.find({ id: paramsId });
+
+    if (!fp.isEqual(id, entity.createdBy)) {
+      const { title, statusCode, detail } = authErrors.notUserAuthorization;
+      return res.send(response.error(title, statusCode, source, detail));
+    }
+    next();
+  } catch (err) {
+    return Promise.reject(boom.internal("Internal Server Error"));
   }
-
-  // get entity (order event, etc) and check owner
-  const { id } = user;
-  const entity: any = dataSource.find({ id: paramsId })[0];
-
-  if (!fp.isEqual(id, entity.createdBy)) {
-    const { title, status, detail } = authErrors.notUserAuthorization;
-    return res.send(response.error(title, status, source, detail));
-  }
-
-  next();
 };
 
 /*
   Appends userId to body (useful for enforcing ownership when creating items)
     key: key to add/modify on body
 */
+//Not in use
 export const appendUser = (key: string = "created_by") => (
   req: Request,
   res: Response,
@@ -68,8 +73,8 @@ export const appendUser = (key: string = "created_by") => (
   const user: ISession | undefined = req["session"];
 
   if (!user) {
-    const { title, status, detail } = authErrors.notUserAuthorization;
-    return res.send(response.error(title, status, source, detail));
+    const { title, statusCode, detail } = authErrors.notUserAuthorization;
+    return res.send(response.error(title, statusCode, source, detail));
   }
   req.body[key] = user.id;
   next();

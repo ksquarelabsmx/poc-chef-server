@@ -2,9 +2,9 @@ import * as fp from "lodash/fp";
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 
-import { user } from "../../partner/interfaces";
+import { IUser, IUserDao } from "../../partner/interfaces/user";
 
-const users: user.IUserDao[] = [
+const users: IUserDao[] = [
   {
     id: "6d623d08-113c-4565-81b2-e17c90331241",
     name: "Maik",
@@ -21,8 +21,8 @@ const users: user.IUserDao[] = [
   }
 ];
 
-const save = (user: user.IUser): user.IUserDao => {
-  const userDao: user.IUserDao = {
+const save = (user: IUser): IUserDao => {
+  const userDao: IUserDao = {
     id: uuid(),
     ...user,
     createdAt: moment()
@@ -37,7 +37,7 @@ const save = (user: user.IUser): user.IUserDao => {
   return userDao;
 };
 
-const findByEmail = (email: string): user.IUserDao | undefined =>
-  fp.find((user: user.IUserDao) => user.email === email, users);
+const findByEmail = (email: string): IUserDao | undefined =>
+  fp.find((user: IUserDao) => user.email === email, users);
 
 export const usersDataSource = { save, findByEmail };

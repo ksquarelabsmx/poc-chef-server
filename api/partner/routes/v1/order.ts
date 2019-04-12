@@ -1,9 +1,15 @@
+import { IOrder } from "./../../../common/models/order";
 import { Express } from "express";
 
 import { orderController } from "../../controllers";
 import { orderMemoryRepository } from "../../../common/repositories/order-memory-repository";
 import { validation } from "../../middlewares";
 import { orderSchema } from "../../utils/schemas";
+import debug = require("debug");
+import chalk from "chalk";
+import { uriBuilder } from "../../utils/uri";
+import { orderMapper } from "../../mappers/order";
+import { response } from "../../utils/response";
 import {
   validateJWT,
   onlyOwner,
@@ -16,27 +22,8 @@ export const orderRoutes = (app: Express) => {
   /**
    * @swagger
    * definitions:
-   *   Order:
-   *     required:
-   *       - user_id
-   *       - event_id
-   *       - price
-   *       - order_product_id
-   *     properties:
-   *       id:
-   *         type: string
-   *       user_id:
-   *         type: string
-   *       event_id:
-   *         type: string
-   *       price:
-   *         type: number
-   *       order_product_id:
-   *         type: array
-   *         items:
-   *           type: string
    *
-   *   OrderDetails:
+   *   Order:
    *     required:
    *       - id
    *       - user_id
@@ -98,7 +85,7 @@ export const orderRoutes = (app: Express) => {
    *           type: array
    *           items:
    *             type: object
-   *             $ref: "#/definitions/OrderDetails"
+   *             $ref: "#/definitions/Order"
    *       401:
    *         description: Access token is missing or invalid
    *       500:
@@ -109,7 +96,19 @@ export const orderRoutes = (app: Express) => {
     "/v1/orders",
     validateJWT("access"),
     filterRoles(["partner"]),
-    orderController.getOrders
+    async (req, res) => {
+      try {
+        const orders: IOrder[] = await orderController.getOrders();
+        const source: string = uriBuilder(req);
+        res.send(response.success(orders, 200, source));
+      } catch (err) {
+        debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
+        res.json({
+          statusCode: 500,
+          message: "Internal Server Error"
+        });
+      }
+    }
   );
 
   /**
@@ -134,7 +133,7 @@ export const orderRoutes = (app: Express) => {
    *         description: Get order
    *         schema:
    *           type: object
-   *           $ref: "#/definitions/OrderDetails"
+   *           $ref: "#/definitions/Order"
    *       401:
    *         description: Access token is missing or invalid
    *       404:
@@ -148,7 +147,19 @@ export const orderRoutes = (app: Express) => {
     validateJWT("access"),
     onlyOwner(orderMemoryRepository),
     validation({ id: orderSchema.orderId }, "params"),
-    orderController.getOrder
+    async (req, res) => {
+      try {
+        const order: IOrder = await orderController.getOrderById(req.params.id);
+        const source: string = uriBuilder(req);
+        res.send(response.success(order, 200, source));
+      } catch (err) {
+        debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
+        res.json({
+          statusCode: 500,
+          message: "Internal Server Error"
+        });
+      }
+    }
   );
 
   /**
@@ -177,7 +188,7 @@ export const orderRoutes = (app: Express) => {
    *         description: Create order
    *         schema:
    *           type: object
-   *           $ref: "#/definitions/OrderDetails"
+   *           $ref: "#/definitions/Order"
    *       400:
    *         description: Bad Request. Order name is required.
    *       401:
@@ -189,9 +200,24 @@ export const orderRoutes = (app: Express) => {
   app.post(
     "/v1/orders",
     validateJWT("access"),
+    filterRoles(["partner"]),
     appendUser(),
     validation(orderSchema.order),
-    orderController.createOrder
+    async (req, res) => {
+      try {
+        const source: string = uriBuilder(req);
+        const data = orderMapper.toModel(req.body);
+        const order = await orderController.createOrder(data);
+        const eventDto = orderMapper.toDto(order);
+        res.send(response.success(eventDto, 201, source));
+      } catch (err) {
+        debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
+        res.json({
+          statusCode: 500,
+          message: "Internal Server Error"
+        });
+      }
+    }
   );
 
   /**
@@ -219,7 +245,7 @@ export const orderRoutes = (app: Express) => {
    *               items:
    *                 type: string
    *         required: true
-   *         description: Order action object
+   *         description: mark_as_paid, mark_as_not_paid, mark_as_cancelled, mark_as_not_cancelled
    *     responses:
    *       200:
    *         description: Order Action
@@ -235,12 +261,24 @@ export const orderRoutes = (app: Express) => {
    *       500:
    *         description: Internal Server Error
    */
-
   app.post(
     "/v1/orders/actions",
     validateJWT("access"),
     filterRoles(["partner"]),
-    orderController.handleAction
+    async (req, res) => {
+      try {
+        const source = uriBuilder(req);
+        const order = await orderController.handleAction(req.body);
+        res.send(response.success(order, 201, source));
+      } catch (err) {
+        console.log(err);
+        debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
+        res.json({
+          statusCode: 500,
+          message: "Internal Server Error"
+        });
+      }
+    }
   );
 
   /**
@@ -274,7 +312,7 @@ export const orderRoutes = (app: Express) => {
    *         description: Update Order
    *         schema:
    *           type: object
-   *           $ref: "#/definitions/OrderDetails"
+   *           $ref: "#/definitions/Order"
    *       400:
    *         description: Bad Request. Event has already finished
    *       401:
@@ -288,9 +326,26 @@ export const orderRoutes = (app: Express) => {
   app.put(
     "/v1/orders/:id",
     validateJWT("access"),
+    onlyOwner(orderMemoryRepository),
     appendUser(),
     validation({ id: orderSchema.orderId }, "params"),
     validation(orderSchema.order),
-    orderController.updateOrder
+    async (req, res) => {
+      try {
+        const source = uriBuilder(req);
+        const order = await orderController.updateOrder(
+          req.params.id,
+          orderMapper.toModel(req.body)
+        );
+        const eventDto = orderMapper.toDto(order);
+        res.send(response.success(eventDto, 201, source));
+      } catch (err) {
+        debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
+        res.json({
+          statusCode: 500,
+          message: "Internal Server Error"
+        });
+      }
+    }
   );
 };

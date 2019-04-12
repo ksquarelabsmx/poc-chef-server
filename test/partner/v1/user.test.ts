@@ -33,7 +33,7 @@ describe("/user", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data).to.have.property("id");
           expect(res.body.data).to.have.property("name", name);
@@ -61,7 +61,7 @@ describe("/user", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors).to.have.property("field", "email");
@@ -88,7 +88,7 @@ describe("/user", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("code", 201);
+          expect(res.body).to.have.property("statusCode", 201);
           expect(res.body).to.have.property("data");
           expect(res.body.data).to.have.property("id");
           expect(res.body.data).to.have.property("name", name);
@@ -119,7 +119,7 @@ describe("/user", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "role");
@@ -145,7 +145,7 @@ describe("/user", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "name");
@@ -168,7 +168,7 @@ describe("/user", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "password");
@@ -191,7 +191,7 @@ describe("/user", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "email");
@@ -214,7 +214,7 @@ describe("/user", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("status", 400);
+          expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
           expect(res.body.errors[0]).to.have.property("field", "role");
