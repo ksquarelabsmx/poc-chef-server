@@ -1,12 +1,12 @@
-import { IOrder } from "./../../common/models/order";
 import * as fp from "lodash/fp";
 import * as boom from "boom";
 import * as moment from "moment";
 
-import { error, response } from "../utils";
+import { error, response } from "../../common/utils";
 import { IEvent } from "../../common/models/event";
 import { IEventRepository } from "../../common/repositories/event-repository";
 import { IOrderRepository } from "api/common/repositories/order-repository";
+import { IOrder } from "./../../common/models/order";
 
 const isFinished = (event: IEvent) => {
   return (

@@ -1,4 +1,3 @@
-import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 import { IProduct } from "../models/product";
 import { IProductRepository } from "./product-repository";
@@ -13,7 +12,7 @@ const products: IProduct[] = [
     updatedAt: 1548000000
   },
   {
-    id: "faa65af2-ac6d-4404-9d9d-7423f04eb740",
+    id: "8eeb4aa5-6f49-43a4-b25f-7987d938f3a7",
     name: "Shrimp Torta",
     description: "Is a Poc Chuc Torta",
     price: 25,
@@ -26,10 +25,9 @@ const find = (query?: any): Promise<IProduct[]> => {
   if (query) {
     const [key]: string[] = Object.keys(query);
     return Promise.resolve(
-      products.filter((user: IProduct) => user[key] === query[key])
+      products.filter((product: IProduct) => product[key] === query[key])
     );
   }
-
   return Promise.resolve(products);
 };
 

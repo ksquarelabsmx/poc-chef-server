@@ -1,4 +1,4 @@
-import { IDomainValidationError, IError } from "./../interfaces/error";
+import { IDomainValidationError, IError } from "../interfaces/error";
 // TODO errors by namespace
 
 const emailInUse: IDomainValidationError = {
@@ -13,7 +13,12 @@ const userNotExist: IDomainValidationError = {
 
 const eventNotExist: IDomainValidationError = {
   field: "event_id",
-  error: "event doesn't exist"
+  error: "event does not exist"
+};
+
+const productNotExist: IDomainValidationError = {
+  field: "products",
+  error: "product doesn't exist"
 };
 
 const eventIsFinished: IDomainValidationError = {
@@ -119,6 +124,7 @@ export const error = {
   invalidPassword,
   invalidAuthProvider,
   eventNotExist,
+  productNotExist,
   orderEventDifferent,
   eventIsFinished,
   orderIsCancelled,

@@ -18,9 +18,7 @@ const order = {
     .min(0)
     .required(),
 
-  products: Joi.array()
-    .items(Joi.string().uuid())
-    .required(),
+  products: Joi.array().required(),
 
   created_by: Joi.string()
     .uuid()

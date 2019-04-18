@@ -1,7 +1,7 @@
 import { IEvent, IEventDto } from "../models/event";
-import * as orderMapper from "../mappers/order";
+import { orderMapper } from "../mappers/order";
 
-export const toDto = (event: IEvent): IEventDto => ({
+const toDto = (event: IEvent): IEventDto => ({
   id: event.id,
   name: event.name,
   start_date: event.startDate,
@@ -17,7 +17,7 @@ export const toDto = (event: IEvent): IEventDto => ({
   updated_at: event.updatedAt
 });
 
-export const toModel = (event: IEventDto): IEvent => ({
+const toModel = (event: IEventDto): IEvent => ({
   id: event.id,
   name: event.name,
   startDate: event.start_date,
@@ -32,3 +32,8 @@ export const toModel = (event: IEventDto): IEvent => ({
   createdAt: event.created_at,
   updatedAt: event.updated_at
 });
+
+export const eventMapper = {
+  toModel,
+  toDto
+};

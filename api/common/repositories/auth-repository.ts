@@ -1,7 +1,7 @@
 import * as fp from "lodash/fp";
 import { v4 as uuid } from "uuid";
 
-import { auth } from "../../partner/interfaces";
+import { auth } from "../interfaces";
 
 const authProviders: auth.IAuthProviderDao[] = [
   {

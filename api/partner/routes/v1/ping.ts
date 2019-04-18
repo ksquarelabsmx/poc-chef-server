@@ -1,7 +1,9 @@
-import { Express } from "express";
+import * as express from "express";
 
 import { pingController } from "../../controllers";
 
-export const pingRoutes = (app: Express) => {
-  app.get("/v1/ping", pingController.pong);
-};
+const pingRouter = express.Router();
+
+pingRouter.get("/", pingController.pong);
+
+export { pingRouter };

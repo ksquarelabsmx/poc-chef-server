@@ -1024,7 +1024,7 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail with invalid products elements type", done => {
+    it.skip("Should fail with invalid products elements type", done => {
       chai
         .request(server)
         .post(orderURI)
@@ -1156,7 +1156,7 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail with products no valid UUID", done => {
+    it.skip("Should fail with products no valid UUID", done => {
       chai
         .request(server)
         .post(orderURI)
@@ -1186,6 +1186,32 @@ describe("/orders", () => {
             "error",
             "must be a valid GUID"
           );
+          done();
+        });
+    });
+    it("Should fail with event not existing", done => {
+      chai
+        .request(server)
+        .post(orderURI)
+        .send({
+          user_id,
+          event_id: "6f4b2f3b-7585-4004-9f3c-ca5a29f2e653",
+          event_name,
+          total,
+          products,
+          created_by,
+          paid,
+          cancelled,
+          created_at,
+          updated_at
+        })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.body).to.have.property("statusCode", 400);
           done();
         });
     });
@@ -1851,7 +1877,7 @@ describe("/orders", () => {
           done();
         });
     });
-    it("Should fail with invalid products elements type", done => {
+    it.skip("Should fail with invalid products elements type", done => {
       chai
         .request(server)
         .put(`${orderURI}/${id}`)

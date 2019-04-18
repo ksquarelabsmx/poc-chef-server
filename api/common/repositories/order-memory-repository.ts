@@ -1,4 +1,3 @@
-import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 
 import { IOrder } from "../models/order";
@@ -13,7 +12,7 @@ const orders: IOrder[] = [
     total: 100,
     products: [
       {
-        id: "1",
+        id: "faa65af2-ac6d-4404-9d9d-7423f04eb740",
         name: "Poc Chuc Torta",
         quantity: 2,
         price: 25,
@@ -22,7 +21,7 @@ const orders: IOrder[] = [
         updatedAt: 1554736045100
       },
       {
-        id: "2",
+        id: "8eeb4aa5-6f49-43a4-b25f-7987d938f3a7",
         name: "Shrimp Torta",
         quantity: 2,
         price: 25,
@@ -97,11 +96,8 @@ const find = (query?: any): Promise<IOrder[]> => {
 
 const save = (order: IOrder): Promise<IOrder> => {
   order.id = uuid();
-  const result: IOrder = {
-    ...order
-  };
-  orders.push(result);
-  return Promise.resolve(result);
+  orders.push(order);
+  return Promise.resolve(order);
 };
 
 const update = (order: IOrder): Promise<IOrder> => {

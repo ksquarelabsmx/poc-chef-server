@@ -2,9 +2,9 @@ import chalk from "chalk";
 import * as Debug from "debug";
 import { Response, Request, NextFunction } from "express";
 
-import { uriBuilder, response } from "../utils";
-import { user } from "../interfaces";
-import { userMapper } from "../mappers";
+import { uriBuilder, response } from "../../common/utils";
+import { user } from "../../common/interfaces";
+import { userMapper } from "./../../common/mappers";
 import { userService } from "../services";
 
 const debug = Debug("chef:events:controller:user");

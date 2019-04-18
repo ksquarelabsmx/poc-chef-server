@@ -15,10 +15,10 @@ import {
   wrapErrors,
   clientErrorHandler,
   errorHandler
-} from "./partner/middlewares";
-import routes from "./partner/routes/v1";
+} from "./common/middlewares";
 import { requestLogStream } from "./libraries/log";
 import { user } from "./user/app";
+import { partner } from "./partner/app";
 
 const debug = Debug("chef:orders:app");
 
@@ -89,7 +89,7 @@ app.get("/swagger.json", (req, res) => {
 });
 
 // routes
-routes(app);
+app.use("/", partner);
 
 app.use("/user/api/", user);
 

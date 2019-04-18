@@ -1,22 +1,40 @@
-import { IEventRepository } from "api/common/repositories/event-repository";
-import { IEvent } from "api/common/models/event";
+import * as boom from "boom";
 
-export const EventService = (eventRepoistory: IEventRepository) => {
-  const getCurrentEvents = (): Promise<IEvent[]> => {
-    return eventRepoistory.find();
+import { IEvent } from "../../common/models/event";
+import { IEventRepository } from "../../common/repositories/event-repository";
+
+export const EventService = (eventsDataSource: IEventRepository) => {
+  const getEvents = async (): Promise<IEvent[]> => {
+    return eventsDataSource.find();
   };
 
-  const getPastEvents = async (): Promise<IEvent[]> => {
-    const events = await eventRepoistory.find();
-    return Promise.resolve(
-      events.filter((event: IEvent) => {
-        return event.expirationDate < Date.now() || event.markedAsFinished;
-      })
-    );
+  const getCurrentEvents = async (): Promise<any> => {
+    try {
+      const events: IEvent[] = await eventsDataSource.find({
+        markedAsFinished: false
+      });
+
+      return Promise.resolve(events);
+    } catch (err) {
+      return Promise.reject(boom.internal("Internal Server Error"));
+    }
+  };
+
+  const getPastEvents = async (): Promise<any> => {
+    try {
+      const events: IEvent[] = await eventsDataSource.find({
+        markedAsFinished: true
+      });
+
+      return Promise.resolve(events);
+    } catch (err) {
+      return Promise.reject(boom.internal("Internal Server Error"));
+    }
   };
 
   return {
-    getCurrentEvents,
-    getPastEvents
+    getEvents,
+    getPastEvents,
+    getCurrentEvents
   };
 };

@@ -1,4 +1,4 @@
-import { error } from "./../interfaces";
+import { error } from "../interfaces";
 
 const badRequestStrategy = (
   payload: error.IErrorWithStack
