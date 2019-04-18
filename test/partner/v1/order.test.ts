@@ -1210,7 +1210,7 @@ describe("/orders", () => {
           if (err) {
             throw err;
           }
-          console.log(res.body);
+
           expect(res.body).to.have.property("statusCode", 400);
           done();
         });
