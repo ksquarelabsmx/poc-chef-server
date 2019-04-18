@@ -1,9 +1,9 @@
 import chalk from "chalk";
 import * as Debug from "debug";
 
-import { response } from "../utils";
+import { response } from "../../common/utils";
 import { orderService } from "../services";
-import { IOrder } from "../../common/models/order";
+import { IOrder } from "api/common/models/order";
 
 const debug = Debug("chef:orders:controller:orders");
 
@@ -19,15 +19,12 @@ const getOrderById = async (id: string): Promise<IOrder> => {
 
 const createOrder = async (data: IOrder): Promise<IOrder> => {
   debug(`OrderController: ${chalk.green("creating order")}`);
-  return orderService.createOrder(data);
+  return orderService.createOne(data);
 };
 
 const updateOrder = async (id: string, data: IOrder): Promise<IOrder> => {
   debug(`EventController: ${chalk.green("getting orders")}`);
-  return orderService.updateOrder({
-    ...data,
-    id
-  });
+  return orderService.updateOneById(id, data);
 };
 
 const handleAction = async (data: {

@@ -1,4 +1,4 @@
-import { user } from "./../interfaces";
+import { user } from "../interfaces";
 
 const toDto = (userDao: user.IUserDao): user.IUserDto => {
   return {

@@ -54,9 +54,7 @@ const find = (query?: any): Promise<IEvent[]> => {
   if (query) {
     const [key]: string[] = Object.keys(query);
     return Promise.resolve(
-      events.filter((order: IEvent) => {
-        return order[key] === query[key];
-      })
+      events.filter((order: IEvent) => order[key] === query[key])
     );
   }
   return Promise.resolve(events);

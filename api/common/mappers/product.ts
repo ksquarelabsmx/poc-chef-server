@@ -1,4 +1,4 @@
-import { IProduct, IProductDto } from "./../../common/models/product";
+import { IProduct, IProductDto } from "../models/product";
 
 const toModel = (productDto: IProductDto): IProduct => {
   return {

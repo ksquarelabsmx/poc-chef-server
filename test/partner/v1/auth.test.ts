@@ -93,11 +93,8 @@ describe("/auth", () => {
             throw err;
           }
 
-          expect(res.body).to.have.property("statusCode", 400);
-          expect(res.body).to.have.property("message", "Bad Request");
-          expect(res.body).to.have.property("errors");
-          expect(res.body.errors).to.have.property("field", "email");
-          expect(res.body.errors).to.have.property("error", "invalid email");
+          expect(res.body).to.have.property("statusCode", 500);
+          expect(res.body).to.have.property("message", "Internal Server Error");
           done();
         });
     });

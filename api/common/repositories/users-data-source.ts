@@ -2,7 +2,7 @@ import * as fp from "lodash/fp";
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 
-import { IUser, IUserDao } from "../../partner/interfaces/user";
+import { IUser, IUserDao } from "../interfaces/user";
 
 const users: IUserDao[] = [
   {

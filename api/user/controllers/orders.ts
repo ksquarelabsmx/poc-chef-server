@@ -1,26 +1,34 @@
+import chalk from "chalk";
+import * as Debug from "debug";
+
 import { IOrder } from "../../common/models/order";
+import { orderService } from "../services";
 
-export const OrdersController = orderService => {
-  const getAll = (): Promise<IOrder[]> => {
-    return orderService.getAll();
-  };
+const debug = Debug("chef:orders:controller:orders");
 
-  const createOrder = (order: IOrder): Promise<IOrder> => {
-    return orderService.createOne(order);
-  };
+const getAll = async (): Promise<IOrder[]> => {
+  debug(`OrderController: ${chalk.green("getting orders")}`);
+  return orderService.getAll();
+};
 
-  const updateOrderById = (id: string, order: IOrder): Promise<IOrder> => {
-    return orderService.updateOneById(id, order);
-  };
+const createOrder = (order: IOrder): Promise<IOrder> => {
+  debug(`OrderController: ${chalk.green("getting orders")}`);
+  return orderService.createOne(order);
+};
 
-  const cancelOrderById = (id: string): Promise<IOrder> => {
-    return orderService.cancelOrderById(id);
-  };
+const updateOrderById = (id: string, order: IOrder): Promise<IOrder> => {
+  debug(`OrderController: ${chalk.green("getting orders")}`);
+  return orderService.updateOneById(id, order);
+};
 
-  return {
-    getAll,
-    createOrder,
-    updateOrderById,
-    cancelOrderById
-  };
+const cancelOrderById = (id: string): Promise<IOrder> => {
+  debug(`OrderController: ${chalk.green("getting orders")}`);
+  return orderService.cancelOrderById(id);
+};
+
+export const ordersController = {
+  getAll,
+  createOrder,
+  updateOrderById,
+  cancelOrderById
 };

@@ -1,6 +1,6 @@
 import * as boom from "boom";
-import { error, response } from "../utils";
-import { user, auth } from "../interfaces";
+import { error, response } from "../../common/utils";
+import { user, auth } from "../../common/interfaces";
 import { usersDataSource, authRepository } from "../../common/repositories";
 
 export const UserService = () => {

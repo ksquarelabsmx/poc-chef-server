@@ -1,16 +1,33 @@
-import { IEvent } from "../../common/models/event";
-import * as eventMapper from "../../common/mappers/event";
+import chalk from "chalk";
+import * as Debug from "debug";
 
-export const EventsController = eventService => {
-  const getEvents = async (query: any): Promise<IEvent[]> => {
-    if (query.getPastEvents) {
+import { IEvent } from "../../common/models/event";
+import { eventService } from "../services";
+
+const debug = Debug("chef:events:controller:events");
+
+const eventStrategy = (
+  eventService: any,
+  query: string = ""
+): Promise<IEvent[]> => {
+  switch (query) {
+    case "current": {
+      return eventService.getCurrentEvents();
+    }
+    case "past": {
       return eventService.getPastEvents();
     }
+    default: {
+      return eventService.getEvents();
+    }
+  }
+};
 
-    return eventService.getCurrentEvents();
-  };
+const getEvents = async (type: string): Promise<IEvent[]> => {
+  debug(`EventController: ${chalk.green("getting events")}`);
+  return eventStrategy(eventService, type);
+};
 
-  return {
-    getEvents
-  };
+export const eventsController = {
+  getEvents
 };

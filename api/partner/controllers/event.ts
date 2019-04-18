@@ -1,9 +1,9 @@
 import chalk from "chalk";
 import * as Debug from "debug";
 
-import { response } from "../utils";
+import { response } from "../../common/utils";
 import { eventService } from "../services";
-import { IEvent } from "../../common/models/event";
+import { IEvent } from "api/common/models/event";
 
 const debug = Debug("chef:events:controller:events");
 

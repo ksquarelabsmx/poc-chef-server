@@ -1,7 +1,7 @@
-import { IOrder, IOrderDto } from "../models/order";
-import * as orderProductMapper from "./order-product";
+import { IOrder, IOrderDto } from "./../models/order";
+import { orderProductMapper } from "./order-product";
 
-export const toDto = (order: IOrder): IOrderDto => ({
+const toDto = (order: IOrder): IOrderDto => ({
   id: order.id,
   total: order.total,
   cancelled: order.cancelled,
@@ -15,7 +15,7 @@ export const toDto = (order: IOrder): IOrderDto => ({
   updated_at: order.updatedAt
 });
 
-export const toModel = (order: IOrderDto): IOrder => ({
+const toModel = (order: IOrderDto): IOrder => ({
   id: order.id,
   total: order.total,
   cancelled: order.cancelled,
@@ -28,3 +28,8 @@ export const toModel = (order: IOrderDto): IOrder => ({
   createdAt: order.created_at,
   updatedAt: order.updated_at
 });
+
+export const orderMapper = {
+  toDto,
+  toModel
+};

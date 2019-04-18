@@ -13,14 +13,14 @@ const orderProducts: IOrderProduct[] = [
   }
 ];
 
-const find = (query?: any): IOrderProduct[] => {
+const find = (query?: any): Promise<IOrderProduct[]> => {
   if (query) {
     const [key]: string[] = Object.keys(query);
-    return orderProducts.filter(
-      (user: IOrderProduct) => user[key] === query[key]
+    return Promise.resolve(
+      orderProducts.filter((user: IOrderProduct) => user[key] === query[key])
     );
   }
-  return orderProducts;
+  return Promise.resolve(orderProducts);
 };
 
 const save = (orderProduct: IOrderProduct): IOrderProduct => {

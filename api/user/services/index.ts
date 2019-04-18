@@ -1,13 +1,13 @@
+import { EventService } from "./events";
 import { OrderService } from "./orders";
+import { eventMemoryRepository } from "../../common/repositories/event-memory-repository";
 import { orderMemoryRepository } from "../../common/repositories/order-memory-repository";
 import { productMemoryRepository } from "../../common/repositories/product-memory-repository";
-import { eventMemoryRepository } from "../../common/repositories/event-memory-repository";
-import { EventService } from "./events";
 
-const orderService = OrderService(
+export const orderService = OrderService(
   orderMemoryRepository,
-  productMemoryRepository
+  productMemoryRepository,
+  eventMemoryRepository
 );
-const eventService = EventService(eventMemoryRepository);
-
-export { orderService, eventService };
+export const eventService = EventService(eventMemoryRepository);
+export { authService } from "./auth";
