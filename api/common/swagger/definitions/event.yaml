@@ -1,0 +1,50 @@
+definitions:
+  Event:
+    required:
+      - name
+      - expiration_date
+      - end_hour
+      - created_by
+      - total
+      - orders
+      - marked_as_finished
+      - cancelled
+      - created_at
+      - updated_at
+    properties:
+      id:
+        type: string
+        format: UUID
+        example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+      name:
+        type: string
+        example: Tortastic
+      expiration_date:
+        type: number
+        example: 1548000000
+      end_hour:
+        type: number
+        example: 1200
+      created_by:
+        type: string
+        example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+      total:
+        type: number
+        example: 100
+      orders:
+        type: array
+        items:
+          type: object
+          $ref: "#/definitions/Order"
+      marked_as_finished:
+        type: boolean
+        example: false
+      cancelled:
+        type: boolean
+        example: false
+      created_at:
+        type: number
+        example: 1548000000
+      updated_at:
+        type: number
+        example: 1548000000

@@ -6,21 +6,12 @@ const eventId = Joi.string().uuid();
 const event = {
   name: Joi.string().required(),
 
-  start_date: Joi.number()
-    .min(moment().unix()) // don't allow start_date in past
-    .required(),
-
   expiration_date: Joi.number()
-    .min(Joi.ref("start_date"))
-    .required(),
-
-  start_hour: Joi.number()
-    .min(0)
-    .max(1440) // time in seconds
+    .min(Joi.ref("created_at"))
     .required(),
 
   end_hour: Joi.number()
-    .greater(Joi.ref("start_hour"))
+    .min(0)
     .max(1440) // time in seconds
     .required(),
 

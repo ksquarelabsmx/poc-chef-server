@@ -21,9 +21,7 @@ const futureDate = (days: number, hours: number): number =>
 
 export const eventMockDto: IEventDto = {
   name: "Tortastic",
-  start_date: futureDate(1, 0), // epoch
   expiration_date: futureDate(1, 2), // epoch
-  start_hour: 800,
   end_hour: 1200,
   created_by: "6d623d08-113c-4565-81b2-e17c90331241",
   total: 10,

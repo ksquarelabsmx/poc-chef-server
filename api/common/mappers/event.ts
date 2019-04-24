@@ -4,9 +4,7 @@ import { orderMapper } from "../mappers/order";
 const toDto = (event: IEvent): IEventDto => ({
   id: event.id,
   name: event.name,
-  start_date: event.startDate,
   expiration_date: event.expirationDate,
-  start_hour: event.startHour,
   end_hour: event.endHour,
   created_by: event.createdBy,
   total: event.total,
@@ -20,9 +18,7 @@ const toDto = (event: IEvent): IEventDto => ({
 const toModel = (event: IEventDto): IEvent => ({
   id: event.id,
   name: event.name,
-  startDate: event.start_date,
   expirationDate: event.expiration_date,
-  startHour: event.start_hour,
   endHour: event.end_hour,
   createdBy: event.created_by,
   total: event.total,

@@ -11,44 +11,6 @@ import { uriBuilder, response } from "../../../common/utils";
 const authRouter = express.Router();
 /**
  * @swagger
- * definitions:
- *   Login:
- *     required:
- *       - email
- *       - password
- *     properties:
- *       email:
- *         type: string
- *       password:
- *         type: string
- *   LoginResponse:
- *     required:
- *       - jwt
- *       - user
- *     properties:
- *       jwt:
- *         type: string
- *       user:
- *         type: object
- *         properties:
- *           id:
- *             type: string
- *           name:
- *             type: string
- *           email:
- *             type: string
- *           role:
- *             type: string
- *           auth_provider:
- *             type: string
- *           created_at:
- *             type: number
- *           updated_at:
- *             type: number
- */
-
-/**
- * @swagger
  * tags:
  *   name: Auth
  *   description: Auth
@@ -56,11 +18,46 @@ const authRouter = express.Router();
 
 /**
  * @swagger
+ * definitions:
+ *   LoginResponse:
+ *     required:
+ *       - jwt
+ *       - user
+ *     properties:
+ *       jwt:
+ *         type: string
+ *         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+ *       user:
+ *         type: object
+ *         properties:
+ *           id:
+ *             type: string
+ *             example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+ *           name:
+ *             type: string
+ *             example: Hal
+ *           email:
+ *             type: string
+ *             example: admin@example.com
+ *           role:
+ *             type: string
+ *             example: partner
+ *           auth_provider:
+ *             type: string
+ *             example: 23984866-cef7-4f12-ae19-e5e78662e451
+ *           created_at:
+ *             type: number
+ *             example: 1548000000
+ *           updated_at:
+ *             type: number
+ *             example: 1548000000
+ */
+
+/**
+ * @swagger
  * /v1/auth/login:
  *   post:
- *     description: Create event
- *     security:
- *       - bearerAuth: []
+ *     summary: Login for partner
  *     tags:
  *       - Auth
  *     consumes:
@@ -75,19 +72,14 @@ const authRouter = express.Router();
  *           $ref: "#/definitions/Login"
  *         required: true
  *         description: Login object
- *         example:
- *           email: admin@example.com
- *           password: adminpassword
  *     responses:
  *       200:
- *         description: Login
+ *         description: Succesful operation
  *         schema:
  *           type: object
  *           $ref: "#/definitions/LoginResponse"
  *       400:
  *         description: Bad Request. Invalid email.
- *       401:
- *         description: Unauthorized. Invalid password
  *       500:
  *         description: Internal Server Error
  */

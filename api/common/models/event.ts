@@ -4,9 +4,7 @@ import { IOrderDto, IOrder } from "./order";
 export interface IEvent {
   id?: string;
   name: string;
-  startDate: number;
   expirationDate: number;
-  startHour: number;
   endHour: number;
   createdBy: string;
   total: number;
@@ -20,9 +18,7 @@ export interface IEvent {
 export interface IEventDto {
   id?: string;
   name: string;
-  start_date: number;
   expiration_date: number;
-  start_hour: number;
   end_hour: number;
   created_by: string;
   total: number;

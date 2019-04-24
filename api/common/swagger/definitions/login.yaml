@@ -1,0 +1,12 @@
+definitions:
+  Login:
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+        example: admin@example.com
+      password:
+        type: string
+        example: adminpassword

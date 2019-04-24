@@ -10,11 +10,51 @@ import { eventsController } from "../../controllers/";
 import { validateJWT, filterRoles } from "../../../common/policies";
 
 const eventsRouter = express.Router();
+/**
+ * @swagger
+ * tags:
+ *   name: Event
+ *   description: Event
+ */
+
+/**
+ * @swagger
+ * /user/api/v1/events:
+ *   get:
+ *     summary: User finds multiple events
+ *     description: Return multiple events, depending of the opptional query related to the status of the event.
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Event
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: eventType
+ *         description: Optional value that could be considered for filtering the events.
+ *         type: string
+ *         enum:
+ *         - current
+ *         - past
+ *     responses:
+ *       200:
+ *         description: Succesful operation
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: object
+ *             $ref: "#/definitions/Event"
+ *       401:
+ *         description: Unathorized. Access token is missing or invalid.
+ *       500:
+ *         description: Internal Server Error
+ */
 
 eventsRouter.get(
   "/",
-  validateJWT("access"),
-  filterRoles(["user"]),
+  //validateJWT("access"),
+  //filterRoles(["user"]),
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);

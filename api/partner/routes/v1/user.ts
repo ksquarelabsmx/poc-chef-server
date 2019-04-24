@@ -6,61 +6,23 @@ import { validation } from "../../../common/middlewares";
 import { userController } from "../../controllers";
 
 const usersRouter = express.Router();
-/**
- * @swagger
- * definitions:
- *   User:
- *     required:
- *       - name
- *       - email
- *       - password
- *     properties:
- *       name:
- *         type: string
- *       email:
- *         type: string
- *       password:
- *         type: string
- *
- *   UserDetails:
- *     required:
- *       - id
- *       - name
- *       - email
- *       - password
- *       - created_at
- *       - updated_at
- *     properties:
- *       id:
- *         type: string
- *       name:
- *         type: string
- *       email:
- *         type: string
- *       password:
- *         type: string
- *       created_at:
- *         type: number
- *       updated_at:
- *         type: number
- */
 
 /**
  * @swagger
  * tags:
- *   name: Users
- *   description: Users
+ *   name: User
+ *   description: User
  */
 
 /**
  * @swagger
  * /v1/users/register:
  *   post:
- *     description: Create user
+ *     summary: Create user
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Users
+ *       - User
  *     consumes:
  *       - application/json
  *     produces:
@@ -86,34 +48,6 @@ const usersRouter = express.Router();
  *         description: Access token is missing or invalid
  *       500:
  *         description: Internal Server Error
- */
-
-/**
- * invalidRole
- * HTTP 1.1 400 Bad Request
- *
- * {
- *   "status": 400,
- *   "message": "Bad Request",
- *   "errors": [
- *     {
- *       "field": "role",
- *       "error": "must be one of [partner, partner admin]"
- *     }
- *   ]
- * }
- *
- * emailInUse
- * HTTP 1.1 400 Bad Request
- *
- * {
- *   "status": 400,
- *   "message": "Bad Request",
- *   "errors": {
- *       "field": "email",
- *       "error": "email already in use"
- *     }
- * }
  */
 
 usersRouter.post(

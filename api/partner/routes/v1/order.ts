@@ -10,83 +10,31 @@ import { orderSchema } from "../../../common/utils/schemas";
 import { uriBuilder } from "../../../common/utils/uri";
 import { orderMapper } from "./../../../common/mappers";
 import { response } from "../../../common/utils/response";
-import {
-  validateJWT,
-  onlyOwner,
-  filterRoles,
-  appendUser
-} from "../../../common/policies";
+import { validateJWT, onlyOwner, filterRoles } from "../../../common/policies";
 
 const ordersRouter = express.Router();
-/**
- * @swagger
- * definitions:
- *
- *   Order:
- *     required:
- *       - id
- *       - user_id
- *       - event_id
- *       - price
- *       - order_product_id
- *       - created_by
- *       - paid
- *       - cancelled
- *       - created_at
- *       - updated_at
- *     properties:
- *       id:
- *         type: string
- *       user_id:
- *         type: string
- *       event_id:
- *         type: string
- *       price:
- *         type: number
- *       order_product_id:
- *         type: array
- *         items:
- *           type: string
- *       created_by:
- *         type: string
- *       paid:
- *         type: boolean
- *       cancelled:
- *         type: boolean
- *       created_at:
- *         type: number
- *       updated_at:
- *         type: number
- */
-
-/**
- * @swagger
- * tags:
- *   name: Orders
- *   description: Orders
- */
 
 /**
  * @swagger
  * /v1/orders:
  *   get:
- *     description: Return all orders
+ *     summary: Partner finds all orders
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Orders
+ *       - Order
  *     produces:
  *       - application/json
  *     responses:
  *       200:
- *         description: Get all orders
+ *         description: Succesful operation
  *         schema:
  *           type: array
  *           items:
  *             type: object
  *             $ref: "#/definitions/Order"
  *       401:
- *         description: Access token is missing or invalid
+ *         description: Unathorized. Access token is missing or invalid.
  *       500:
  *         description: Internal Server Error
  */
@@ -114,11 +62,12 @@ ordersRouter.get(
  * @swagger
  * /v1/orders/{id}:
  *   get:
- *     description: Return order
+ *     summary: Partner finds order by ID
+ *     description: Return a single order
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Orders
+ *       - Order
  *     produces:
  *       - application/json
  *     parameters:
@@ -126,15 +75,15 @@ ordersRouter.get(
  *         name: id
  *         type: string
  *         required: true
- *         description: UUID of the order to get
+ *         description: ID of the order to return
  *     responses:
  *       200:
- *         description: Get order
+ *         description: Succesful operation
  *         schema:
  *           type: object
  *           $ref: "#/definitions/Order"
  *       401:
- *         description: Access token is missing or invalid
+ *         description: Unathorized. Access token is missing or invalid.
  *       404:
  *         description: Not Found
  *       500:
@@ -165,11 +114,11 @@ ordersRouter.get(
  * @swagger
  * /v1/orders:
  *   post:
- *     description: Create order
+ *     summary: Partner creates a new order
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Orders
+ *       - Order
  *     consumes:
  *       - application/json
  *     produces:
@@ -181,17 +130,17 @@ ordersRouter.get(
  *           type: object
  *           $ref: "#/definitions/Order"
  *         required: true
- *         description: Order object
+ *         description: Event object that is going to be added
  *     responses:
  *       200:
- *         description: Create order
+ *         description: Succesful operation
  *         schema:
  *           type: object
  *           $ref: "#/definitions/Order"
  *       400:
  *         description: Bad Request. Order name is required.
  *       401:
- *         description: Access token is missing or invalid
+ *         description: Unathorized. Access token is missing or invalid.
  *       500:
  *         description: Internal Server Error
  */
@@ -200,15 +149,14 @@ ordersRouter.post(
   "/",
   validateJWT("access"),
   filterRoles(["partner"]),
-  appendUser(),
   validation(orderSchema.order),
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);
       const data = orderMapper.toModel(req.body);
       const order = await orderController.createOrder(data);
-      const eventDto = orderMapper.toDto(order);
-      res.send(response.success(eventDto, 201, source));
+      const orderDto = orderMapper.toDto(order);
+      res.send(response.success(orderDto, 201, source));
     } catch (err) {
       debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
       res.json(err.output.payload);
@@ -220,11 +168,12 @@ ordersRouter.post(
  * @swagger
  * /v1/orders/action:
  *   post:
- *     description: Action order
+ *     summary: Partner special actions that updated specifics order values
+ *     description: Order Actions that updates an specific value for one or multiple orders
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Orders
+ *       - Order
  *     consumes:
  *       - application/json
  *     produces:
@@ -236,24 +185,38 @@ ordersRouter.post(
  *           properties:
  *             action:
  *               type: string
+ *               enum:
+ *               - mark_as_paid
+ *               - mark_as_not_paid
+ *               - mark_as_cancelled
+ *               - mark_as_not_cancelled
+ *               description: Name of the action that update a specific order value
  *             ids:
  *               type: array
+ *               example:
+ *               - 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+ *               - 6457a76f-b009-44dc-8e01-0895602932367
+ *               - bcc53260-6912-414c-8f80-25838c1bae9c
  *               items:
  *                 type: string
- *         required: true
- *         description: mark_as_paid, mark_as_not_paid, mark_as_cancelled, mark_as_not_cancelled
+ *                 format: UUID
+ *                 description: Array of orders ids
  *     responses:
  *       200:
- *         description: Order Action
+ *         description: Succesful operation
  *         schema:
  *           type: array
+ *           example:
+ *           - order 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653 not found
+ *           - order 6457a76f-b009-44dc-8e01-089560293236 was already marked as paid
+ *           - order bcc53260-6912-414c-8f80-25838c1bae9c successfully modified
  *           items:
  *             type: string
- *
+ *             description: Array of messages for every individual order id sent
  *       400:
  *         description: Bad Request. That action does not exists.
  *       401:
- *         description: Access token is missing or invalid
+ *         description: Unathorized. Access token is missing or invalid.
  *       500:
  *         description: Internal Server Error
  */
@@ -280,11 +243,11 @@ ordersRouter.post(
  * @swagger
  * /v1/orders/{id}:
  *   put:
- *     description: Update orders
+ *     summary: Partner updates a single orders
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Orders
+ *       - Order
  *     consumes:
  *       - application/json
  *     produces:
@@ -293,25 +256,27 @@ ordersRouter.post(
  *       - in: path
  *         name: id
  *         type: string
+ *         example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
  *         required: true
- *         description: UUID of the order to get
+ *         format: UUID
+ *         description: ID of the order to return
  *       - in: body
  *         name: Order object
  *         schema:
  *           type: object
  *           $ref: "#/definitions/Order"
  *         required: true
- *         description: Order object
+ *         description: Order object that is going to be updated
  *     responses:
  *       200:
- *         description: Update Order
+ *         description: Succesful operation
  *         schema:
  *           type: object
  *           $ref: "#/definitions/Order"
  *       400:
- *         description: Bad Request. Event has already finished
+ *         description: Bad Request. Order has already finished
  *       401:
- *         description: Access token is missing or invalid
+ *         description: Unathorized. Access token is missing or invalid.
  *       404:
  *         description: Not Found
  *       500:
@@ -322,7 +287,6 @@ ordersRouter.put(
   "/:id",
   validateJWT("access"),
   onlyOwner(orderMemoryRepository),
-  appendUser(),
   validation({ id: orderSchema.orderId }, "params"),
   validation(orderSchema.order),
   async (req, res) => {
@@ -332,8 +296,8 @@ ordersRouter.put(
         req.params.id,
         orderMapper.toModel(req.body)
       );
-      const eventDto = orderMapper.toDto(order);
-      res.send(response.success(eventDto, 201, source));
+      const orderDto = orderMapper.toDto(order);
+      res.send(response.success(orderDto, 201, source));
     } catch (err) {
       debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
       res.json({
