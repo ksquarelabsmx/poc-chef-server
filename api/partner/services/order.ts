@@ -94,7 +94,7 @@ export const OrderService = (
       );
       const products = normalizeProducts(records, data.products);
       if (products.length !== data.products.length) {
-        return Promise.reject(boom.notFound("Product Not Found"));
+        return Promise.reject(boom.notFound("Not Found"));
       }
 
       return Promise.resolve(
@@ -149,7 +149,7 @@ export const OrderService = (
       );
       const products = normalizeProducts(records, order.products);
       if (products.length !== order.products.length) {
-        return Promise.reject(boom.notFound("Product Not Found"));
+        return Promise.reject(boom.notFound("Not Found"));
       }
 
       return Promise.resolve(

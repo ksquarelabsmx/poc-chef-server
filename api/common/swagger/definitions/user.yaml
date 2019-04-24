@@ -1,0 +1,44 @@
+definitions:
+  User:
+    required:
+      - name
+      - email
+      - password
+    properties:
+      name:
+        type: string
+        example: Hal
+      email:
+        type: string
+        example: admin@example.com
+      password:
+        type: string
+        example: adminpassword
+
+  UserDetails:
+    required:
+      - id
+      - name
+      - email
+      - password
+      - created_at
+      - updated_at
+    properties:
+      id:
+        type: string
+        example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+      name:
+        type: string
+        example: Hal
+      email:
+        type: string
+        example: admin@example.com
+      password:
+        type: string
+        example: adminpassword
+      created_at:
+        type: number
+        example: 1548000000
+      updated_at:
+        type: number
+        example: 1548000000

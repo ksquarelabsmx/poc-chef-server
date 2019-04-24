@@ -65,7 +65,6 @@ const swaggerDefinition = {
     bearerAuth: {
       type: "apiKey",
       name: "Authorization",
-      scheme: "bearer",
       in: "header"
     }
   }
@@ -76,7 +75,11 @@ const options = {
   // Import swaggerDefinitions
   swaggerDefinition,
   // Path to the API docs
-  apis: ["./api/partner/routes/v1/*.ts"]
+  apis: [
+    "./api/partner/routes/v1/*.ts",
+    "./api/user/routes/v1/*.ts",
+    "./api/common/swagger/definitions/*.yaml"
+  ]
 };
 
 // Initialize swagger-jsdoc -> returns validated swagger spec in json format

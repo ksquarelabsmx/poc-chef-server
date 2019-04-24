@@ -1,0 +1,48 @@
+definitions:
+  Order:
+    required:
+      - user_id
+      - event_id
+      - price
+      - products
+      - created_by
+      - paid
+      - cancelled
+      - created_at
+      - updated_at
+    properties:
+      id:
+        type: string
+        format: UUID
+        example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+      user_id:
+        type: string
+        format: UUID
+        example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+      event_id:
+        type: string
+        format: UUID
+        example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+      price:
+        type: number
+        example: 100
+      products:
+        type: array
+        items:
+          type: object
+          $ref: "#/definitions/Product"
+      created_by:
+        type: string
+        example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+      paid:
+        type: boolean
+        example: false
+      cancelled:
+        type: boolean
+        example: false
+      created_at:
+        type: number
+        example: 1548000000
+      updated_at:
+        type: number
+        example: 1548000000

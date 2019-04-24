@@ -19,119 +19,34 @@ import { response } from "../../../common/utils/response";
 const eventsRouter = express.Router();
 /**
  * @swagger
- * definitions:
- *
- *   Event:
- *     required:
- *       - id
- *       - event_name
- *       - start_date
- *       - expiration_date
- *       - start_hour
- *       - end_hour
- *       - created_by
- *       - total
- *       - marked_as_finished
- *       - cancelled
- *       - created_at
- *       - updated_at
- *     properties:
- *       id:
- *         type: string
- *       event_name:
- *         type: string
- *       start_date:
- *         type: number
- *       expiration_date:
- *         type: number
- *       start_hour:
- *         type: number
- *       end_hour:
- *         type: number
- *       created_by:
- *         type: string
- *       total:
- *         type: number
- *       marked_as_finished:
- *         type: boolean
- *       cancelled:
- *         type: boolean
- *       created_at:
- *         type: number
- *       updated_at:
- *         type: number
- *
- *   Order:
- *     required:
- *       - id
- *       - user_id
- *       - event_id
- *       - price
- *       - order_product_id
- *       - created_by
- *       - paid
- *       - cancelled
- *       - created_at
- *       - updated_at
- *     properties:
- *       id:
- *         type: string
- *       user_id:
- *         type: string
- *       event_id:
- *         type: string
- *       price:
- *         type: number
- *       order_product_id:
- *         type: array
- *         items:
- *           type: string
- *       created_by:
- *         type: string
- *       paid:
- *         type: boolean
- *       cancelled:
- *         type: boolean
- *       created_at:
- *         type: number
- *       updated_at:
- *         type: number
- */
-
-/**
- * @swagger
- * tags:
- *   name: Events
- *   description: Events
- */
-
-/**
- * @swagger
  * /v1/events:
  *   get:
- *     description: Return all events
+ *     summary: Partner finds multiple events
+ *     description: Return multiple events, depending of the opptional query related to the status of the event.
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Events
+ *       - Event
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
  *         name: eventType
- *         schema:
- *           type: string
- *         description: Query to return "current" or "past"
+ *         description: Optional value that could be considered for filtering the events.
+ *         type: string
+ *         enum:
+ *         - current
+ *         - past
  *     responses:
  *       200:
- *         description: Get all events
+ *         description: Succesful operation
  *         schema:
  *           type: array
  *           items:
  *             type: object
  *             $ref: "#/definitions/Event"
  *       401:
- *         description: Access token is missing or invalid
+ *         description: Unathorized. Access token is missing or invalid.
  *       500:
  *         description: Internal Server Error
  */
@@ -159,47 +74,34 @@ eventsRouter.get(
  * @swagger
  * /v1/events/{id}:
  *   get:
- *     description: Return event
+ *     summary: Partner finds event by ID
+ *     description: Return a single event
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Events
+ *       - Event
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: path
  *         name: id
  *         type: string
+ *         format: UUID
+ *         example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
  *         required: true
- *         description: UUID of the event to get
+ *         description: ID of the event to return
  *     responses:
  *       200:
- *         description: Get event
+ *         description: Succesful operation
  *         schema:
- *           properties:
- *             id:
- *               type: string
- *             event_name:
- *               type: string
- *             start_date:
- *               type: number
- *             expiration_date:
- *               type: number
- *             start_hour:
- *               type: number
- *             end_hour:
- *               type: number
- *             created_by:
- *               type: string
- *             orders:
- *               type: array
- *               items:
- *                 $ref: "#/definitions/Order"
- *                 type: object
+ *           type: object
+ *           $ref: "#/definitions/Event"
+ *       400:
+ *         description: Bad Request. The id must be a valid UUID.
  *       401:
- *         description: Access token is missing or invalid
+ *         description: Unathorized. Access token is missing or invalid.
  *       404:
- *         description: Not Found
+ *         description: Not Found. Event Not Found.
  *       500:
  *         description: Internal Server Error
  */
@@ -225,11 +127,11 @@ eventsRouter.get(
  * @swagger
  * /v1/events/{id}:
  *   put:
- *     description: Update event
+ *     summary: Partner updates a single event
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Events
+ *       - Event
  *     consumes:
  *       - application/json
  *     produces:
@@ -238,27 +140,29 @@ eventsRouter.get(
  *       - in: path
  *         name: id
  *         type: string
+ *         example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
  *         required: true
- *         description: UUID of the event to get
+ *         format: UUID
+ *         description: ID of the event to return
  *       - in: body
  *         name: Event object
  *         schema:
  *           type: object
  *           $ref: "#/definitions/Event"
  *         required: true
- *         description: Event object
+ *         description: Event object that is going to be updated
  *     responses:
  *       200:
- *         description: Update event
+ *         description: Succesful operation
  *         schema:
  *           type: object
  *           $ref: "#/definitions/Event"
  *       400:
  *         description: Bad Request. Event has already finished
  *       401:
- *         description: Access token is missing or invalid
+ *         description: Unathorized. Access token is missing or invalid.
  *       404:
- *         description: Not Found
+ *         description: Not Found. Event Not Found.
  *       500:
  *         description: Internal Server Error
  */
@@ -294,11 +198,11 @@ eventsRouter.put(
  * @swagger
  * /v1/events:
  *   post:
- *     description: Create event
+ *     summary: Partner creates a new event
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Events
+ *       - Event
  *     consumes:
  *       - application/json
  *     produces:
@@ -310,17 +214,17 @@ eventsRouter.put(
  *           type: object
  *           $ref: "#/definitions/Event"
  *         required: true
- *         description: Event object
+ *         description: Event object that is going to be added
  *     responses:
  *       200:
- *         description: Create event
+ *         description: Succesful operation
  *         schema:
  *           type: object
  *           $ref: "#/definitions/Event"
  *       400:
  *         description: Bad Request. Event name is required.
  *       401:
- *         description: Access token is missing or invalid
+ *         description: Unathorized. Access token is missing or invalid.
  *       500:
  *         description: Internal Server Error
  */
@@ -350,11 +254,12 @@ eventsRouter.post(
  * @swagger
  * /v1/events/action:
  *   post:
- *     description: Action order
+ *     summary: Partner special actions that updated specifics events values
+ *     description: Event Actions that updates an specific value for one or multiple events
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Events
+ *       - Event
  *     consumes:
  *       - application/json
  *     produces:
@@ -362,28 +267,43 @@ eventsRouter.post(
  *     parameters:
  *       - in: body
  *         name: Events
+ *         required: true
  *         schema:
  *           properties:
  *             action:
  *               type: string
+ *               enum:
+ *               - mark_as_finish
+ *               - mark_as_not_finish
+ *               - mark_as_cancelled
+ *               - mark_as_not_cancelled
+ *               description: Name of the action that update a specific event value
  *             ids:
  *               type: array
+ *               example:
+ *               - 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+ *               - 6457a76f-b009-44dc-8e01-0895602932367
+ *               - bcc53260-6912-414c-8f80-25838c1bae9c
  *               items:
  *                 type: string
- *         required: true
- *         description: mark_as_finish, mark_as_not_finish, mark_as_cancelled, mark_as_not_cancelled
+ *                 format: UUID
+ *                 description: Array of events ids
  *     responses:
  *       200:
- *         description: Event Action
+ *         description: Succesful operation
  *         schema:
  *           type: array
+ *           example:
+ *           - event 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653 not found
+ *           - event 6457a76f-b009-44dc-8e01-089560293236 was already marked as finished
+ *           - event bcc53260-6912-414c-8f80-25838c1bae9c successfully modified
  *           items:
  *             type: string
- *
+ *             description: Array of messages for every individual event id sent
  *       400:
  *         description: Bad Request. That action does not exists.
  *       401:
- *         description: Access token is missing or invalid
+ *         description: Unathorized. Access token is missing or invalid.
  *       500:
  *         description: Internal Server Error
  */
