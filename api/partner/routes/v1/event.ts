@@ -8,13 +8,14 @@ import {
   onlyOwner,
   appendUser
 } from "../../../common/policies";
-import { eventMemoryRepository } from "../../../common/repositories/event-memory-repository";
-import { eventController } from "../../controllers";
 import { validation } from "../../../common/middlewares";
-import { eventSchema } from "../../../common/utils/schemas";
 import { uriBuilder } from "../../../common/utils/uri";
-import { eventMapper } from "./../../../common/mappers/event";
 import { response } from "../../../common/utils/response";
+import { eventController } from "../../controllers";
+import { eventSchema } from "../../../common/utils/schemas";
+import { eventMapper } from "./../../../common/mappers/event";
+import { IEventDto, IEvent } from "./../../../common/models/event";
+import { eventMemoryRepository } from "../../../common/repositories/event-memory-repository";
 
 const eventsRouter = express.Router();
 /**
@@ -57,9 +58,10 @@ eventsRouter.get(
   filterRoles(["partner"]),
   async (req, res) => {
     try {
-      const events = await eventController.getEvents(req.query.type);
+      const events: IEvent[] = await eventController.getEvents(req.query.type);
       const source: string = uriBuilder(req);
-      res.send(response.success(events, 200, source));
+      const eventDto: IEventDto[] = events.map(eventMapper.toDto);
+      res.send(response.success(eventDto, 200, source));
     } catch (err) {
       debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
       res.json({
@@ -113,9 +115,10 @@ eventsRouter.get(
   validation({ id: eventSchema.eventId }, "params"),
   async (req, res) => {
     try {
-      const event = await eventController.getEventById(req.params.id);
+      const event: IEvent = await eventController.getEventById(req.params.id);
       const source: string = uriBuilder(req);
-      res.send(response.success(event, 200, source));
+      const eventDto: IEventDto = eventMapper.toDto(event);
+      res.send(response.success(eventDto, 200, source));
     } catch (err) {
       debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
       res.send(err.output.payload);
@@ -149,6 +152,8 @@ eventsRouter.get(
  *         schema:
  *           type: object
  *           $ref: "#/definitions/Event"
+ *           orders:
+ *             $ref: "#/definitions/Order"
  *         required: true
  *         description: Event object that is going to be updated
  *     responses:
@@ -177,12 +182,12 @@ eventsRouter.put(
   validation(eventSchema.event),
   async (req, res) => {
     try {
-      const source = uriBuilder(req);
-      const event = await eventController.updateEvent(
+      const source: string = uriBuilder(req);
+      const event: IEvent = await eventController.updateEvent(
         req.params.id,
         eventMapper.toModel(req.body)
       );
-      const eventDto = eventMapper.toDto(event);
+      const eventDto: IEventDto = eventMapper.toDto(event);
       res.send(response.success(eventDto, 201, source));
     } catch (err) {
       debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
@@ -236,10 +241,11 @@ eventsRouter.post(
   validation(eventSchema.event),
   async (req, res) => {
     try {
+      console.log(req.body);
       const source: string = uriBuilder(req);
-      const data = eventMapper.toModel(req.body);
-      const event = await eventController.createEvent(data);
-      const eventDto = eventMapper.toDto(event);
+      const data: IEvent = eventMapper.toModel(req.body);
+      const event: IEvent = await eventController.createEvent(data);
+      const eventDto: IEventDto = eventMapper.toDto(event);
       res.send(response.success(eventDto, 201, source));
     } catch (err) {
       debug(`createEvent Controller Error: ${chalk.red(err.message)}`);

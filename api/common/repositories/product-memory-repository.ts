@@ -1,4 +1,6 @@
 import { v4 as uuid } from "uuid";
+import moment = require("moment");
+
 import { IProduct } from "../models/product";
 import { IProductRepository } from "./product-repository";
 
@@ -6,7 +8,6 @@ const products: IProduct[] = [
   {
     id: "faa65af2-ac6d-4404-9d9d-7423f04eb740",
     name: "Poc Chuc Torta",
-    description: "Is a Poc Chuc Torta",
     price: 25,
     createdAt: 1548000000,
     updatedAt: 1548000000
@@ -14,7 +15,6 @@ const products: IProduct[] = [
   {
     id: "8eeb4aa5-6f49-43a4-b25f-7987d938f3a7",
     name: "Shrimp Torta",
-    description: "Is a Poc Chuc Torta",
     price: 25,
     createdAt: 1548000000,
     updatedAt: 1548000000
@@ -33,7 +33,15 @@ const find = (query?: any): Promise<IProduct[]> => {
 
 const save = (product: IProduct): Promise<IProduct> => {
   product.id = uuid();
-  const result: IProduct = { ...product };
+  const result: IProduct = {
+    ...product,
+    createdAt: moment()
+      .utc()
+      .unix(),
+    updatedAt: moment()
+      .utc()
+      .unix()
+  };
   products.push(result);
   return Promise.resolve(result);
 };
@@ -42,7 +50,12 @@ const update = (product: IProduct): Promise<IProduct> => {
   const index: number = products.findIndex(
     (p: IProduct) => p.id === product.id
   );
-  products[index] = { ...product };
+  products[index] = {
+    ...product,
+    updatedAt: moment()
+      .utc()
+      .unix()
+  };
   return Promise.resolve(products[index]);
 };
 

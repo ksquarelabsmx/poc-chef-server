@@ -30,7 +30,7 @@ definitions:
         type: array
         items:
           type: object
-          $ref: "#/definitions/Product"
+          $ref: "#/definitions/OrderProduct"
       created_by:
         type: string
         example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653

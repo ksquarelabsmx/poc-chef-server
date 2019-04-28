@@ -2,7 +2,7 @@ import * as express from "express";
 import debug = require("debug");
 import chalk from "chalk";
 
-import { IOrder } from "./../../../common/models/order";
+import { IOrder, IOrderDto } from "./../../../common/models/order";
 import { orderController } from "../../controllers";
 import { orderMemoryRepository } from "../../../common/repositories/order-memory-repository";
 import { validation } from "../../../common/middlewares";
@@ -47,7 +47,8 @@ ordersRouter.get(
     try {
       const orders: IOrder[] = await orderController.getOrders();
       const source: string = uriBuilder(req);
-      res.send(response.success(orders, 200, source));
+      const ordersDto: IOrderDto[] = orders.map(orderMapper.toDto);
+      res.send(response.success(ordersDto, 200, source));
     } catch (err) {
       debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
       res.json({
@@ -99,7 +100,8 @@ ordersRouter.get(
     try {
       const order: IOrder = await orderController.getOrderById(req.params.id);
       const source: string = uriBuilder(req);
-      res.send(response.success(order, 200, source));
+      const orderDto: IOrderDto = orderMapper.toDto(order);
+      res.send(response.success(orderDto, 200, source));
     } catch (err) {
       debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
       res.json({
@@ -153,9 +155,9 @@ ordersRouter.post(
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);
-      const data = orderMapper.toModel(req.body);
-      const order = await orderController.createOrder(data);
-      const orderDto = orderMapper.toDto(order);
+      const data: IOrder = orderMapper.toModel(req.body);
+      const order: IOrder = await orderController.createOrder(data);
+      const orderDto: IOrderDto = orderMapper.toDto(order);
       res.send(response.success(orderDto, 201, source));
     } catch (err) {
       debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
@@ -226,7 +228,7 @@ ordersRouter.post(
   filterRoles(["partner"]),
   async (req, res) => {
     try {
-      const source = uriBuilder(req);
+      const source: string = uriBuilder(req);
       const order = await orderController.handleAction(req.body);
       res.send(response.success(order, 201, source));
     } catch (err) {
@@ -291,12 +293,12 @@ ordersRouter.put(
   validation(orderSchema.order),
   async (req, res) => {
     try {
-      const source = uriBuilder(req);
-      const order = await orderController.updateOrder(
+      const source: string = uriBuilder(req);
+      const order: IOrder = await orderController.updateOrder(
         req.params.id,
         orderMapper.toModel(req.body)
       );
-      const orderDto = orderMapper.toDto(order);
+      const orderDto: IOrderDto = orderMapper.toDto(order);
       res.send(response.success(orderDto, 201, source));
     } catch (err) {
       debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);

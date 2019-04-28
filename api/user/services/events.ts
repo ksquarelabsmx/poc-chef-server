@@ -1,3 +1,4 @@
+import * as fp from "lodash/fp";
 import * as boom from "boom";
 
 import { IEvent } from "../../common/models/event";
@@ -32,9 +33,23 @@ export const EventService = (eventsDataSource: IEventRepository) => {
     }
   };
 
+  const getEventOrderById = async (id: string): Promise<any> => {
+    try {
+      const event: IEvent[] = await eventsDataSource.find({ id });
+
+      if (fp.isEmpty(event)) {
+        return Promise.reject(boom.notFound("Not Found"));
+      }
+      return Promise.resolve(event);
+    } catch (err) {
+      return Promise.reject(boom.internal("Internal Server Error"));
+    }
+  };
+
   return {
     getEvents,
     getPastEvents,
-    getCurrentEvents
+    getCurrentEvents,
+    getEventOrderById
   };
 };

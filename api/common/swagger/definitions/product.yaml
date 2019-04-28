@@ -2,6 +2,30 @@ definitions:
   Product:
     required:
       - name
+      - price
+      - createdAt
+      - updatedAt
+    properties:
+      id:
+        type: string
+        format: UUID
+        example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+      name:
+        type: string
+        example: Torta de Poc Chuc
+      price:
+        type: number
+        example: 20
+      createdAt:
+        type: number
+        example: 1548000000
+      updatedAt:
+        type: number
+        example: 1548000000
+
+  OrderProduct:
+    required:
+      - name
       - quantity
       - price
       - subtotal

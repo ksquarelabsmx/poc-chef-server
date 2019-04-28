@@ -29,70 +29,70 @@ describe("/orders", () => {
           expect(res.body).to.have.property("data");
 
           expect(res.body.data[0]).to.have.property(
-            "userId",
+            "user_id",
             "6d623d08-113c-4565-81b2-e17c90331241"
           );
           expect(res.body.data[0]).to.have.property(
-            "eventId",
+            "event_id",
             "8c9ae830-dd56-4828-8503-c70355253de9"
           );
           expect(res.body.data[0]).to.have.property(
-            "eventName",
+            "event_name",
             "Aún más tortas"
           );
           expect(res.body.data[0]).to.have.property("total", 100);
           expect(res.body.data[0]).to.have.deep.property("products");
           expect(res.body.data[0]).to.have.property(
-            "createdBy",
+            "created_by",
             "6d623d08-113c-4565-81b2-e17c90331241"
           );
           expect(res.body.data[0]).to.have.property("paid", false);
           expect(res.body.data[0]).to.have.property("cancelled", true);
-          expect(res.body.data[0]).to.have.property("createdAt", 1548000000);
-          expect(res.body.data[0]).to.have.property("updatedAt", 1548000000);
+          expect(res.body.data[0]).to.have.property("created_at", 1548000000);
+          expect(res.body.data[0]).to.have.property("updated_at", 1548000000);
 
           expect(res.body.data[1]).to.have.property(
-            "userId",
+            "user_id",
             "6d623d08-113c-4565-81b2-e17c90331241"
           );
           expect(res.body.data[1]).to.have.property(
-            "eventId",
+            "event_id",
             "8c9ae830-dd56-4828-8503-c70355253de9"
           );
-          expect(res.body.data[1]).to.have.property("eventName", "Más tortas");
+          expect(res.body.data[1]).to.have.property("event_name", "Más tortas");
           expect(res.body.data[1]).to.have.property("total", 50);
           expect(res.body.data[1]).to.have.deep.property("products");
           expect(res.body.data[1]).to.have.property(
-            "createdBy",
+            "created_by",
             "6d623d08-113c-4565-81b2-e17c90331241"
           );
           expect(res.body.data[1]).to.have.property("paid", true);
           expect(res.body.data[1]).to.have.property("cancelled", false);
-          expect(res.body.data[1]).to.have.property("createdAt", 1548000000);
-          expect(res.body.data[1]).to.have.property("updatedAt", 1548000000);
+          expect(res.body.data[1]).to.have.property("created_at", 1548000000);
+          expect(res.body.data[1]).to.have.property("updated_at", 1548000000);
 
           expect(res.body.data[2]).to.have.property(
-            "userId",
+            "user_id",
             "6d623d08-113c-4565-81b2-e17c90331241"
           );
           expect(res.body.data[2]).to.have.property(
-            "eventId",
+            "event_id",
             "92c483f9-87cb-4715-b563-093f91703f63"
           );
           expect(res.body.data[2]).to.have.property(
-            "eventName",
+            "event_name",
             "Tortas para la oficina"
           );
           expect(res.body.data[2]).to.have.property("total", 50);
           expect(res.body.data[2]).to.have.deep.property("products");
           expect(res.body.data[2]).to.have.property(
-            "createdBy",
+            "created_by",
             "6d623d08-113c-4565-81b2-e17c90331241"
           );
           expect(res.body.data[2]).to.have.property("paid", false);
           expect(res.body.data[2]).to.have.property("cancelled", false);
-          expect(res.body.data[2]).to.have.property("createdAt", 1548000000);
-          expect(res.body.data[2]).to.have.property("updatedAt", 1548000000);
+          expect(res.body.data[2]).to.have.property("created_at", 1548000000);
+          expect(res.body.data[2]).to.have.property("updated_at", 1548000000);
           done();
         });
     });
@@ -102,6 +102,7 @@ describe("/orders", () => {
       user_id,
       event_id,
       event_name,
+      order_number,
       total,
       products,
       created_by,
@@ -119,6 +120,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           total,
           products,
           created_by,
@@ -140,10 +142,10 @@ describe("/orders", () => {
           expect(res.body.data).to.have.property("total", total);
           expect(res.body.data).to.have.deep.property("products", products);
           expect(res.body.data).to.have.property("created_by", created_by);
-          expect(res.body.data).to.have.property("paid", paid);
-          expect(res.body.data).to.have.property("cancelled", cancelled);
-          expect(res.body.data).to.have.property("created_at", updated_at);
-          expect(res.body.data).to.have.property("updated_at", updated_at);
+          expect(res.body.data).to.have.property("paid");
+          expect(res.body.data).to.have.property("cancelled");
+          expect(res.body.data).to.have.property("created_at");
+          expect(res.body.data).to.have.property("updated_at");
           done();
         });
     });
@@ -442,6 +444,7 @@ describe("/orders", () => {
         .send({
           event_id,
           event_name,
+          order_number,
           total,
           products,
           created_by,
@@ -471,6 +474,7 @@ describe("/orders", () => {
         .send({
           user_id,
           event_name,
+          order_number,
           total,
           products,
           created_by,
@@ -500,6 +504,7 @@ describe("/orders", () => {
         .send({
           user_id,
           event_id,
+          order_number,
           total,
           products,
           created_by,
@@ -530,6 +535,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           products,
           created_by,
           paid,
@@ -559,6 +565,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           total,
           created_by,
           paid,
@@ -588,6 +595,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           total,
           products,
           created_by,
@@ -617,6 +625,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           total,
           products,
           created_by,
@@ -646,6 +655,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           total,
           products,
           created_by,
@@ -675,6 +685,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           total,
           products,
           created_by,
@@ -704,6 +715,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           total,
           products,
           paid,
@@ -735,6 +747,7 @@ describe("/orders", () => {
           user_id: 100,
           event_id,
           event_name,
+          order_number,
           total,
           products,
           created_by,
@@ -768,6 +781,7 @@ describe("/orders", () => {
           user_id,
           event_id: 100,
           event_name,
+          order_number,
           total,
           products,
           created_by,
@@ -801,6 +815,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name: 100,
+          order_number,
           total,
           products,
           created_by,
@@ -834,6 +849,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           total: "40",
           products,
           created_by,
@@ -867,6 +883,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           total,
           products: 100,
           created_by,
@@ -900,6 +917,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           total,
           products,
           created_by,
@@ -934,6 +952,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -967,6 +986,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1000,6 +1020,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1033,6 +1054,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products: [100],
           created_by,
           paid,
@@ -1067,6 +1089,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1099,6 +1122,7 @@ describe("/orders", () => {
           event_id: "1946fd04-763a-4542-b77b-05332a6c4d8",
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1132,6 +1156,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total: -40,
+          order_number,
           products,
           created_by,
           paid,
@@ -1165,6 +1190,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products: ["1946fd04-763a-4542-b77b-05332a6c4d8"],
           created_by,
           paid,
@@ -1198,6 +1224,7 @@ describe("/orders", () => {
           event_id: "6f4b2f3b-7585-4004-9f3c-ca5a29f2e653",
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1229,6 +1256,7 @@ describe("/orders", () => {
             event_id,
             event_name,
             total,
+            order_number,
             products,
             created_by,
             paid,
@@ -1244,6 +1272,7 @@ describe("/orders", () => {
       event_id,
       event_name,
       total,
+      order_number,
       products,
       created_by,
       paid,
@@ -1261,6 +1290,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1281,10 +1311,10 @@ describe("/orders", () => {
           expect(res.body.data).to.have.property("total", total);
           expect(res.body.data).to.have.deep.property("products", products);
           expect(res.body.data).to.have.property("created_by", created_by);
-          expect(res.body.data).to.have.property("paid", paid);
-          expect(res.body.data).to.have.property("cancelled", cancelled);
-          expect(res.body.data).to.have.property("created_at", updated_at);
-          expect(res.body.data).to.have.property("updated_at", updated_at);
+          expect(res.body.data).to.have.property("paid");
+          expect(res.body.data).to.have.property("cancelled");
+          expect(res.body.data).to.have.property("created_at");
+          expect(res.body.data).to.have.property("updated_at");
           done();
         });
     });
@@ -1296,6 +1326,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1325,6 +1356,7 @@ describe("/orders", () => {
           user_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1354,6 +1386,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1383,6 +1416,7 @@ describe("/orders", () => {
           user_id,
           event_id,
           event_name,
+          order_number,
           products,
           created_by,
           paid,
@@ -1413,6 +1447,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           created_by,
           paid,
           cancelled,
@@ -1442,6 +1477,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           cancelled,
@@ -1471,6 +1507,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1500,6 +1537,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1529,6 +1567,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1558,6 +1597,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           paid,
           cancelled,
@@ -1589,6 +1629,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1622,6 +1663,7 @@ describe("/orders", () => {
           event_id: 100,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1655,6 +1697,7 @@ describe("/orders", () => {
           event_id,
           event_name: 100,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1688,6 +1731,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total: "40",
+          order_number,
           products,
           created_by,
           paid,
@@ -1721,6 +1765,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products: 100,
           created_by,
           paid,
@@ -1754,6 +1799,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid: "true",
@@ -1787,6 +1833,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1820,6 +1867,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1853,6 +1901,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1886,6 +1935,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products: [100],
           created_by,
           paid,
@@ -1919,6 +1969,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1952,6 +2003,7 @@ describe("/orders", () => {
           event_id: "1946fd04-763a-4542-b77b-05332a6c4d8",
           event_name,
           total,
+          order_number,
           products,
           created_by,
           paid,
@@ -1985,6 +2037,7 @@ describe("/orders", () => {
           event_id,
           event_name,
           total: -40,
+          order_number,
           products,
           created_by,
           paid,

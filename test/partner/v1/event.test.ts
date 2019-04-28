@@ -35,60 +35,66 @@ describe("/events", () => {
             "Tortas para la oficina 1"
           );
           expect(res.body.data[0]).to.have.property(
-            "expirationDate",
+            "expiration_date",
             1549000000
           );
-          expect(res.body.data[0]).to.have.property("endHour", 1200);
+          expect(res.body.data[0]).to.have.property("end_hour", 1200);
           expect(res.body.data[0]).to.have.property(
-            "createdBy",
+            "created_by",
             "90ec45da-452b-4c37-a5fc-482c8bc92895"
           );
           expect(res.body.data[0]).to.have.property("total", 22);
           expect(res.body.data[0]).to.have.property("orders");
-          expect(res.body.data[0]).to.have.property("markedAsFinished", false);
+          expect(res.body.data[0]).to.have.property(
+            "marked_as_finished",
+            false
+          );
           expect(res.body.data[0]).to.have.property("cancelled", false);
-          expect(res.body.data[0]).to.have.property("createdAt", 1548000000);
-          expect(res.body.data[0]).to.have.property("updatedAt", 1548000000);
+          expect(res.body.data[0]).to.have.property("created_at", 1548000000);
+          expect(res.body.data[0]).to.have.property("updated_at", 1548000000);
 
           expect(res.body.data[1]).to.have.property(
             "name",
             "Tortas para la oficina 2"
           );
           expect(res.body.data[1]).to.have.property(
-            "expirationDate",
+            "expiration_date",
             1549500000
           );
-          expect(res.body.data[1]).to.have.property("endHour", 1200);
+          expect(res.body.data[1]).to.have.property("end_hour", 1200);
           expect(res.body.data[1]).to.have.property(
-            "createdBy",
+            "created_by",
             "a79639e6-3ed9-467c-b9c5-1e60908d812c"
           );
           expect(res.body.data[1]).to.have.property("total", 10);
           expect(res.body.data[1]).to.have.property("orders");
-          expect(res.body.data[1]).to.have.property("markedAsFinished", true);
+          expect(res.body.data[1]).to.have.property("marked_as_finished", true);
           expect(res.body.data[1]).to.have.property("cancelled", true);
-          expect(res.body.data[1]).to.have.property("createdAt", 1548000000);
-          expect(res.body.data[1]).to.have.property("updatedAt", 1548000000);
+          expect(res.body.data[1]).to.have.property("created_at", 1548000000);
+          expect(res.body.data[1]).to.have.property("updated_at", 1548000000);
 
           expect(res.body.data[2]).to.have.property(
             "name",
             "Tortas para la oficina 3"
           );
           expect(res.body.data[2]).to.have.property(
-            "expirationDate",
+            "expiration_date",
             1586476800
           );
-          expect(res.body.data[2]).to.have.property("endHour", 1200);
+          expect(res.body.data[2]).to.have.property("end_hour", 1200);
           expect(res.body.data[2]).to.have.property(
-            "createdBy",
+            "created_by",
             "6d623d08-113c-4565-81b2-e17c90331241"
           );
           expect(res.body.data[2]).to.have.property("total", 20);
           expect(res.body.data[2]).to.have.property("orders");
-          expect(res.body.data[2]).to.have.property("markedAsFinished", false);
+          expect(res.body.data[2]).to.have.property(
+            "marked_as_finished",
+            false
+          );
           expect(res.body.data[2]).to.have.property("cancelled", false);
-          expect(res.body.data[2]).to.have.property("createdAt", 1548000000);
-          expect(res.body.data[2]).to.have.property("updatedAt", 1548000000);
+          expect(res.body.data[2]).to.have.property("created_at", 1548000000);
+          expect(res.body.data[2]).to.have.property("updated_at", 1548000000);
           done();
         });
     });
@@ -107,20 +113,20 @@ describe("/events", () => {
             "Tortas para la oficina 2"
           );
           expect(res.body.data[0]).to.have.property(
-            "expirationDate",
+            "expiration_date",
             1549500000
           );
-          expect(res.body.data[0]).to.have.property("endHour", 1200);
+          expect(res.body.data[0]).to.have.property("end_hour", 1200);
           expect(res.body.data[0]).to.have.property(
-            "createdBy",
+            "created_by",
             "a79639e6-3ed9-467c-b9c5-1e60908d812c"
           );
           expect(res.body.data[0]).to.have.property("total", 10);
           expect(res.body.data[0]).to.have.property("orders");
-          expect(res.body.data[0]).to.have.property("markedAsFinished", true);
+          expect(res.body.data[0]).to.have.property("marked_as_finished", true);
           expect(res.body.data[0]).to.have.property("cancelled", true);
-          expect(res.body.data[0]).to.have.property("createdAt", 1548000000);
-          expect(res.body.data[0]).to.have.property("updatedAt", 1548000000);
+          expect(res.body.data[0]).to.have.property("created_at", 1548000000);
+          expect(res.body.data[0]).to.have.property("updated_at", 1548000000);
           done();
         });
     });
@@ -144,40 +150,46 @@ describe("/events", () => {
             "Tortas para la oficina 1"
           );
           expect(res.body.data[0]).to.have.property(
-            "expirationDate",
+            "expiration_date",
             1549000000
           );
-          expect(res.body.data[0]).to.have.property("endHour", 1200);
+          expect(res.body.data[0]).to.have.property("end_hour", 1200);
           expect(res.body.data[0]).to.have.property(
-            "createdBy",
+            "created_by",
             "90ec45da-452b-4c37-a5fc-482c8bc92895"
           );
           expect(res.body.data[0]).to.have.property("total", 22);
           expect(res.body.data[0]).to.have.property("orders");
-          expect(res.body.data[0]).to.have.property("markedAsFinished", false);
+          expect(res.body.data[0]).to.have.property(
+            "marked_as_finished",
+            false
+          );
           expect(res.body.data[0]).to.have.property("cancelled", false);
-          expect(res.body.data[0]).to.have.property("createdAt", 1548000000);
-          expect(res.body.data[0]).to.have.property("updatedAt", 1548000000);
+          expect(res.body.data[0]).to.have.property("created_at", 1548000000);
+          expect(res.body.data[0]).to.have.property("updated_at", 1548000000);
 
           expect(res.body.data[1]).to.have.property(
             "name",
             "Tortas para la oficina 3"
           );
           expect(res.body.data[1]).to.have.property(
-            "expirationDate",
+            "expiration_date",
             1586476800
           );
-          expect(res.body.data[1]).to.have.property("endHour", 1200);
+          expect(res.body.data[1]).to.have.property("end_hour", 1200);
           expect(res.body.data[1]).to.have.property(
-            "createdBy",
+            "created_by",
             "6d623d08-113c-4565-81b2-e17c90331241"
           );
           expect(res.body.data[1]).to.have.property("total", 20);
           expect(res.body.data[1]).to.have.property("orders");
-          expect(res.body.data[1]).to.have.property("markedAsFinished", false);
+          expect(res.body.data[1]).to.have.property(
+            "marked_as_finished",
+            false
+          );
           expect(res.body.data[1]).to.have.property("cancelled", false);
-          expect(res.body.data[1]).to.have.property("createdAt", 1548000000);
-          expect(res.body.data[1]).to.have.property("updatedAt", 1548000000);
+          expect(res.body.data[1]).to.have.property("created_at", 1548000000);
+          expect(res.body.data[1]).to.have.property("updated_at", 1548000000);
           done();
         });
     });
@@ -189,6 +201,7 @@ describe("/events", () => {
       end_hour,
       created_by,
       total,
+      products,
       orders,
       marked_as_finished,
       cancelled,
@@ -206,6 +219,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -230,14 +244,11 @@ describe("/events", () => {
           expect(res.body.data).to.have.property("end_hour", end_hour);
           expect(res.body.data).to.have.property("created_by", created_by);
           expect(res.body.data).to.have.property("total", total);
-          expect(res.body.data).to.have.deep.property("orders", orders);
-          expect(res.body.data).to.have.property(
-            "marked_as_finished",
-            marked_as_finished
-          );
-          expect(res.body.data).to.have.property("cancelled", cancelled);
-          expect(res.body.data).to.have.property("created_at", created_at);
-          expect(res.body.data).to.have.property("updated_at", updated_at);
+          expect(res.body.data).to.have.deep.property("orders");
+          expect(res.body.data).to.have.property("marked_as_finished");
+          expect(res.body.data).to.have.property("cancelled");
+          expect(res.body.data).to.have.property("created_at");
+          expect(res.body.data).to.have.property("updated_at");
           done();
         });
     });
@@ -406,6 +417,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -435,6 +447,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -468,6 +481,7 @@ describe("/events", () => {
           expiration_date,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -497,6 +511,7 @@ describe("/events", () => {
           expiration_date,
           end_hour,
           created_by,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -527,6 +542,7 @@ describe("/events", () => {
           created_by,
           end_hour,
           total,
+          products,
           marked_as_finished,
           cancelled,
           created_at,
@@ -556,6 +572,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           cancelled,
           created_at,
@@ -588,6 +605,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           created_at,
@@ -617,6 +635,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -631,8 +650,8 @@ describe("/events", () => {
           expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[1]).to.have.property("field", "created_at");
-          expect(res.body.errors[1]).to.have.property("error", "is required");
+          expect(res.body.errors[0]).to.have.property("field", "created_at");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
           done();
         });
     });
@@ -646,6 +665,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -710,6 +730,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -743,6 +764,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -779,6 +801,7 @@ describe("/events", () => {
           end_hour: "1440",
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -812,6 +835,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total: "100",
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -845,6 +869,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders: "Hi",
           marked_as_finished,
           cancelled,
@@ -878,6 +903,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished: "true",
           cancelled,
@@ -913,6 +939,7 @@ describe("/events", () => {
           expiration_date,
           end_hour,
           created_by,
+          products,
           total,
           orders,
           marked_as_finished,
@@ -947,6 +974,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -962,8 +990,8 @@ describe("/events", () => {
           expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[1]).to.have.property("field", "created_at");
-          expect(res.body.errors[1]).to.have.property(
+          expect(res.body.errors[0]).to.have.property("field", "created_at");
+          expect(res.body.errors[0]).to.have.property(
             "error",
             "must be a number"
           );
@@ -980,6 +1008,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1013,6 +1042,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1045,6 +1075,7 @@ describe("/events", () => {
           end_hour: 1441,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1085,6 +1116,7 @@ describe("/events", () => {
             end_hour,
             created_by,
             total,
+            products,
             orders,
             marked_as_finished,
             cancelled,
@@ -1102,6 +1134,7 @@ describe("/events", () => {
       end_hour,
       created_by,
       total,
+      products,
       orders,
       marked_as_finished,
       cancelled,
@@ -1118,6 +1151,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1142,13 +1176,10 @@ describe("/events", () => {
           expect(res.body.data).to.have.property("created_by", created_by);
           expect(res.body.data).to.have.property("total", total);
           expect(res.body.data).to.have.deep.property("orders", orders);
-          expect(res.body.data).to.have.property(
-            "marked_as_finished",
-            marked_as_finished
-          );
-          expect(res.body.data).to.have.property("cancelled", cancelled);
-          expect(res.body.data).to.have.property("created_at", created_at);
-          expect(res.body.data).to.have.property("updated_at", updated_at);
+          expect(res.body.data).to.have.property("marked_as_finished");
+          expect(res.body.data).to.have.property("cancelled");
+          expect(res.body.data).to.have.property("created_at");
+          expect(res.body.data).to.have.property("updated_at");
           done();
         });
     });
@@ -1161,6 +1192,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1190,6 +1222,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1222,6 +1255,7 @@ describe("/events", () => {
           expiration_date,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1251,6 +1285,7 @@ describe("/events", () => {
           expiration_date,
           end_hour,
           created_by,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1281,6 +1316,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           marked_as_finished,
           cancelled,
           created_at,
@@ -1310,6 +1346,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           cancelled,
           created_at,
@@ -1342,6 +1379,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           created_at,
@@ -1371,6 +1409,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1385,8 +1424,8 @@ describe("/events", () => {
           expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[1]).to.have.property("field", "created_at");
-          expect(res.body.errors[1]).to.have.property("error", "is required");
+          expect(res.body.errors[0]).to.have.property("field", "created_at");
+          expect(res.body.errors[0]).to.have.property("error", "is required");
           done();
         });
     });
@@ -1400,6 +1439,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1428,6 +1468,7 @@ describe("/events", () => {
           expiration_date,
           end_hour,
           total,
+          products,
           orders,
           created_by,
           marked_as_finished,
@@ -1463,6 +1504,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1496,6 +1538,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1532,6 +1575,7 @@ describe("/events", () => {
           end_hour: "1440",
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1565,6 +1609,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total: "100",
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1598,6 +1643,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders: {},
           marked_as_finished,
           cancelled,
@@ -1631,6 +1677,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished: "true",
           cancelled,
@@ -1667,6 +1714,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled: "true",
@@ -1700,6 +1748,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1715,8 +1764,8 @@ describe("/events", () => {
           expect(res.body).to.have.property("statusCode", 400);
           expect(res.body).to.have.property("message", "Bad Request");
           expect(res.body).to.have.property("errors");
-          expect(res.body.errors[1]).to.have.property("field", "created_at");
-          expect(res.body.errors[1]).to.have.property(
+          expect(res.body.errors[0]).to.have.property("field", "created_at");
+          expect(res.body.errors[0]).to.have.property(
             "error",
             "must be a number"
           );
@@ -1733,6 +1782,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1766,6 +1816,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1798,6 +1849,7 @@ describe("/events", () => {
           end_hour: 1441,
           created_by,
           total,
+          products,
           orders,
           marked_as_finished,
           cancelled,
@@ -1831,6 +1883,7 @@ describe("/events", () => {
           end_hour,
           created_by,
           total: -100,
+          products,
           orders,
           marked_as_finished,
           cancelled,
