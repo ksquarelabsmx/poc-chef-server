@@ -1,4 +1,5 @@
 import { IOrderDto, IOrder } from "./order";
+import { IProduct, IProductDto } from "./product";
 
 // interfaces for update event and create event
 export interface IEvent {
@@ -9,6 +10,7 @@ export interface IEvent {
   createdBy: string;
   total: number;
   orders: IOrder[];
+  products: IProduct[];
   markedAsFinished: boolean;
   cancelled: boolean;
   createdAt: number;
@@ -23,6 +25,7 @@ export interface IEventDto {
   created_by: string;
   total: number;
   orders: IOrderDto[];
+  products: IProductDto[];
   marked_as_finished: boolean;
   cancelled: boolean;
   created_at: number;

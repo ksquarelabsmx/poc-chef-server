@@ -6,6 +6,7 @@ definitions:
       - end_hour
       - created_by
       - total
+      - products
       - orders
       - marked_as_finished
       - cancelled
@@ -31,11 +32,16 @@ definitions:
       total:
         type: number
         example: 100
+      products:
+        type: array
+        items:
+          type: object
+          $ref: "#/definitions/Product"
       orders:
         type: array
         items:
           type: object
-          $ref: "#/definitions/Order"
+          $ref: "#/definitions/OrderProduct"
       marked_as_finished:
         type: boolean
         example: false

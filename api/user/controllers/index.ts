@@ -1,3 +1,3 @@
 export { authController } from "./auth";
-export { eventsController } from "./events";
+export { eventController } from "./events";
 export { ordersController } from "./orders";

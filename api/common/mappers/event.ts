@@ -1,5 +1,6 @@
 import { IEvent, IEventDto } from "../models/event";
 import { orderMapper } from "../mappers/order";
+import { productMapper } from "../mappers/product";
 
 const toDto = (event: IEvent): IEventDto => ({
   id: event.id,
@@ -8,6 +9,7 @@ const toDto = (event: IEvent): IEventDto => ({
   end_hour: event.endHour,
   created_by: event.createdBy,
   total: event.total,
+  products: event.products.map(productMapper.toDto),
   orders: event.orders.map(orderMapper.toDto),
   marked_as_finished: event.markedAsFinished,
   cancelled: event.cancelled,
@@ -22,6 +24,7 @@ const toModel = (event: IEventDto): IEvent => ({
   endHour: event.end_hour,
   createdBy: event.created_by,
   total: event.total,
+  products: event.products.map(productMapper.toModel),
   orders: event.orders.map(orderMapper.toModel),
   markedAsFinished: event.marked_as_finished,
   cancelled: event.cancelled,

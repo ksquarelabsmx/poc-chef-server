@@ -1,4 +1,5 @@
 import { v4 as uuid } from "uuid";
+import moment = require("moment");
 
 import { IOrder } from "../models/order";
 import { IOrderRepository } from "./order-repository";
@@ -10,6 +11,7 @@ const orders: IOrder[] = [
     eventId: "8c9ae830-dd56-4828-8503-c70355253de9",
     eventName: "Aún más tortas",
     total: 100,
+    orderNumber: 1,
     products: [
       {
         id: "faa65af2-ac6d-4404-9d9d-7423f04eb740",
@@ -42,6 +44,7 @@ const orders: IOrder[] = [
     eventId: "8c9ae830-dd56-4828-8503-c70355253de9",
     eventName: "Más tortas",
     total: 50,
+    orderNumber: 2,
     products: [
       {
         id: "3",
@@ -65,6 +68,7 @@ const orders: IOrder[] = [
     eventId: "92c483f9-87cb-4715-b563-093f91703f63",
     eventName: "Tortas para la oficina",
     total: 50,
+    orderNumber: 3,
     products: [
       {
         id: "4",
@@ -96,13 +100,29 @@ const find = (query?: any): Promise<IOrder[]> => {
 
 const save = (order: IOrder): Promise<IOrder> => {
   order.id = uuid();
-  orders.push(order);
-  return Promise.resolve(order);
+  const result: IOrder = {
+    ...order,
+    paid: false,
+    cancelled: false,
+    createdAt: moment()
+      .utc()
+      .unix(),
+    updatedAt: moment()
+      .utc()
+      .unix()
+  };
+  orders.push(result);
+  return Promise.resolve(result);
 };
 
 const update = (order: IOrder): Promise<IOrder> => {
   const index: number = orders.findIndex((ord: IOrder) => ord.id === order.id);
-  orders[index] = { ...order };
+  orders[index] = {
+    ...order,
+    updatedAt: moment()
+      .utc()
+      .unix()
+  };
   return Promise.resolve(orders[index]);
 };
 
