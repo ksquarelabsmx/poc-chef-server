@@ -1,11 +1,12 @@
 import * as moment from "moment";
 
+import { config } from "../../../config";
 import { IEventDto } from "../../../api/common/models/event";
 import { IOrderDto } from "../../../api/common/models/order";
 import { authService } from "../../../api/partner/services";
 import { ILogin } from "../../../api/common/interfaces/auth";
 
-export const server: string = "http://localhost:7777";
+export const server: string = `http://localhost:${config.server.port}`;
 export const healthURI: string = "/v1/ping";
 export const eventURI: string = "/v1/events";
 export const userURI: string = "/v1/users";
