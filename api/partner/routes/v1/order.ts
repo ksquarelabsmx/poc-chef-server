@@ -114,60 +114,6 @@ ordersRouter.get(
 
 /**
  * @swagger
- * /v1/orders:
- *   post:
- *     summary: Partner creates a new order
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Order
- *     consumes:
- *       - application/json
- *     produces:
- *       - application/json
- *     parameters:
- *       - in: body
- *         name: Order
- *         schema:
- *           type: object
- *           $ref: "#/definitions/Order"
- *         required: true
- *         description: Event object that is going to be added
- *     responses:
- *       200:
- *         description: Succesful operation
- *         schema:
- *           type: object
- *           $ref: "#/definitions/Order"
- *       400:
- *         description: Bad Request. Order name is required.
- *       401:
- *         description: Unathorized. Access token is missing or invalid.
- *       500:
- *         description: Internal Server Error
- */
-
-ordersRouter.post(
-  "/",
-  validateJWT("access"),
-  filterRoles(["partner"]),
-  validation(orderSchema.order),
-  async (req, res) => {
-    try {
-      const source: string = uriBuilder(req);
-      const data: IOrder = orderMapper.toModel(req.body);
-      const order: IOrder = await orderController.createOrder(data);
-      const orderDto: IOrderDto = orderMapper.toDto(order);
-      res.send(response.success(orderDto, 201, source));
-    } catch (err) {
-      debug(`createEvent Controller Error: ${chalk.red(err.message)}`);
-      res.json(err.output.payload);
-    }
-  }
-);
-
-/**
- * @swagger
  * /v1/orders/action:
  *   post:
  *     summary: Partner special actions that updated specifics order values
@@ -222,6 +168,7 @@ ordersRouter.post(
  *       500:
  *         description: Internal Server Error
  */
+
 ordersRouter.post(
   "/actions",
   validateJWT("access"),
@@ -231,75 +178,6 @@ ordersRouter.post(
       const source: string = uriBuilder(req);
       const order = await orderController.handleAction(req.body);
       res.send(response.success(order, 201, source));
-    } catch (err) {
-      debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
-      res.json({
-        statusCode: 500,
-        message: "Internal Server Error"
-      });
-    }
-  }
-);
-
-/**
- * @swagger
- * /v1/orders/{id}:
- *   put:
- *     summary: Partner updates a single orders
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Order
- *     consumes:
- *       - application/json
- *     produces:
- *       - application/json
- *     parameters:
- *       - in: path
- *         name: id
- *         type: string
- *         example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
- *         required: true
- *         format: UUID
- *         description: ID of the order to return
- *       - in: body
- *         name: Order object
- *         schema:
- *           type: object
- *           $ref: "#/definitions/Order"
- *         required: true
- *         description: Order object that is going to be updated
- *     responses:
- *       200:
- *         description: Succesful operation
- *         schema:
- *           type: object
- *           $ref: "#/definitions/Order"
- *       400:
- *         description: Bad Request. Order has already finished
- *       401:
- *         description: Unathorized. Access token is missing or invalid.
- *       404:
- *         description: Not Found
- *       500:
- *         description: Internal Server Error
- */
-
-ordersRouter.put(
-  "/:id",
-  validateJWT("access"),
-  onlyOwner(orderMemoryRepository),
-  validation({ id: orderSchema.orderId }, "params"),
-  validation(orderSchema.order),
-  async (req, res) => {
-    try {
-      const source: string = uriBuilder(req);
-      const order: IOrder = await orderController.updateOrder(
-        req.params.id,
-        orderMapper.toModel(req.body)
-      );
-      const orderDto: IOrderDto = orderMapper.toDto(order);
-      res.send(response.success(orderDto, 201, source));
     } catch (err) {
       debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
       res.json({

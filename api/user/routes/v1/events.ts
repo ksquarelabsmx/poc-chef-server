@@ -2,13 +2,13 @@ import * as express from "express";
 import debug = require("debug");
 import chalk from "chalk";
 
-import { validateJWT, filterRoles } from "../../../common/policies";
 import { uriBuilder } from "../../../common/utils/uri";
 import { response } from "../../../common/utils/response";
+import { validateJWT, filterRoles } from "../../../common/policies";
 
-import { eventMemoryRepository } from "../../../common/repositories/event-memory-repository";
-import { eventController } from "../../controllers";
 import { validation } from "../../../common/middlewares";
+import { eventController } from "../../controllers";
+import { IEvent, IEventDto } from "api/common/models/event";
 import { eventSchema } from "../../../common/utils/schemas";
 import { eventMapper } from "./../../../common/mappers/event";
 
@@ -61,8 +61,8 @@ eventsRouter.get(
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);
-      const events = await eventController.getEvents(req.query.type);
-      const eventsDto = events.map(eventMapper.toDto);
+      const events: IEvent[] = await eventController.getEvents(req.query.type);
+      const eventsDto: IEventDto[] = events.map(eventMapper.toDto);
       res.send(response.success(eventsDto, 200, source));
     } catch (err) {
       debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
@@ -76,7 +76,7 @@ eventsRouter.get(
 
 /**
  * @swagger
- * /v1/events/{id}:
+ * /user/api/v1/events/{id}:
  *   get:
  *     summary: Partner finds event by ID
  *     description: Return a single event
@@ -112,14 +112,14 @@ eventsRouter.get(
 
 eventsRouter.get(
   "/:id",
-  validateJWT("access"),
-  filterRoles(["partner"]),
+  //validateJWT("access"),
+  //filterRoles(["partner"]),
   validation({ id: eventSchema.eventId }, "params"),
   async (req, res) => {
     try {
-      const event = await eventController.getEventById(req.params.id);
+      const event: IEvent = await eventController.getEventById(req.params.id);
       const source: string = uriBuilder(req);
-      const eventDto = eventMapper.toDto(event);
+      const eventDto: IEventDto = eventMapper.toDto(event);
       res.send(response.success(eventDto, 200, source));
     } catch (err) {
       debug(`getEvents Controller Error: ${chalk.red(err.message)}`);

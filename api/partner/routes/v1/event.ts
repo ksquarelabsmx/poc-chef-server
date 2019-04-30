@@ -112,6 +112,7 @@ eventsRouter.get(
   "/:id",
   validateJWT("access"),
   filterRoles(["partner"]),
+  onlyOwner(eventMemoryRepository),
   validation({ id: eventSchema.eventId }, "params"),
   async (req, res) => {
     try {
@@ -241,7 +242,6 @@ eventsRouter.post(
   validation(eventSchema.event),
   async (req, res) => {
     try {
-      console.log(req.body);
       const source: string = uriBuilder(req);
       const data: IEvent = eventMapper.toModel(req.body);
       const event: IEvent = await eventController.createEvent(data);

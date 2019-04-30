@@ -33,7 +33,7 @@ export const EventService = (eventsDataSource: IEventRepository) => {
     }
   };
 
-  const getEventOrderById = async (id: string): Promise<any> => {
+  const getEventById = async (id: string): Promise<any> => {
     try {
       const event: IEvent[] = await eventsDataSource.find({ id });
 
@@ -50,6 +50,6 @@ export const EventService = (eventsDataSource: IEventRepository) => {
     getEvents,
     getPastEvents,
     getCurrentEvents,
-    getEventOrderById
+    getEventById
   };
 };
