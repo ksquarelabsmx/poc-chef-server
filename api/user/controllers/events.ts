@@ -30,7 +30,7 @@ const getEvents = async (type: string): Promise<IEvent[]> => {
 
 const getEventById = async (id: string): Promise<IEvent> => {
   debug(`EventController: ${chalk.green("getting event")}`);
-  return eventService.getEventOrderById(id);
+  return eventService.getEventById(id);
 };
 
 export const eventController = {

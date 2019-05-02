@@ -49,6 +49,20 @@ export const OrderService = (
     return Promise.resolve(ordersDataSource.find());
   };
 
+  const getOrderById = async (id: string): Promise<any> => {
+    try {
+      const order: IOrder[] = await ordersDataSource.find({ id });
+
+      if (fp.isEmpty(order)) {
+        return Promise.reject(boom.notFound("Not Found"));
+      }
+
+      return Promise.resolve(fp.head(order));
+    } catch (err) {
+      return Promise.reject(boom.internal("Internal Server Error"));
+    }
+  };
+
   const createOne = async (data: IOrder): Promise<any> => {
     try {
       const [eventFinded]: IEvent[] = await eventsDataSource.find({
@@ -195,6 +209,7 @@ export const OrderService = (
 
   return {
     getAll,
+    getOrderById,
     createOne,
     updateOneById,
     cancelOrderById

@@ -11,6 +11,11 @@ const getAll = async (): Promise<IOrder[]> => {
   return orderService.getAll();
 };
 
+const getOrderById = async (id: string): Promise<IOrder> => {
+  debug(`OrderController: ${chalk.green("getting order")}`);
+  return orderService.getOrderById(id);
+};
+
 const createOrder = (order: IOrder): Promise<IOrder> => {
   debug(`OrderController: ${chalk.green("getting orders")}`);
   return orderService.createOne(order);
@@ -28,6 +33,7 @@ const cancelOrderById = (id: string): Promise<IOrder> => {
 
 export const ordersController = {
   getAll,
+  getOrderById,
   createOrder,
   updateOrderById,
   cancelOrderById

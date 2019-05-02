@@ -17,16 +17,6 @@ const getOrderById = async (id: string): Promise<IOrder> => {
   return orderService.getOrderById(id);
 };
 
-const createOrder = async (data: IOrder): Promise<IOrder> => {
-  debug(`OrderController: ${chalk.green("creating order")}`);
-  return orderService.createOne(data);
-};
-
-const updateOrder = async (id: string, data: IOrder): Promise<IOrder> => {
-  debug(`EventController: ${chalk.green("getting orders")}`);
-  return orderService.updateOneById(id, data);
-};
-
 const handleAction = async (data: {
   action: string;
   ids: string[];
@@ -38,12 +28,6 @@ const handleAction = async (data: {
     }
     case "mark_as_not_paid": {
       return orderService.markManyAsNotPaid(data.ids);
-    }
-    case "mark_as_cancelled": {
-      return orderService.markManyAsCancelled(data.ids);
-    }
-    case "mark_as_not_cancelled": {
-      return orderService.markManyAsNotCancelled(data.ids);
     }
     default: {
       return response.error(
@@ -59,8 +43,6 @@ const handleAction = async (data: {
 const orderController = {
   getOrders,
   getOrderById,
-  createOrder,
-  updateOrder,
   handleAction
 };
 export { orderController };

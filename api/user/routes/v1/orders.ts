@@ -5,13 +5,13 @@ import chalk from "chalk";
 import { response } from "../../../common/utils/response";
 import { uriBuilder } from "../../../common/utils/uri";
 import { validation } from "../../../common/middlewares";
-
-import { orderSchema } from "../../../common/utils/schemas";
-import { orderMemoryRepository } from "../../../common/repositories/order-memory-repository";
-import { orderMapper } from "./../../../common/mappers";
-import { IOrder } from "./../../../common/models/order";
-import { ordersController } from "../../controllers";
 import { validateJWT, onlyOwner, filterRoles } from "../../../common/policies";
+
+import { ordersController } from "../../controllers";
+import { orderMapper } from "./../../../common/mappers";
+import { orderSchema } from "../../../common/utils/schemas";
+import { IOrder, IOrderDto } from "./../../../common/models/order";
+import { orderMemoryRepository } from "../../../common/repositories/order-memory-repository";
 
 const ordersRouter = express.Router();
 /**
@@ -54,10 +54,63 @@ ordersRouter.get(
     try {
       const source: string = uriBuilder(req);
       const orders: IOrder[] = await ordersController.getAll();
-      const ordersDto = orders.map(orderMapper.toDto);
+      const ordersDto: IOrderDto[] = orders.map(orderMapper.toDto);
       res.send(response.success(ordersDto, 200, source));
     } catch (err) {
       debug(`getOrders Controller Error: ${chalk.red(err.message)}`);
+      res.json({
+        statusCode: 500,
+        message: "Internal Server Error"
+      });
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /user/api/v1/orders/{id}:
+ *   get:
+ *     summary: Partner finds order by ID
+ *     description: Return a single order
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Order
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+ *         description: ID of the order to return
+ *     responses:
+ *       200:
+ *         description: Succesful operation
+ *         schema:
+ *           type: object
+ *           $ref: "#/definitions/Order"
+ *       401:
+ *         description: Unathorized. Access token is missing or invalid.
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+
+ordersRouter.get(
+  "/:id",
+  validateJWT("access"),
+  onlyOwner(orderMemoryRepository),
+  validation({ id: orderSchema.orderId }, "params"),
+  async (req, res) => {
+    try {
+      const order: IOrder = await ordersController.getOrderById(req.params.id);
+      const source: string = uriBuilder(req);
+      const orderDto: IOrderDto = orderMapper.toDto(order);
+      res.send(response.success(orderDto, 200, source));
+    } catch (err) {
+      debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
       res.json({
         statusCode: 500,
         message: "Internal Server Error"
@@ -109,9 +162,9 @@ ordersRouter.post(
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);
-      const data = orderMapper.toModel(req.body);
-      const order = await ordersController.createOrder(data);
-      const orderDto = orderMapper.toDto(order);
+      const data: IOrder = orderMapper.toModel(req.body);
+      const order: IOrder = await ordersController.createOrder(data);
+      const orderDto: IOrderDto = orderMapper.toDto(order);
       res.send(response.success(orderDto, 201, source));
     } catch (err) {
       debug(`createOrder Controller Error: ${chalk.red(err.message)}`);
@@ -172,12 +225,12 @@ ordersRouter.put(
   //validation(orderSchema.order),
   async (req, res) => {
     try {
-      const source = uriBuilder(req);
-      const order = await ordersController.updateOrderById(
+      const source: string = uriBuilder(req);
+      const order: IOrder = await ordersController.updateOrderById(
         req.params.id,
         orderMapper.toModel(req.body)
       );
-      const eventDto = orderMapper.toDto(order);
+      const eventDto: IOrderDto = orderMapper.toDto(order);
       res.send(response.success(eventDto, 201, source));
     } catch (err) {
       debug(`updateOrder Controller Error: ${chalk.red(err.message)}`);
@@ -230,7 +283,7 @@ ordersRouter.post(
   // filterRoles(["user"]),
   async (req, res) => {
     try {
-      const source = uriBuilder(req);
+      const source: string = uriBuilder(req);
       const order = await ordersController.cancelOrderById(req.params.id);
       res.send(response.success(order, 201, source));
     } catch (err) {
