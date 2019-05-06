@@ -2,7 +2,7 @@ import { IOrderProduct, IOrderProductDto } from "./order-product";
 
 export interface IOrder {
   id?: string;
-  userId: string;
+  userName: string;
   eventId: string;
   eventName: string;
   orderNumber: number;
@@ -17,7 +17,7 @@ export interface IOrder {
 
 export interface IOrderDto {
   id?: string;
-  user_id: string;
+  user_name: string;
   event_id: string;
   event_name: string;
   total: number;

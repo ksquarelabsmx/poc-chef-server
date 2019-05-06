@@ -86,7 +86,6 @@ const find = (query?: any): Promise<IEvent[]> => {
 
 const save = (event: IEvent): Promise<IEvent> => {
   event.id = uuid();
-  event.products.map((product: IProduct) => (product.id = uuid()));
   const result: IEvent = {
     ...event,
     orders: [],

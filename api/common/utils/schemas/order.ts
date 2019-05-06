@@ -3,9 +3,7 @@ import * as Joi from "joi";
 const orderId = Joi.string().uuid();
 
 const order = {
-  user_id: Joi.string()
-    .uuid()
-    .required(),
+  user_name: Joi.string().required(),
   event_id: Joi.string()
     .uuid()
     .required(),

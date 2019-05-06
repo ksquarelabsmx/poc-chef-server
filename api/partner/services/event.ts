@@ -4,9 +4,11 @@ import * as moment from "moment";
 
 import { error, response } from "../../common/utils";
 import { IEvent } from "../../common/models/event";
+import { IOrder } from "./../../common/models/order";
+import { IProduct } from "../../common/models/product";
 import { IEventRepository } from "../../common/repositories/event-repository";
 import { IOrderRepository } from "api/common/repositories/order-repository";
-import { IOrder } from "./../../common/models/order";
+import { IProductRepository } from "./../../common/repositories/product-repository";
 
 const isFinished = (event: IEvent) => {
   return (
@@ -18,9 +20,16 @@ const isFinished = (event: IEvent) => {
   );
 };
 
+const normalizeProducts = (records: IProduct[][]): IProduct[] => {
+  return records
+    .map((docs: IProduct[]) => docs[0])
+    .filter((prod: IProduct) => prod);
+};
+
 export const EventService = (
   eventsDataSource: IEventRepository,
-  ordersDataSource: IOrderRepository
+  ordersDataSource: IOrderRepository,
+  productMemoryRepository: IProductRepository
 ) => {
   const getEvents = async (): Promise<IEvent[]> => {
     return eventsDataSource.find();
@@ -68,19 +77,32 @@ export const EventService = (
     }
   };
 
-  const createEvent = async (event: IEvent): Promise<any> => {
+  const createEvent = async (data: IEvent): Promise<any> => {
     try {
-      const createdEvent: IEvent = await eventsDataSource.save(event);
-
-      return Promise.resolve(createdEvent);
+      const records: IProduct[][] = await Promise.all(
+        data.products.map(
+          async (product: IProduct): Promise<IProduct[]> => {
+            return Promise.resolve(
+              productMemoryRepository.find({
+                id: product.id
+              })
+            );
+          }
+        )
+      );
+      const products = normalizeProducts(records);
+      if (products.length !== data.products.length) {
+        return Promise.reject(boom.notFound("Product Not Found"));
+      }
+      return Promise.resolve(eventsDataSource.save(data));
     } catch (err) {
       return Promise.resolve(boom.internal("Internal Server Error"));
     }
   };
 
-  const updateEvent = async (event: IEvent): Promise<any> => {
+  const updateEvent = async (data: IEvent): Promise<any> => {
     try {
-      const { id } = event;
+      const { id } = data;
       const eventFinded: IEvent[] = await eventsDataSource.find({ id });
 
       if (fp.isEmpty(eventFinded)) {
@@ -89,8 +111,22 @@ export const EventService = (
       if (isFinished(eventFinded[0])) {
         return Promise.reject(response.badRequest(error.eventIsFinished));
       }
-
-      return eventsDataSource.update(event);
+      const records: IProduct[][] = await Promise.all(
+        data.products.map(
+          async (product: IProduct): Promise<IProduct[]> => {
+            return Promise.resolve(
+              productMemoryRepository.find({
+                id: product.id
+              })
+            );
+          }
+        )
+      );
+      const products = normalizeProducts(records);
+      if (products.length !== data.products.length) {
+        return Promise.reject(boom.notFound("Product Not Found"));
+      }
+      return eventsDataSource.update(data);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
     }
