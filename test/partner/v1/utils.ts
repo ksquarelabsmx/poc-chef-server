@@ -55,7 +55,7 @@ export const loginMock: ILogin = {
 };
 
 export const orderMockDto: IOrderDto = {
-  user_id: "6d623d08-113c-4565-81b2-e17c90331241",
+  user_name: "6d623d08-113c-4565-81b2-e17c90331241",
   event_id: "8c9ae830-dd56-4828-8503-c70355253de9",
   event_name: "Tortastic",
   total: 50,
