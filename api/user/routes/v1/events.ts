@@ -1,5 +1,5 @@
 import * as express from "express";
-import debug = require("debug");
+import * as Debug from "debug";
 import chalk from "chalk";
 
 import { uriBuilder } from "../../../common/utils/uri";
@@ -11,6 +11,8 @@ import { eventController } from "../../controllers";
 import { IEvent, IEventDto } from "api/common/models/event";
 import { eventSchema } from "../../../common/utils/schemas";
 import { eventMapper } from "./../../../common/mappers/event";
+
+const debug = Debug("chef:events:controller:events");
 
 const eventsRouter = express.Router();
 /**
@@ -65,11 +67,8 @@ eventsRouter.get(
       const eventsDto: IEventDto[] = events.map(eventMapper.toDto);
       res.send(response.success(eventsDto, 200, source));
     } catch (err) {
-      debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
-      res.json({
-        statusCode: 500,
-        message: "Internal Server Error"
-      });
+      debug(`getEvents Controller Error: ${chalk.red(err)}`);
+      res.json(err.output.payload);
     }
   }
 );
@@ -122,8 +121,8 @@ eventsRouter.get(
       const eventDto: IEventDto = eventMapper.toDto(event);
       res.send(response.success(eventDto, 200, source));
     } catch (err) {
-      debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
-      res.send(err);
+      debug(`getEvent Controller Error: ${chalk.red(err)}`);
+      res.json(err.output.payload);
     }
   }
 );

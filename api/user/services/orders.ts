@@ -11,20 +11,26 @@ import { IOrderRepository } from "api/common/repositories/order-repository";
 import { IEventRepository } from "api/common/repositories/event-repository";
 import { IProductRepository } from "api/common/repositories/product-repository";
 
-const normalizeProducts = (records, products) => {
+const normalizeProducts = (
+  records,
+  products: IOrderProduct[]
+): IOrderProduct[] => {
   return records
-    .map(docs => docs[0])
-    .filter(prod => prod)
-    .map(prod => {
-      const rawProduct = products.filter(rawProd => rawProd.id === prod.id)[0];
+    .map((docs: IProduct[]) => docs[0])
+    .filter((prod: IProduct) => prod)
+    .map((prod: IProduct) => {
+      const rawProduct: IOrderProduct = products.filter(
+        rawProd => rawProd.id === prod.id
+      )[0];
       return {
         ...prod,
-        quantity: rawProduct.quantity
+        quantity: rawProduct.quantity,
+        subtotal: rawProduct.quantity * prod.price
       };
     });
 };
 
-const calculateTotal = products => {
+const calculateTotal = (products: IOrderProduct[]): number => {
   return products.reduce((acc, product) => {
     return acc + product.quantity * product.price;
   }, 0);
@@ -76,9 +82,9 @@ export const OrderService = (
         return Promise.reject(response.badRequest(error.eventIsFinished));
       }
 
-      const records = await Promise.all(
+      const records: IProduct[][] = await Promise.all(
         data.products.map(
-          async (product: IOrderProduct): Promise<IProduct[]> => {
+          async (product: IProduct): Promise<IProduct[]> => {
             return Promise.resolve(
               productRepository.find({
                 id: product.id
@@ -87,9 +93,12 @@ export const OrderService = (
           }
         )
       );
-      const products = normalizeProducts(records, data.products);
+      const products: IOrderProduct[] = normalizeProducts(
+        records,
+        data.products
+      );
       if (products.length !== data.products.length) {
-        return Promise.reject(boom.notFound("Not Found"));
+        return Promise.reject(boom.notFound("Product Not Found"));
       }
 
       return Promise.resolve(
@@ -118,7 +127,7 @@ export const OrderService = (
         return Promise.reject(response.badRequest(error.eventIsFinished));
       }
       if (fp.isEmpty(oldOrder)) {
-        return Promise.reject(boom.notFound("Not Found"));
+        return Promise.reject(boom.notFound("Order Not Found"));
       }
       //validate if the request order.eventId is the same as the existing order.eventId
       if (oldOrder.eventId !== order.eventId) {
@@ -133,7 +142,7 @@ export const OrderService = (
 
       const records = await Promise.all(
         order.products.map(
-          async (product: any): Promise<any> => {
+          async (product: IProduct): Promise<IProduct[]> => {
             return Promise.resolve(
               productRepository.find({
                 id: product.id
@@ -142,44 +151,19 @@ export const OrderService = (
           }
         )
       );
-      const products = normalizeProducts(records, order.products);
-      if (products.length !== order.products.length) {
-        return Promise.reject(boom.notFound("Not Found"));
+      const orderProducts: IOrderProduct[] = normalizeProducts(
+        records,
+        order.products
+      );
+      if (orderProducts.length !== order.products.length) {
+        return Promise.reject(boom.notFound("Product Not Found"));
       }
-
-      const updatedProducts: IOrder = order.products
-        .filter((product: IProduct) => {
-          return (
-            order.products.findIndex((oldProduct: IProduct) => {
-              return oldProduct.id === product.id;
-            }) !== -1
-          );
-        })
-        .map((product: IProduct) => {
-          const index: number = order.products.findIndex(
-            (raw: IProduct) => raw.id === product.id
-          );
-
-          if (index == -1) {
-            return null;
-          }
-
-          const quantity = order.products[index].quantity;
-          const price: number = product.price;
-
-          return {
-            ...product,
-            quantity,
-            subtotal: quantity * price
-          };
-        })
-        .filter((product: IProduct) => product);
 
       return Promise.resolve(
         ordersDataSource.update({
           ...order,
-          products: updatedProducts,
-          total: calculateTotal(updatedProducts)
+          products: orderProducts,
+          total: calculateTotal(orderProducts)
         })
       );
     } catch (err) {

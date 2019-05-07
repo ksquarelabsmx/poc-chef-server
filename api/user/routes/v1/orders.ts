@@ -1,5 +1,5 @@
 import * as express from "express";
-import debug = require("debug");
+import * as Debug from "debug";
 import chalk from "chalk";
 
 import { response } from "../../../common/utils/response";
@@ -12,6 +12,8 @@ import { orderMapper } from "./../../../common/mappers";
 import { orderSchema } from "../../../common/utils/schemas";
 import { IOrder, IOrderDto } from "./../../../common/models/order";
 import { orderMemoryRepository } from "../../../common/repositories/order-memory-repository";
+
+const debug = Debug("chef:events:controller:orders");
 
 const ordersRouter = express.Router();
 /**
@@ -57,7 +59,7 @@ ordersRouter.get(
       const ordersDto: IOrderDto[] = orders.map(orderMapper.toDto);
       res.send(response.success(ordersDto, 200, source));
     } catch (err) {
-      debug(`getOrders Controller Error: ${chalk.red(err.message)}`);
+      debug(`getOrders Controller Error: ${chalk.red()}`);
       res.json({
         statusCode: 500,
         message: "Internal Server Error"
@@ -100,8 +102,8 @@ ordersRouter.get(
 
 ordersRouter.get(
   "/:id",
-  validateJWT("access"),
-  onlyOwner(orderMemoryRepository),
+  // validateJWT("access"),
+  // onlyOwner(orderMemoryRepository),
   validation({ id: orderSchema.orderId }, "params"),
   async (req, res) => {
     try {
@@ -158,7 +160,7 @@ ordersRouter.post(
   "/",
   //validateJWT("access"),
   //filterRoles(["user"]),
-  //validation(orderSchema.order),
+  validation(orderSchema.order),
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);
@@ -167,8 +169,8 @@ ordersRouter.post(
       const orderDto: IOrderDto = orderMapper.toDto(order);
       res.send(response.success(orderDto, 201, source));
     } catch (err) {
-      debug(`createOrder Controller Error: ${chalk.red(err.message)}`);
-      res.json(err.output.payload);
+      debug(`createOrder Controller Error: ${chalk.red(err)}`);
+      res.json(err.output);
     }
   }
 );
@@ -221,8 +223,8 @@ ordersRouter.put(
   "/:id",
   //validateJWT("access"),
   //onlyOwner(orderMemoryRepository),
-  //validation({ id: orderSchema.orderId }, "params"),
-  //validation(orderSchema.order),
+  validation({ id: orderSchema.orderId }, "params"),
+  validation(orderSchema.order),
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);
@@ -287,11 +289,8 @@ ordersRouter.post(
       const order = await ordersController.cancelOrderById(req.params.id);
       res.send(response.success(order, 201, source));
     } catch (err) {
-      debug(`cancelOrder Controller Error: ${chalk.red(err.message)}`);
-      res.json({
-        statusCode: 500,
-        message: "Internal Server Error"
-      });
+      debug(`actionOrder Controller Error: ${chalk.red(err)}`);
+      res.json(err.output.payload);
     }
   }
 );

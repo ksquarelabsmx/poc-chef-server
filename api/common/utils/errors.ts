@@ -41,6 +41,11 @@ const orderIsPaid: IDomainValidationError = {
   error: "Order has already paid"
 };
 
+const orderIsNotPaid: IDomainValidationError = {
+  field: "paid",
+  error: "Order hasn't been already paid"
+};
+
 const invalidPassword: string = "invalid password";
 
 const invalidAuthProvider: string = "invalid auth provider";
@@ -128,5 +133,6 @@ export const error = {
   orderEventDifferent,
   eventIsFinished,
   orderIsCancelled,
-  orderIsPaid
+  orderIsPaid,
+  orderIsNotPaid
 };

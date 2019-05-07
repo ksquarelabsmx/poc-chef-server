@@ -1,5 +1,5 @@
 import * as express from "express";
-import debug = require("debug");
+import * as Debug from "debug";
 import chalk from "chalk";
 
 import { IOrder, IOrderDto } from "./../../../common/models/order";
@@ -11,6 +11,8 @@ import { uriBuilder } from "../../../common/utils/uri";
 import { orderMapper } from "./../../../common/mappers";
 import { response } from "../../../common/utils/response";
 import { validateJWT, onlyOwner, filterRoles } from "../../../common/policies";
+
+const debug = Debug("chef:events:controller:orders");
 
 const ordersRouter = express.Router();
 
@@ -50,11 +52,8 @@ ordersRouter.get(
       const ordersDto: IOrderDto[] = orders.map(orderMapper.toDto);
       res.send(response.success(ordersDto, 200, source));
     } catch (err) {
-      debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
-      res.json({
-        statusCode: 500,
-        message: "Internal Server Error"
-      });
+      debug(`getOrders Controller Error: ${chalk.red(err)}`);
+      res.json(err.output.payload);
     }
   }
 );
@@ -103,18 +102,15 @@ ordersRouter.get(
       const orderDto: IOrderDto = orderMapper.toDto(order);
       res.send(response.success(orderDto, 200, source));
     } catch (err) {
-      debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
-      res.json({
-        statusCode: 500,
-        message: "Internal Server Error"
-      });
+      debug(`getOrder Controller Error: ${chalk.red(err)}`);
+      res.json(err.output.payload);
     }
   }
 );
 
 /**
  * @swagger
- * /v1/orders/action:
+ * /v1/orders/actions:
  *   post:
  *     summary: Partner special actions that updated specifics order values
  *     description: Order Actions that updates an specific value for one or multiple orders
@@ -139,24 +135,19 @@ ordersRouter.get(
  *               - mark_as_cancelled
  *               - mark_as_not_cancelled
  *               description: Name of the action that update a specific order value
- *             ids:
- *               type: array
+ *             id:
+ *               type: string
+ *               format: UUID
  *               example:
  *               - 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
- *               - 6457a76f-b009-44dc-8e01-0895602932367
- *               - bcc53260-6912-414c-8f80-25838c1bae9c
- *               items:
- *                 type: string
- *                 format: UUID
- *                 description: Array of orders ids
+ *               description: Orders ids
+ *
  *     responses:
  *       200:
  *         description: Succesful operation
  *         schema:
  *           type: array
  *           example:
- *           - order 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653 not found
- *           - order 6457a76f-b009-44dc-8e01-089560293236 was already marked as paid
  *           - order bcc53260-6912-414c-8f80-25838c1bae9c successfully modified
  *           items:
  *             type: string
@@ -170,20 +161,18 @@ ordersRouter.get(
  */
 
 ordersRouter.post(
-  "/actions",
+  "/:id/actions",
   validateJWT("access"),
   filterRoles(["partner"]),
+  validation({ id: orderSchema.orderId }, "params"),
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);
-      const order = await orderController.handleAction(req.body);
+      const order = await orderController.handleAction(req.params.id, req.body);
       res.send(response.success(order, 201, source));
     } catch (err) {
-      debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
-      res.json({
-        statusCode: 500,
-        message: "Internal Server Error"
-      });
+      debug(`actionOrder Controller Error: ${chalk.red(err)}`);
+      res.json(err.output.payload);
     }
   }
 );

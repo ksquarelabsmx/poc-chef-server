@@ -10,7 +10,7 @@ import { IEventRepository } from "../../common/repositories/event-repository";
 import { IOrderRepository } from "api/common/repositories/order-repository";
 import { IProductRepository } from "./../../common/repositories/product-repository";
 
-const isFinished = (event: IEvent) => {
+const isFinished = (event: IEvent): boolean => {
   return (
     event.markedAsFinished ||
     event.expirationDate <
@@ -90,7 +90,7 @@ export const EventService = (
           }
         )
       );
-      const products = normalizeProducts(records);
+      const products: IProduct[] = normalizeProducts(records);
       if (products.length !== data.products.length) {
         return Promise.reject(boom.notFound("Product Not Found"));
       }
@@ -122,7 +122,7 @@ export const EventService = (
           }
         )
       );
-      const products = normalizeProducts(records);
+      const products: IProduct[] = normalizeProducts(records);
       if (products.length !== data.products.length) {
         return Promise.reject(boom.notFound("Product Not Found"));
       }
