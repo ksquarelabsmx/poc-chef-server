@@ -17,7 +17,7 @@ const errors = (errors: any) => {
   };
 };
 
-const error = (title: any, statusCode: any, url: any, message: any) => {
+const error = (statusCode: any, url: any, message: any, title?: any) => {
   return {
     request: new Date().getTime(), // timestamp
     statusCode,

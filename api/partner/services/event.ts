@@ -132,109 +132,73 @@ export const EventService = (
     }
   };
 
-  const markManyAsFinished = async (eventIds: string[]): Promise<string[]> => {
+  const markAsFinished = async (id: string): Promise<string> => {
     try {
-      const eventStatus = await Promise.all(
-        eventIds.map(
-          async (id: string): Promise<string> => {
-            const [event]: IEvent[] = await eventsDataSource.find({ id });
+      const [event]: IEvent[] = await eventsDataSource.find({ id });
+      if (fp.isEmpty(event)) {
+        return Promise.reject(boom.notFound("Event Not Found"));
+      }
+      if (event.markedAsFinished) {
+        return Promise.reject(response.badRequest(error.eventIsFinished));
+      }
 
-            if (fp.isEmpty(event)) {
-              return Promise.resolve(`event ${id} not found`);
-            }
-            if (event.markedAsFinished) {
-              return Promise.resolve(
-                `event ${id} was already marked as finished`
-              );
-            }
-            event.markedAsFinished = true;
-            eventsDataSource.update(event);
-            return Promise.resolve(`event ${id} successfully modified`);
-          }
-        )
-      );
-      return Promise.resolve(eventStatus);
+      event.markedAsFinished = true;
+      eventsDataSource.update(event);
+      return Promise.resolve(`order ${id} successfully modified`);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
     }
   };
 
-  const markManyAsNotFinished = async (
-    eventIds: string[]
-  ): Promise<string[]> => {
+  const markAsNotFinished = async (id: string): Promise<string> => {
     try {
-      const eventStatus = await Promise.all(
-        eventIds.map(async (id: any) => {
-          const [event]: IEvent[] = await eventsDataSource.find({ id });
+      const [event]: IEvent[] = await eventsDataSource.find({ id });
+      if (fp.isEmpty(event)) {
+        return Promise.reject(boom.notFound("Event Not Found"));
+      }
+      if (!event.markedAsFinished) {
+        return Promise.reject(response.badRequest(error.eventIsNotFinished));
+      }
 
-          if (fp.isEmpty(event)) {
-            return Promise.resolve(`event ${id} not found`);
-          }
-          if (!event.markedAsFinished) {
-            return Promise.resolve(
-              `event ${id} has not been marked as finished`
-            );
-          }
-          event.markedAsFinished = false;
-          eventsDataSource.update(event);
-          return Promise.resolve(`event ${id} successfully modified`);
-        })
-      );
-      return Promise.resolve(eventStatus);
+      event.markedAsFinished = false;
+      eventsDataSource.update(event);
+      return Promise.resolve(`event ${id} successfully modified`);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
     }
   };
 
-  const markManyAsCancelled = async (eventIds: string[]): Promise<string[]> => {
+  const markAsCancelled = async (id: string): Promise<string> => {
     try {
-      const eventStatus = await Promise.all(
-        eventIds.map(
-          async (id: string): Promise<string> => {
-            const [event]: IEvent[] = await eventsDataSource.find({ id });
+      const [event]: IEvent[] = await eventsDataSource.find({ id });
+      if (fp.isEmpty(event)) {
+        return Promise.reject(boom.notFound("Event Not Found"));
+      }
+      if (event.cancelled) {
+        return Promise.reject(response.badRequest(error.eventIsCancelled));
+      }
 
-            if (fp.isEmpty(event)) {
-              return Promise.resolve(`event ${id} not found`);
-            }
-            if (event.cancelled) {
-              return Promise.resolve(
-                `event ${id} was already marked as cancelled`
-              );
-            }
-            event.cancelled = true;
-            eventsDataSource.update(event);
-            return Promise.resolve(`event ${id} successfully modified`);
-          }
-        )
-      );
-      return Promise.resolve(eventStatus);
+      event.cancelled = true;
+      eventsDataSource.update(event);
+      return Promise.resolve(`event ${id} successfully modified`);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
     }
   };
 
-  const markManyAsNotCancelled = async (
-    eventIds: string[]
-  ): Promise<string[]> => {
+  const markAsNotCancelled = async (id: string): Promise<string> => {
     try {
-      const eventStatus = await Promise.all(
-        eventIds.map(async (id: any) => {
-          const [event]: IEvent[] = await eventsDataSource.find({ id });
+      const [event]: IEvent[] = await eventsDataSource.find({ id });
+      if (fp.isEmpty(event)) {
+        return Promise.reject(boom.notFound("Event Not Found"));
+      }
+      if (!event.cancelled) {
+        return Promise.reject(response.badRequest(error.eventIsNotCancelled));
+      }
 
-          if (fp.isEmpty(event)) {
-            return Promise.resolve(`event ${id} not found`);
-          }
-          if (!event.cancelled) {
-            return Promise.resolve(
-              `event ${id} has not been marked as cancelled`
-            );
-          }
-          event.cancelled = false;
-          eventsDataSource.update(event);
-          return Promise.resolve(`event ${id} successfully modified`);
-        })
-      );
-      return Promise.resolve(eventStatus);
+      event.cancelled = false;
+      eventsDataSource.update(event);
+      return Promise.resolve(`event ${id} successfully modified`);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
     }
@@ -247,9 +211,9 @@ export const EventService = (
     getCurrentEvents,
     createEvent,
     updateEvent,
-    markManyAsFinished,
-    markManyAsNotFinished,
-    markManyAsCancelled,
-    markManyAsNotCancelled
+    markAsFinished,
+    markAsNotFinished,
+    markAsCancelled,
+    markAsNotCancelled
   };
 };

@@ -162,6 +162,7 @@ export const OrderService = (
       return Promise.resolve(
         ordersDataSource.update({
           ...order,
+          id,
           products: orderProducts,
           total: calculateTotal(orderProducts)
         })

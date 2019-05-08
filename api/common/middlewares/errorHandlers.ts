@@ -4,6 +4,7 @@ import * as Debug from "debug";
 import { Request, Response, NextFunction } from "express";
 
 import { config } from "../../../config";
+import { uriBuilder, response } from "../utils";
 import { logger } from "../../libraries/log";
 import { badRequestFormated } from "./utils";
 
@@ -15,6 +16,7 @@ const logErrors = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(err, 0);
   debug(`LogErrors: ${chalk.red(err.stack)}`);
   next(err);
 };
@@ -65,7 +67,7 @@ const errorHandler = (
   const {
     output: { statusCode, payload }
   } = err;
-
+  const source: string = uriBuilder(req);
   // catch error while streaming
   if (res.headersSent) {
     next(err);
@@ -75,12 +77,12 @@ const errorHandler = (
     const dataFormatted = badRequestFormated(data);
 
     logger.error(dataFormatted);
-    return res.status(statusCode).json(dataFormatted);
+    return res.send(response.error(statusCode, source, dataFormatted));
   }
 
   const dataFormatted = withErrorStack(payload, err.stack);
   logger.error(dataFormatted);
-  return res.status(statusCode).json(dataFormatted);
+  return res.send(response.error(statusCode, source, dataFormatted));
 };
 
 export { logErrors, wrapErrors, clientErrorHandler, errorHandler };

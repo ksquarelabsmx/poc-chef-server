@@ -26,6 +26,21 @@ const eventIsFinished: IDomainValidationError = {
   error: "Event has already finished"
 };
 
+const eventIsNotFinished: IDomainValidationError = {
+  field: "marked_as_not_finished",
+  error: "Event hasn't finished"
+};
+
+const eventIsCancelled: IDomainValidationError = {
+  field: "cancelled",
+  error: "Event has already cancelled"
+};
+
+const eventIsNotCancelled: IDomainValidationError = {
+  field: "cancelled",
+  error: "Event hasn't been cancelled"
+};
+
 const orderEventDifferent: IDomainValidationError = {
   field: "eventId",
   error: "Event cannot be change"
@@ -43,7 +58,7 @@ const orderIsPaid: IDomainValidationError = {
 
 const orderIsNotPaid: IDomainValidationError = {
   field: "paid",
-  error: "Order hasn't been already paid"
+  error: "Order hasn't been paid"
 };
 
 const invalidPassword: string = "invalid password";
@@ -132,6 +147,9 @@ export const error = {
   productNotExist,
   orderEventDifferent,
   eventIsFinished,
+  eventIsNotFinished,
+  eventIsCancelled,
+  eventIsNotCancelled,
   orderIsCancelled,
   orderIsPaid,
   orderIsNotPaid

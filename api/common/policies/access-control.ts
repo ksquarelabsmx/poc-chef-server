@@ -16,7 +16,7 @@ export const filterRoles = (roles: string[]) => (
 
   if (!user) {
     const { title, statusCode, detail } = authErrors.notRoleAuthorization;
-    return res.send(response.error(title, statusCode, source, detail));
+    return res.send(response.error(statusCode, source, detail, title));
   }
 
   const { role } = user;
@@ -24,7 +24,7 @@ export const filterRoles = (roles: string[]) => (
   // role without privileges
   if (!fp.includes(roles, role)) {
     const { title, statusCode, detail } = authErrors.notRoleAuthorization;
-    return res.send(response.error(title, statusCode, source, detail));
+    return res.send(response.error(statusCode, source, detail, title));
   }
 
   next();
@@ -42,7 +42,7 @@ export const onlyOwner = (dataSource: any) => async (
 
     if (!user) {
       const { title, statusCode, detail } = authErrors.notUserAuthorization;
-      return res.send(response.error(title, statusCode, source, detail));
+      return res.send(response.error(statusCode, source, detail, title));
     }
 
     // get entity (order event, etc) and check owner
@@ -51,7 +51,7 @@ export const onlyOwner = (dataSource: any) => async (
 
     if (!fp.isEqual(id, entity.createdBy)) {
       const { title, statusCode, detail } = authErrors.notUserAuthorization;
-      return res.send(response.error(title, statusCode, source, detail));
+      return res.send(response.error(statusCode, source, detail, title));
     }
     next();
   } catch (err) {
@@ -74,7 +74,7 @@ export const appendUser = (key: string = "created_by") => (
 
   if (!user) {
     const { title, statusCode, detail } = authErrors.notUserAuthorization;
-    return res.send(response.error(title, statusCode, source, detail));
+    return res.send(response.error(statusCode, source, detail, title));
   }
   req.body[key] = user.id;
   next();

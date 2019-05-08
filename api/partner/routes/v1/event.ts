@@ -307,20 +307,18 @@ eventsRouter.post(
  *         description: Internal Server Error
  */
 eventsRouter.post(
-  "/actions",
+  "/:id/actions",
   validateJWT("access"),
   filterRoles(["partner"]),
+  validation({ id: eventSchema.eventId }, "params"),
   async (req, res) => {
     try {
       const source = uriBuilder(req);
-      const order = await eventController.handleAction(req.body);
+      const order = await eventController.handleAction(req.body, req.params.id);
       res.send(response.success(order, 201, source));
     } catch (err) {
-      debug(`updateEvent Controller Error: ${chalk.red(err.message)}`);
-      res.json({
-        statusCode: 500,
-        message: "Internal Server Error"
-      });
+      debug(`actionOrder Controller Error: ${chalk.red(err)}`);
+      res.send(err.output.payload);
     }
   }
 );
