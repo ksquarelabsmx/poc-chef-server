@@ -65,11 +65,8 @@ eventsRouter.get(
       const eventDto: IEventDto[] = events.map(eventMapper.toDto);
       res.send(response.success(eventDto, 200, source));
     } catch (err) {
-      debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
-      res.json({
-        statusCode: 500,
-        message: "Internal Server Error"
-      });
+      debug(`getEvents Controller Error: ${chalk.red(err)}`);
+      res.json(err.output.payload);
     }
   }
 );
@@ -123,8 +120,8 @@ eventsRouter.get(
       const eventDto: IEventDto = eventMapper.toDto(event);
       res.send(response.success(eventDto, 200, source));
     } catch (err) {
-      debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
-      res.send(err.output.payload);
+      debug(`getEvent Controller Error: ${chalk.red(err)}`);
+      res.json(err.output.payload);
     }
   }
 );

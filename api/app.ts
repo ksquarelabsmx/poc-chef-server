@@ -105,7 +105,6 @@ app.use((req: Request, res: Response) => {
   const {
     output: { statusCode, payload }
   } = boom.notFound();
-  console.log(req.path);
   res.status(statusCode).json(payload);
 });
 

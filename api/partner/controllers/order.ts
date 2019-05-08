@@ -1,6 +1,7 @@
 import chalk from "chalk";
 import * as Debug from "debug";
 
+import { config } from "../../../config";
 import { response } from "../../common/utils";
 import { orderService } from "../services";
 import { IOrder } from "api/common/models/order";
@@ -17,23 +18,20 @@ const getOrderById = async (id: string): Promise<IOrder> => {
   return orderService.getOrderById(id);
 };
 
-const handleAction = async (data: {
-  action: string;
-  ids: string[];
-}): Promise<any> => {
+const handleAction = async (id: string, { action }): Promise<any> => {
   debug(`OrderCOntroller: ${chalk.green("paying orders")}`);
-  switch (data.action) {
+  switch (action) {
     case "mark_as_paid": {
-      return orderService.markManyAsPaid(data.ids);
+      return orderService.markAsPaid(id);
     }
     case "mark_as_not_paid": {
-      return orderService.markManyAsNotPaid(data.ids);
+      return orderService.markAsNotPaid(id);
     }
     default: {
       return response.error(
         "Bad Request",
         400,
-        "http://localhost:3000/v1/orders/actions",
+        `http://localhost:${config.server.port}/v1/orders/actions`,
         "That action does not exists"
       );
     }
