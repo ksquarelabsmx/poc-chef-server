@@ -47,23 +47,20 @@ const createEvent = async (data: IEvent): Promise<IEvent> => {
   return eventService.createEvent(data);
 };
 
-const handleAction = async (data: {
-  action: string;
-  ids: string[];
-}): Promise<any> => {
+const handleAction = async ({ action }, id: string): Promise<any> => {
   debug(`OrderCOntroller: ${chalk.green("paying orders")}`);
-  switch (data.action) {
+  switch (action) {
     case "mark_as_finish": {
-      return eventService.markManyAsFinished(data.ids);
+      return eventService.markAsFinished(id);
     }
     case "mark_as_not_finish": {
-      return eventService.markManyAsNotFinished(data.ids);
+      return eventService.markAsNotFinished(id);
     }
     case "mark_as_cancelled": {
-      return eventService.markManyAsCancelled(data.ids);
+      return eventService.markAsCancelled(id);
     }
     case "mark_as_not_cancelled": {
-      return eventService.markManyAsNotCancelled(data.ids);
+      return eventService.markAsNotCancelled(id);
     }
     default: {
       return response.error(
