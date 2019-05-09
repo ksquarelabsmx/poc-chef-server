@@ -79,3 +79,19 @@ export const appendUser = (key: string = "created_by") => (
   req.body[key] = user.id;
   next();
 };
+
+export const appendUserName = (key: string = "user_name") => (
+  req: Request,
+  res: Response,
+  next: Function
+) => {
+  const source: string = uriBuilder(req);
+  const user: ISession | undefined = req["session"];
+
+  if (!user) {
+    const { title, statusCode, detail } = authErrors.notUserAuthorization;
+    return res.send(response.error(statusCode, source, detail, title));
+  }
+  req.body[key] = user.name;
+  next();
+};

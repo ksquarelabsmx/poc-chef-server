@@ -5,7 +5,13 @@ import chalk from "chalk";
 import { response } from "../../../common/utils/response";
 import { uriBuilder } from "../../../common/utils/uri";
 import { validation } from "../../../common/middlewares";
-import { validateJWT, onlyOwner, filterRoles } from "../../../common/policies";
+import {
+  validateJWT,
+  onlyOwner,
+  filterRoles,
+  appendUser,
+  appendUserName
+} from "../../../common/policies";
 
 import { ordersController } from "../../controllers";
 import { orderMapper } from "./../../../common/mappers";
@@ -50,7 +56,8 @@ const ordersRouter = express.Router();
 
 ordersRouter.get(
   "/",
-  //validateJWT("access"),
+  validateJWT("access"),
+  filterRoles(["user"]),
   //onlyOwner(orderMemoryRepository),
   async (req, res) => {
     try {
@@ -102,8 +109,9 @@ ordersRouter.get(
 
 ordersRouter.get(
   "/:id",
-  // validateJWT("access"),
-  // onlyOwner(orderMemoryRepository),
+  validateJWT("access"),
+  filterRoles(["user"]),
+  onlyOwner(orderMemoryRepository),
   validation({ id: orderSchema.orderId }, "params"),
   async (req, res) => {
     try {
@@ -158,8 +166,10 @@ ordersRouter.get(
 
 ordersRouter.post(
   "/",
-  //validateJWT("access"),
-  //filterRoles(["user"]),
+  validateJWT("access"),
+  filterRoles(["user"]),
+  appendUser(),
+  appendUserName(),
   validation(orderSchema.order),
   async (req, res) => {
     try {
@@ -221,8 +231,11 @@ ordersRouter.post(
 
 ordersRouter.put(
   "/:id",
-  //validateJWT("access"),
-  //onlyOwner(orderMemoryRepository),
+  validateJWT("access"),
+  filterRoles(["user"]),
+  appendUser(),
+  appendUserName(),
+  onlyOwner(orderMemoryRepository),
   validation({ id: orderSchema.orderId }, "params"),
   validation(orderSchema.order),
   async (req, res) => {
@@ -281,8 +294,8 @@ ordersRouter.put(
 
 ordersRouter.post(
   "/:id/cancel",
-  //validateJWT("access"),
-  // filterRoles(["user"]),
+  validateJWT("access"),
+  filterRoles(["user"]),
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);

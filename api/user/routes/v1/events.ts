@@ -58,8 +58,8 @@ const eventsRouter = express.Router();
 
 eventsRouter.get(
   "/",
-  //validateJWT("access"),
-  //filterRoles(["user"]),
+  validateJWT("access"),
+  filterRoles(["user"]),
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);
@@ -111,8 +111,8 @@ eventsRouter.get(
 
 eventsRouter.get(
   "/:id",
-  //validateJWT("access"),
-  //filterRoles(["partner"]),
+  validateJWT("access"),
+  filterRoles(["user"]),
   validation({ id: eventSchema.eventId }, "params"),
   async (req, res) => {
     try {
