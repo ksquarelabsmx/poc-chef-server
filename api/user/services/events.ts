@@ -35,8 +35,7 @@ export const EventService = (eventsDataSource: IEventRepository) => {
 
   const getEventById = async (id: string): Promise<any> => {
     try {
-      const event: IEvent[] = await eventsDataSource.find({ id });
-
+      const [event]: IEvent[] = await eventsDataSource.find({ id });
       if (fp.isEmpty(event)) {
         return Promise.reject(boom.notFound("Not Found"));
       }
