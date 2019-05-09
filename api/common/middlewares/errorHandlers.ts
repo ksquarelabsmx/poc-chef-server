@@ -16,7 +16,6 @@ const logErrors = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(err, 0);
   debug(`LogErrors: ${chalk.red(err.stack)}`);
   next(err);
 };
