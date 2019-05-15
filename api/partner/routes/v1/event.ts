@@ -1,6 +1,4 @@
 import * as express from "express";
-import * as Debug from "debug";
-import chalk from "chalk";
 
 import {
   validateJWT,
@@ -8,7 +6,7 @@ import {
   onlyOwner,
   appendUser
 } from "../../../common/policies";
-import { validation } from "../../../common/middlewares";
+import { validation, respError } from "../../../common/middlewares";
 import { uriBuilder } from "../../../common/utils/uri";
 import { response } from "../../../common/utils/response";
 import { eventController } from "../../controllers";
@@ -16,8 +14,6 @@ import { eventSchema } from "../../../common/utils/schemas";
 import { eventMapper } from "./../../../common/mappers/event";
 import { IEventDto, IEvent } from "./../../../common/models/event";
 import { eventMemoryRepository } from "../../../common/repositories/event-memory-repository";
-
-const debug = Debug("chef:events:controller:events");
 
 const eventsRouter = express.Router();
 /**
@@ -40,6 +36,7 @@ const eventsRouter = express.Router();
  *         enum:
  *         - current
  *         - past
+ *         - all
  *     responses:
  *       200:
  *         description: Succesful operation
@@ -65,8 +62,7 @@ eventsRouter.get(
       const eventDto: IEventDto[] = events.map(eventMapper.toDto);
       res.send(response.success(eventDto, 200, source));
     } catch (err) {
-      debug(`getEvents Controller Error: ${chalk.red(err)}`);
-      res.json(err.output.payload);
+      res.send(respError(req, err));
     }
   }
 );
@@ -111,7 +107,6 @@ eventsRouter.get(
   "/:id",
   validateJWT("access"),
   filterRoles(["partner"]),
-  onlyOwner(eventMemoryRepository),
   validation({ id: eventSchema.eventId }, "params"),
   async (req, res) => {
     try {
@@ -120,8 +115,7 @@ eventsRouter.get(
       const eventDto: IEventDto = eventMapper.toDto(event);
       res.send(response.success(eventDto, 200, source));
     } catch (err) {
-      debug(`getEvent Controller Error: ${chalk.red(err)}`);
-      res.json(err.output.payload);
+      res.send(respError(req, err));
     }
   }
 );
@@ -152,8 +146,6 @@ eventsRouter.get(
  *         schema:
  *           type: object
  *           $ref: "#/definitions/Event"
- *           orders:
- *             $ref: "#/definitions/Order"
  *         required: true
  *         description: Event object that is going to be updated
  *     responses:
@@ -190,8 +182,7 @@ eventsRouter.put(
       const eventDto: IEventDto = eventMapper.toDto(event);
       res.send(response.success(eventDto, 201, source));
     } catch (err) {
-      debug(`updateEvent Controller Error: ${chalk.red(err)}`);
-      res.json(err.output.payload);
+      res.send(respError(req, err));
     }
   }
 );
@@ -244,14 +235,13 @@ eventsRouter.post(
       const eventDto: IEventDto = eventMapper.toDto(event);
       res.send(response.success(eventDto, 201, source));
     } catch (err) {
-      debug(`createEvent Controller Error: ${chalk.red(err)}`);
-      res.json(err.output.payload);
+      res.send(respError(req, err));
     }
   }
 );
 /**
  * @swagger
- * /v1/events/action:
+ * /v1/events/{id}/actions:
  *   post:
  *     summary: Partner special actions that updated specifics events values
  *     description: Event Actions that updates an specific value for one or multiple events
@@ -264,41 +254,30 @@ eventsRouter.post(
  *     produces:
  *       - application/json
  *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+ *         required: true
+ *         format: UUID
+ *         description: ID of the event to return
  *       - in: body
- *         name: Events
+ *         name: Event Action
  *         required: true
  *         schema:
  *           properties:
  *             action:
  *               type: string
  *               enum:
- *               - mark_as_finish
- *               - mark_as_not_finish
  *               - mark_as_cancelled
  *               - mark_as_not_cancelled
  *               description: Name of the action that update a specific event value
- *             ids:
- *               type: array
- *               example:
- *               - 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
- *               - 6457a76f-b009-44dc-8e01-0895602932367
- *               - bcc53260-6912-414c-8f80-25838c1bae9c
- *               items:
- *                 type: string
- *                 format: UUID
- *                 description: Array of events ids
  *     responses:
  *       200:
  *         description: Succesful operation
  *         schema:
- *           type: array
- *           example:
- *           - event 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653 not found
- *           - event 6457a76f-b009-44dc-8e01-089560293236 was already marked as finished
- *           - event bcc53260-6912-414c-8f80-25838c1bae9c successfully modified
- *           items:
- *             type: string
- *             description: Array of messages for every individual event id sent
+ *           type: object
+ *           $ref: "#/definitions/Event"
  *       400:
  *         description: Bad Request. That action does not exists.
  *       401:
@@ -310,15 +289,16 @@ eventsRouter.post(
   "/:id/actions",
   validateJWT("access"),
   filterRoles(["partner"]),
+  onlyOwner(eventMemoryRepository),
   validation({ id: eventSchema.eventId }, "params"),
   async (req, res) => {
     try {
       const source = uriBuilder(req);
-      const order = await eventController.handleAction(req.body, req.params.id);
-      res.send(response.success(order, 201, source));
+      const event = await eventController.handleAction(req.body, req.params.id);
+      const eventDto: IEventDto = eventMapper.toDto(event);
+      res.send(response.success(eventDto, 201, source));
     } catch (err) {
-      debug(`actionOrder Controller Error: ${chalk.red(err)}`);
-      res.send(err.output.payload);
+      res.send(respError(req, err));
     }
   }
 );

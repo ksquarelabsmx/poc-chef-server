@@ -3,18 +3,15 @@ import moment = require("moment");
 
 import { IEvent } from "../models/event";
 import { IEventRepository } from "./event-repository";
-import { IProduct } from "./../models/product";
 
 const events: IEvent[] = [
   {
     id: "c64b1314-64ab-4fcf-99a1-df9edd1307ce",
     name: "Tortas para la oficina 1",
-    expirationDate: 1549000000, // epoch
-    endHour: 1200,
+    expirationDateTime: 1549000000, // epoch
     createdBy: "90ec45da-452b-4c37-a5fc-482c8bc92895",
     total: 22,
     cancelled: false,
-    markedAsFinished: false,
     createdAt: 1548000000,
     updatedAt: 1548000000,
     orders: [],
@@ -31,12 +28,10 @@ const events: IEvent[] = [
   {
     id: "8022f792-40cf-43ef-b72d-ba42de2117d3",
     name: "Tortas para la oficina 2",
-    expirationDate: 1549500000, // epoch
-    endHour: 1200,
+    expirationDateTime: 1549500000, // epoch
     createdBy: "a79639e6-3ed9-467c-b9c5-1e60908d812c",
     total: 10,
     cancelled: true,
-    markedAsFinished: true,
     createdAt: 1548000000,
     updatedAt: 1548000000,
     orders: [],
@@ -53,12 +48,10 @@ const events: IEvent[] = [
   {
     id: "8c9ae830-dd56-4828-8503-c70355253de9",
     name: "Tortas para la oficina 3",
-    expirationDate: 1586476800, // epoch
-    endHour: 1200,
+    expirationDateTime: 1586476800, // epoch
     createdBy: "6d623d08-113c-4565-81b2-e17c90331241",
     total: 20,
     cancelled: false,
-    markedAsFinished: false,
     createdAt: 1548000000,
     updatedAt: 1548000000,
     orders: [],
@@ -90,7 +83,6 @@ const save = (event: IEvent): Promise<IEvent> => {
     ...event,
     orders: [],
     total: 0,
-    markedAsFinished: false,
     cancelled: false,
     createdAt: moment()
       .utc()

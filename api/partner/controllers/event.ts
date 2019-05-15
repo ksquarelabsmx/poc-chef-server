@@ -18,8 +18,11 @@ const eventStrategy = (
     case "past": {
       return eventService.getPastEvents();
     }
-    default: {
+    case "all": {
       return eventService.getEvents();
+    }
+    default: {
+      return eventService.getCurrentEvents();
     }
   }
 };
@@ -50,12 +53,6 @@ const createEvent = async (data: IEvent): Promise<IEvent> => {
 const handleAction = async ({ action }, id: string): Promise<any> => {
   debug(`OrderCOntroller: ${chalk.green("paying orders")}`);
   switch (action) {
-    case "mark_as_finish": {
-      return eventService.markAsFinished(id);
-    }
-    case "mark_as_not_finish": {
-      return eventService.markAsNotFinished(id);
-    }
     case "mark_as_cancelled": {
       return eventService.markAsCancelled(id);
     }

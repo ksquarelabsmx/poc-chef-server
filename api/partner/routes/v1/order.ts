@@ -5,7 +5,7 @@ import chalk from "chalk";
 import { IOrder, IOrderDto } from "./../../../common/models/order";
 import { orderController } from "../../controllers";
 import { orderMemoryRepository } from "../../../common/repositories/order-memory-repository";
-import { validation } from "../../../common/middlewares";
+import { validation, respError } from "../../../common/middlewares";
 import { orderSchema } from "../../../common/utils/schemas";
 import { uriBuilder } from "../../../common/utils/uri";
 import { orderMapper } from "./../../../common/mappers";
@@ -102,15 +102,14 @@ ordersRouter.get(
       const orderDto: IOrderDto = orderMapper.toDto(order);
       res.send(response.success(orderDto, 200, source));
     } catch (err) {
-      debug(`getOrder Controller Error: ${chalk.red(err)}`);
-      res.json(err.output.payload);
+      res.send(respError(req, err));
     }
   }
 );
 
 /**
  * @swagger
- * /v1/orders/actions:
+ * /v1/orders/{id}/actions:
  *   post:
  *     summary: Partner special actions that updated specifics order values
  *     description: Order Actions that updates an specific value for one or multiple orders
@@ -123,6 +122,11 @@ ordersRouter.get(
  *     produces:
  *       - application/json
  *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+ *         description: ID of the order to return
  *       - in: body
  *         name: Order
  *         schema:
@@ -135,23 +139,12 @@ ordersRouter.get(
  *               - mark_as_cancelled
  *               - mark_as_not_cancelled
  *               description: Name of the action that update a specific order value
- *             id:
- *               type: string
- *               format: UUID
- *               example:
- *               - 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
- *               description: Orders ids
- *
  *     responses:
  *       200:
  *         description: Succesful operation
  *         schema:
- *           type: array
- *           example:
- *           - order bcc53260-6912-414c-8f80-25838c1bae9c successfully modified
- *           items:
- *             type: string
- *             description: Array of messages for every individual order id sent
+ *           type: object
+ *           $ref: "#/definitions/Order"
  *       400:
  *         description: Bad Request. That action does not exists.
  *       401:
@@ -169,10 +162,10 @@ ordersRouter.post(
     try {
       const source: string = uriBuilder(req);
       const order = await orderController.handleAction(req.params.id, req.body);
-      res.send(response.success(order, 201, source));
+      const orderDto: IOrderDto = orderMapper.toDto(order);
+      res.send(response.success(orderDto, 201, source));
     } catch (err) {
-      debug(`actionOrder Controller Error: ${chalk.red(err)}`);
-      res.json(err.output.payload);
+      res.send(respError(req, err));
     }
   }
 );

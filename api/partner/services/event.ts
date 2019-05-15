@@ -10,13 +10,22 @@ import { IEventRepository } from "../../common/repositories/event-repository";
 import { IOrderRepository } from "api/common/repositories/order-repository";
 import { IProductRepository } from "./../../common/repositories/product-repository";
 
-const isFinished = (event: IEvent): boolean => {
+const isFinishedCancelled = (event: IEvent): boolean => {
   return (
-    event.markedAsFinished ||
-    event.expirationDate <
+    event.cancelled ||
+    event.expirationDateTime <
       moment()
         .utc()
         .unix()
+  );
+};
+
+const isFinished = (event: IEvent): boolean => {
+  return (
+    event.expirationDateTime <
+    moment()
+      .utc()
+      .unix()
   );
 };
 
@@ -35,49 +44,48 @@ export const EventService = (
     return eventsDataSource.find();
   };
 
-  const getCurrentEvents = async (): Promise<any> => {
+  const getCurrentEvents = async (): Promise<IEvent[]> => {
     try {
-      const events: IEvent[] = await eventsDataSource.find({
-        markedAsFinished: false
-      });
-
-      return Promise.resolve(events);
+      const events: IEvent[] = await eventsDataSource.find();
+      const currentEvents: IEvent[] = events.filter(
+        (event: IEvent) => !isFinishedCancelled(event)
+      );
+      return Promise.resolve(currentEvents);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
     }
   };
 
-  const getPastEvents = async (): Promise<any> => {
+  const getPastEvents = async (): Promise<IEvent[]> => {
     try {
-      const events: IEvent[] = await eventsDataSource.find({
-        markedAsFinished: true
-      });
-
-      return Promise.resolve(events);
+      const events: IEvent[] = await eventsDataSource.find();
+      const pastEvents: IEvent[] = events.filter((event: IEvent) =>
+        isFinishedCancelled(event)
+      );
+      return Promise.resolve(pastEvents);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
     }
   };
 
-  const getEventOrderById = async (id: string): Promise<any> => {
+  const getEventOrderById = async (id: string): Promise<IEvent> => {
     try {
-      const event: IEvent[] = await eventsDataSource.find({ id });
-
+      const [event]: IEvent[] = await eventsDataSource.find({ id });
       if (fp.isEmpty(event)) {
-        return Promise.reject(boom.notFound("Not Found"));
+        throw Promise.reject(boom.notFound("Event Not Found"));
       }
       const orders: IOrder[] = await ordersDataSource.find({
         eventId: id
       });
-      const eventOrders: IEvent = { ...event[0], orders: orders };
+      const eventOrders: IEvent = { ...event, orders: orders };
 
       return Promise.resolve(eventOrders);
     } catch (err) {
-      return Promise.reject(boom.internal("Internal Server Error"));
+      return err;
     }
   };
 
-  const createEvent = async (data: IEvent): Promise<any> => {
+  const createEvent = async (data: IEvent): Promise<IEvent> => {
     try {
       const records: IProduct[][] = await Promise.all(
         data.products.map(
@@ -92,24 +100,27 @@ export const EventService = (
       );
       const products: IProduct[] = normalizeProducts(records);
       if (products.length !== data.products.length) {
-        return Promise.reject(boom.notFound("Product Not Found"));
+        throw Promise.reject(boom.notFound("Product Not Found"));
       }
       return Promise.resolve(eventsDataSource.save(data));
     } catch (err) {
-      return Promise.resolve(boom.internal("Internal Server Error"));
+      return err;
     }
   };
 
-  const updateEvent = async (data: IEvent): Promise<any> => {
+  const updateEvent = async (data: IEvent): Promise<IEvent> => {
     try {
       const { id } = data;
-      const eventFinded: IEvent[] = await eventsDataSource.find({ id });
+      const [eventFinded]: IEvent[] = await eventsDataSource.find({ id });
 
       if (fp.isEmpty(eventFinded)) {
-        return Promise.reject(boom.notFound("Not Found"));
+        throw Promise.reject(boom.notFound("Event Not Found"));
       }
-      if (isFinished(eventFinded[0])) {
-        return Promise.reject(response.badRequest(error.eventIsFinished));
+      if (isFinished(eventFinded)) {
+        throw Promise.reject(response.badRequest(error.eventIsFinished));
+      }
+      if (eventFinded.cancelled) {
+        throw Promise.reject(response.badRequest(error.eventIsCancelled));
       }
       const records: IProduct[][] = await Promise.all(
         data.products.map(
@@ -124,83 +135,51 @@ export const EventService = (
       );
       const products: IProduct[] = normalizeProducts(records);
       if (products.length !== data.products.length) {
-        return Promise.reject(boom.notFound("Product Not Found"));
+        throw Promise.reject(boom.notFound("Product Not Found"));
       }
       return eventsDataSource.update(data);
     } catch (err) {
-      return Promise.reject(boom.internal("Internal Server Error"));
+      return err;
     }
   };
 
-  const markAsFinished = async (id: string): Promise<string> => {
+  const markAsCancelled = async (id: string): Promise<IEvent> => {
     try {
       const [event]: IEvent[] = await eventsDataSource.find({ id });
       if (fp.isEmpty(event)) {
-        return Promise.reject(boom.notFound("Event Not Found"));
+        throw Promise.reject(boom.notFound("Event Not Found"));
       }
-      if (event.markedAsFinished) {
-        return Promise.reject(response.badRequest(error.eventIsFinished));
-      }
-
-      event.markedAsFinished = true;
-      eventsDataSource.update(event);
-      return Promise.resolve(`order ${id} successfully modified`);
-    } catch (err) {
-      return Promise.reject(boom.internal("Internal Server Error"));
-    }
-  };
-
-  const markAsNotFinished = async (id: string): Promise<string> => {
-    try {
-      const [event]: IEvent[] = await eventsDataSource.find({ id });
-      if (fp.isEmpty(event)) {
-        return Promise.reject(boom.notFound("Event Not Found"));
-      }
-      if (!event.markedAsFinished) {
-        return Promise.reject(response.badRequest(error.eventIsNotFinished));
-      }
-
-      event.markedAsFinished = false;
-      eventsDataSource.update(event);
-      return Promise.resolve(`event ${id} successfully modified`);
-    } catch (err) {
-      return Promise.reject(boom.internal("Internal Server Error"));
-    }
-  };
-
-  const markAsCancelled = async (id: string): Promise<string> => {
-    try {
-      const [event]: IEvent[] = await eventsDataSource.find({ id });
-      if (fp.isEmpty(event)) {
-        return Promise.reject(boom.notFound("Event Not Found"));
+      if (isFinished(event)) {
+        throw Promise.reject(response.badRequest(error.eventIsFinished));
       }
       if (event.cancelled) {
-        return Promise.reject(response.badRequest(error.eventIsCancelled));
+        throw Promise.reject(response.badRequest(error.eventIsCancelled));
       }
 
       event.cancelled = true;
-      eventsDataSource.update(event);
-      return Promise.resolve(`event ${id} successfully modified`);
+      return Promise.resolve(eventsDataSource.update(event));
     } catch (err) {
-      return Promise.reject(boom.internal("Internal Server Error"));
+      return err;
     }
   };
 
-  const markAsNotCancelled = async (id: string): Promise<string> => {
+  const markAsNotCancelled = async (id: string): Promise<IEvent> => {
     try {
       const [event]: IEvent[] = await eventsDataSource.find({ id });
       if (fp.isEmpty(event)) {
-        return Promise.reject(boom.notFound("Event Not Found"));
+        throw Promise.reject(boom.notFound("Event Not Found"));
+      }
+      if (isFinished(event)) {
+        throw Promise.reject(response.badRequest(error.eventIsFinished));
       }
       if (!event.cancelled) {
-        return Promise.reject(response.badRequest(error.eventIsNotCancelled));
+        throw Promise.reject(response.badRequest(error.eventIsNotCancelled));
       }
 
       event.cancelled = false;
-      eventsDataSource.update(event);
-      return Promise.resolve(`event ${id} successfully modified`);
+      return Promise.resolve(eventsDataSource.update(event));
     } catch (err) {
-      return Promise.reject(boom.internal("Internal Server Error"));
+      return err;
     }
   };
 
@@ -211,8 +190,6 @@ export const EventService = (
     getCurrentEvents,
     createEvent,
     updateEvent,
-    markAsFinished,
-    markAsNotFinished,
     markAsCancelled,
     markAsNotCancelled
   };

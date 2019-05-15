@@ -5,13 +5,11 @@ import { IProduct, IProductDto } from "./product";
 export interface IEvent {
   id?: string;
   name: string;
-  expirationDate: number;
-  endHour: number;
+  expirationDateTime: number;
   createdBy: string;
   total: number;
   orders: IOrder[];
   products: IProduct[];
-  markedAsFinished: boolean;
   cancelled: boolean;
   createdAt: number;
   updatedAt: number;
@@ -20,13 +18,11 @@ export interface IEvent {
 export interface IEventDto {
   id?: string;
   name: string;
-  expiration_date: number;
-  end_hour: number;
+  expiration_date_time: number;
   created_by: string;
   total: number;
   orders: IOrderDto[];
   products: IProductDto[];
-  marked_as_finished: boolean;
   cancelled: boolean;
   created_at: number;
   updated_at: number;

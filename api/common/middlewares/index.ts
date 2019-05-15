@@ -3,7 +3,8 @@ export {
   logErrors,
   wrapErrors,
   clientErrorHandler,
-  errorHandler
+  errorHandler,
+  respError
 } from "./errorHandlers";
 export { badRequestFormated } from "./utils";
 export { validation } from "./validationHandler";
