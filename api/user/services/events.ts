@@ -1,8 +1,19 @@
 import * as fp from "lodash/fp";
 import * as boom from "boom";
+import * as moment from "moment";
 
 import { IEvent } from "../../common/models/event";
 import { IEventRepository } from "../../common/repositories/event-repository";
+
+const isFinished = (event: IEvent): boolean => {
+  return (
+    event.cancelled ||
+    event.expirationDateTime <
+      moment()
+        .utc()
+        .unix()
+  );
+};
 
 export const EventService = (eventsDataSource: IEventRepository) => {
   const getEvents = async (): Promise<IEvent[]> => {
@@ -11,11 +22,11 @@ export const EventService = (eventsDataSource: IEventRepository) => {
 
   const getCurrentEvents = async (): Promise<any> => {
     try {
-      const events: IEvent[] = await eventsDataSource.find({
-        markedAsFinished: false
-      });
-
-      return Promise.resolve(events);
+      const events: IEvent[] = await eventsDataSource.find();
+      const currentEvents: IEvent[] = events.filter(
+        (event: IEvent) => !isFinished(event)
+      );
+      return Promise.resolve(currentEvents);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
     }
@@ -23,11 +34,11 @@ export const EventService = (eventsDataSource: IEventRepository) => {
 
   const getPastEvents = async (): Promise<any> => {
     try {
-      const events: IEvent[] = await eventsDataSource.find({
-        markedAsFinished: true
-      });
-
-      return Promise.resolve(events);
+      const events: IEvent[] = await eventsDataSource.find();
+      const pastEvents: IEvent[] = events.filter((event: IEvent) =>
+        isFinished(event)
+      );
+      return Promise.resolve(pastEvents);
     } catch (err) {
       return Promise.reject(boom.internal("Internal Server Error"));
     }

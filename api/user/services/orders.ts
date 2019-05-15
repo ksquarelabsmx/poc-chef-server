@@ -38,8 +38,8 @@ const calculateTotal = (products: IOrderProduct[]): number => {
 
 const isFinished = (event: IEvent): boolean => {
   return (
-    event.markedAsFinished ||
-    event.expirationDate <
+    event.cancelled ||
+    event.expirationDateTime <
       moment()
         .utc()
         .unix()
@@ -60,7 +60,7 @@ export const OrderService = (
       const order: IOrder[] = await ordersDataSource.find({ id });
 
       if (fp.isEmpty(order)) {
-        return Promise.reject(boom.notFound("Not Found"));
+        throw Promise.reject(boom.notFound("Not Found"));
       }
 
       return Promise.resolve(fp.head(order));
@@ -69,17 +69,17 @@ export const OrderService = (
     }
   };
 
-  const createOne = async (data: IOrder): Promise<any> => {
+  const createOne = async (data: IOrder): Promise<IOrder> => {
     try {
       const [eventFinded]: IEvent[] = await eventsDataSource.find({
         id: data.eventId
       });
 
       if (fp.isEmpty(eventFinded)) {
-        return Promise.reject(response.badRequest(error.eventNotExist));
+        throw Promise.reject(response.badRequest(error.eventNotExist));
       }
       if (isFinished(eventFinded)) {
-        return Promise.reject(response.badRequest(error.eventIsFinished));
+        throw Promise.reject(response.badRequest(error.eventIsFinished));
       }
 
       const records: IProduct[][] = await Promise.all(
@@ -98,7 +98,7 @@ export const OrderService = (
         data.products
       );
       if (products.length !== data.products.length) {
-        return Promise.reject(boom.notFound("Product Not Found"));
+        throw Promise.reject(boom.notFound("Product Not Found"));
       }
 
       return Promise.resolve(
@@ -109,11 +109,11 @@ export const OrderService = (
         })
       );
     } catch (err) {
-      return Promise.reject(boom.internal("Internal Server Error"));
+      return err;
     }
   };
 
-  const updateOneById = async (id: string, order: any): Promise<any> => {
+  const updateOneById = async (id: string, order: any): Promise<IOrder> => {
     try {
       const [oldOrder]: IOrder[] = await ordersDataSource.find({ id });
       const [eventFinded]: IEvent[] = await eventsDataSource.find({
@@ -121,23 +121,23 @@ export const OrderService = (
       });
 
       if (fp.isEmpty(eventFinded)) {
-        return Promise.reject(response.badRequest(error.eventNotExist));
+        throw Promise.reject(response.badRequest(error.eventNotExist));
       }
       if (isFinished(eventFinded)) {
-        return Promise.reject(response.badRequest(error.eventIsFinished));
+        throw Promise.reject(response.badRequest(error.eventIsFinished));
       }
       if (fp.isEmpty(oldOrder)) {
-        return Promise.reject(boom.notFound("Order Not Found"));
+        throw Promise.reject(boom.notFound("Order Not Found"));
       }
       //validate if the request order.eventId is the same as the existing order.eventId
       if (oldOrder.eventId !== order.eventId) {
-        return Promise.reject(response.badRequest(error.orderEventDifferent));
+        throw Promise.reject(response.badRequest(error.orderEventDifferent));
       }
       if (oldOrder.cancelled) {
-        return Promise.reject(response.badRequest(error.orderIsCancelled));
+        throw Promise.reject(response.badRequest(error.orderIsCancelled));
       }
       if (oldOrder.paid) {
-        return Promise.reject(response.badRequest(error.orderIsPaid));
+        throw Promise.reject(response.badRequest(error.orderIsPaid));
       }
 
       const records = await Promise.all(
@@ -156,7 +156,7 @@ export const OrderService = (
         order.products
       );
       if (orderProducts.length !== order.products.length) {
-        return Promise.reject(boom.notFound("Product Not Found"));
+        throw Promise.reject(boom.notFound("Product Not Found"));
       }
 
       return Promise.resolve(
@@ -168,27 +168,25 @@ export const OrderService = (
         })
       );
     } catch (err) {
-      return Promise.reject(boom.internal("Internal Server Error"));
+      return err;
     }
   };
 
-  const cancelOrderById = async (id: string): Promise<any> => {
+  const cancelOrderById = async (id: string): Promise<IOrder> => {
     try {
       const [order]: IOrder[] = await ordersDataSource.find({ id });
 
       if (fp.isEmpty(order)) {
-        return Promise.reject(boom.notFound("Not Found"));
+        throw Promise.reject(boom.notFound("Order Not Found"));
       }
       if (order.cancelled) {
-        return Promise.reject(response.badRequest(error.orderIsCancelled));
+        throw Promise.reject(response.badRequest(error.orderIsCancelled));
       }
 
-      return ordersDataSource.update({
-        ...order,
-        cancelled: true
-      });
+      order.cancelled = true;
+      return ordersDataSource.update(order);
     } catch (err) {
-      return Promise.reject(boom.internal("Internal Server Error"));
+      return err;
     }
   };
 

@@ -17,13 +17,6 @@ const debug = Debug("chef:events:controller:events");
 const eventsRouter = express.Router();
 /**
  * @swagger
- * tags:
- *   name: Event
- *   description: Event
- */
-
-/**
- * @swagger
  * /user/api/v1/events:
  *   get:
  *     summary: User finds multiple events

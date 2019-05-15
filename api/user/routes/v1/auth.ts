@@ -1,7 +1,6 @@
 import * as express from "express";
-import debug = require("debug");
-import chalk from "chalk";
 
+import { respError } from "../../../common/middlewares";
 import { uriBuilder } from "../../../common/utils/uri";
 import { response } from "../../../common/utils/response";
 import { authController } from "../../controllers";
@@ -15,11 +14,7 @@ authRouter.post("/googleLogin", async (req, res) => {
     const userInfo = await authController.googleLogin(idToken);
     return res.send(response.success(userInfo, 200, source));
   } catch (err) {
-    debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
-    res.json({
-      statusCode: 500,
-      message: "Internal Server Error"
-    });
+    res.send(respError(req, err));
   }
 });
 
