@@ -1,10 +1,8 @@
 import * as express from "express";
-import * as Debug from "debug";
-import chalk from "chalk";
 
 import { response } from "../../../common/utils/response";
 import { uriBuilder } from "../../../common/utils/uri";
-import { validation } from "../../../common/middlewares";
+import { validation, respError } from "../../../common/middlewares";
 import {
   validateJWT,
   onlyOwner,
@@ -19,16 +17,7 @@ import { orderSchema } from "../../../common/utils/schemas";
 import { IOrder, IOrderDto } from "./../../../common/models/order";
 import { orderMemoryRepository } from "../../../common/repositories/order-memory-repository";
 
-const debug = Debug("chef:events:controller:orders");
-
 const ordersRouter = express.Router();
-/**
- * @swagger
- * tags:
- *   name: Order
- *   description: Order
- */
-
 /**
  * @swagger
  * /user/api/v1/orders:
@@ -58,7 +47,6 @@ ordersRouter.get(
   "/",
   validateJWT("access"),
   filterRoles(["user"]),
-  //onlyOwner(orderMemoryRepository),
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);
@@ -66,11 +54,7 @@ ordersRouter.get(
       const ordersDto: IOrderDto[] = orders.map(orderMapper.toDto);
       res.send(response.success(ordersDto, 200, source));
     } catch (err) {
-      debug(`getOrders Controller Error: ${chalk.red()}`);
-      res.json({
-        statusCode: 500,
-        message: "Internal Server Error"
-      });
+      res.send(respError(req, err));
     }
   }
 );
@@ -120,11 +104,7 @@ ordersRouter.get(
       const orderDto: IOrderDto = orderMapper.toDto(order);
       res.send(response.success(orderDto, 200, source));
     } catch (err) {
-      debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
-      res.json({
-        statusCode: 500,
-        message: "Internal Server Error"
-      });
+      res.send(respError(req, err));
     }
   }
 );
@@ -179,8 +159,7 @@ ordersRouter.post(
       const orderDto: IOrderDto = orderMapper.toDto(order);
       res.send(response.success(orderDto, 201, source));
     } catch (err) {
-      debug(`createOrder Controller Error: ${chalk.red(err)}`);
-      res.json(err.output);
+      res.send(respError(req, err));
     }
   }
 );
@@ -245,11 +224,10 @@ ordersRouter.put(
         req.params.id,
         orderMapper.toModel(req.body)
       );
-      const eventDto: IOrderDto = orderMapper.toDto(order);
-      res.send(response.success(eventDto, 201, source));
+      const orderDto: IOrderDto = orderMapper.toDto(order);
+      res.send(response.success(orderDto, 201, source));
     } catch (err) {
-      debug(`updateOrder Controller Error: ${chalk.red(err.message)}`);
-      res.json(err.output.payload);
+      res.send(respError(req, err));
     }
   }
 );
@@ -296,14 +274,17 @@ ordersRouter.post(
   "/:id/cancel",
   validateJWT("access"),
   filterRoles(["user"]),
+  onlyOwner(orderMemoryRepository),
+  validation({ id: orderSchema.orderId }, "params"),
   async (req, res) => {
     try {
       const source: string = uriBuilder(req);
       const order = await ordersController.cancelOrderById(req.params.id);
+      const orderDto: IOrderDto = orderMapper.toDto(order);
+      res.send(response.success(orderDto, 201, source));
       res.send(response.success(order, 201, source));
     } catch (err) {
-      debug(`actionOrder Controller Error: ${chalk.red(err)}`);
-      res.json(err.output.payload);
+      res.send(respError(req, err));
     }
   }
 );

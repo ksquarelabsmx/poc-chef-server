@@ -22,13 +22,8 @@ const productNotExist: IDomainValidationError = {
 };
 
 const eventIsFinished: IDomainValidationError = {
-  field: "marked_as_finished",
+  field: "cancelled",
   error: "Event has already finished"
-};
-
-const eventIsNotFinished: IDomainValidationError = {
-  field: "marked_as_not_finished",
-  error: "Event hasn't finished"
 };
 
 const eventIsCancelled: IDomainValidationError = {
@@ -38,7 +33,7 @@ const eventIsCancelled: IDomainValidationError = {
 
 const eventIsNotCancelled: IDomainValidationError = {
   field: "cancelled",
-  error: "Event hasn't been cancelled"
+  error: "Event has not been cancelled"
 };
 
 const orderEventDifferent: IDomainValidationError = {
@@ -51,6 +46,11 @@ const orderIsCancelled: IDomainValidationError = {
   error: "Order has already cancelled"
 };
 
+const orderIsNotCancelled: IDomainValidationError = {
+  field: "cancelled",
+  error: "Order has not been cancelled"
+};
+
 const orderIsPaid: IDomainValidationError = {
   field: "paid",
   error: "Order has already paid"
@@ -58,7 +58,7 @@ const orderIsPaid: IDomainValidationError = {
 
 const orderIsNotPaid: IDomainValidationError = {
   field: "paid",
-  error: "Order hasn't been paid"
+  error: "Order has not been paid"
 };
 
 const invalidPassword: string = "invalid password";
@@ -147,10 +147,10 @@ export const error = {
   productNotExist,
   orderEventDifferent,
   eventIsFinished,
-  eventIsNotFinished,
   eventIsCancelled,
   eventIsNotCancelled,
   orderIsCancelled,
+  orderIsNotCancelled,
   orderIsPaid,
   orderIsNotPaid
 };

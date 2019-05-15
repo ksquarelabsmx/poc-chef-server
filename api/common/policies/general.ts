@@ -70,7 +70,7 @@ export const validateJWT = (type: string) => (
   // check authorization header errors
   if (authzError) {
     const { title, detail, statusCode } = authzError;
-    return res.send(response.error(title, statusCode, source, detail));
+    return res.send(response.error(statusCode, source, detail, title));
   }
 
   const token: string = authorization.split(" ")[1];

@@ -17,20 +17,23 @@ const eventStrategy = (
     case "past": {
       return eventService.getPastEvents();
     }
-    default: {
+    case "all": {
       return eventService.getEvents();
     }
+    default: {
+      return eventService.getCurrentEvents();
+    }
   }
-};
-
-const getEvents = async (type: string): Promise<IEvent[]> => {
-  debug(`EventController: ${chalk.green("getting events")}`);
-  return eventStrategy(eventService, type);
 };
 
 const getEventById = async (id: string): Promise<IEvent> => {
   debug(`EventController: ${chalk.green("getting event")}`);
   return eventService.getEventById(id);
+};
+
+const getEvents = async (type: string): Promise<IEvent[]> => {
+  debug(`EventController: ${chalk.green("getting events")}`);
+  return eventStrategy(eventService, type);
 };
 
 export const eventController = {

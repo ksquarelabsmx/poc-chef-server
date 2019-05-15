@@ -42,20 +42,29 @@ export const onlyOwner = (dataSource: any) => async (
 
     if (!user) {
       const { title, statusCode, detail } = authErrors.notUserAuthorization;
-      return res.send(response.error(statusCode, source, detail, title));
+      throw response.error(statusCode, source, detail, title);
     }
 
     // get entity (order event, etc) and check owner
     const { id } = user;
     const [entity]: any = await dataSource.find({ id: paramsId });
 
+    if (!entity) {
+      const {
+        output: {
+          payload: { statusCode, error, message }
+        }
+      } = boom.notFound("Not Found");
+      throw response.error(statusCode, source, message, error);
+    }
+
     if (!fp.isEqual(id, entity.createdBy)) {
       const { title, statusCode, detail } = authErrors.notUserAuthorization;
-      return res.send(response.error(statusCode, source, detail, title));
+      throw response.error(statusCode, source, detail, title);
     }
     next();
   } catch (err) {
-    return Promise.reject(boom.internal("Internal Server Error"));
+    return res.send(err);
   }
 };
 

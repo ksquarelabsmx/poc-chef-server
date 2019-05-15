@@ -84,7 +84,7 @@ const googleLogin = async (idToken: string): Promise<any> => {
     const payload: TokenPayload | undefined = ticket.getPayload();
 
     if (!payload) {
-      return Promise.reject(boom.internal("Can't payload from google account"));
+      throw Promise.reject(boom.internal("Can't payload from google account"));
     }
 
     const userData: user.IGoogleUser = getDataFromPayload(payload);
@@ -100,7 +100,7 @@ const googleLogin = async (idToken: string): Promise<any> => {
       }
     });
   } catch (err) {
-    return Promise.reject(boom.internal("Internal Server Error"));
+    return err;
   }
 };
 
