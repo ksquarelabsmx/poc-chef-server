@@ -5,14 +5,8 @@ const eventId = Joi.string().uuid();
 
 const event = {
   name: Joi.string().required(),
-  expiration_date: Joi.number()
+  expiration_date_time: Joi.number()
     .min(moment().unix())
-    .required(),
-  end_hour: Joi.number()
-    .positive()
-    .allow(0)
-    .min(0)
-    .max(1440) // time in seconds
     .required(),
   created_by: Joi.string()
     .uuid()
@@ -44,7 +38,6 @@ const event = {
   orders: Joi.array()
     .items(Joi.object())
     .required(),
-  marked_as_finished: Joi.boolean().required(),
   cancelled: Joi.boolean().required(),
   created_at: Joi.number()
     .min(0)

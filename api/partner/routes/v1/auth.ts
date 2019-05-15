@@ -1,9 +1,7 @@
 import * as express from "express";
-import debug = require("debug");
-import chalk from "chalk";
 
 import { authController } from "../../controllers";
-import { validation } from "../../../common/middlewares";
+import { validation, respError } from "../../../common/middlewares";
 import { credentialsSchema } from "../../../common/utils/schemas";
 import { ILogin } from "../../../common/interfaces/auth";
 import { uriBuilder, response } from "../../../common/utils";
@@ -94,11 +92,7 @@ authRouter.post(
       const userInfo = await authController.login(loginCredentials);
       return res.send(response.success(userInfo, 200, source));
     } catch (err) {
-      debug(`getEvents Controller Error: ${chalk.red(err.message)}`);
-      res.json({
-        statusCode: 500,
-        message: "Internal Server Error"
-      });
+      res.send(respError(req, err));
     }
   }
 );

@@ -24,10 +24,10 @@ const validateLogin = async (loginCredentials: auth.ILogin): Promise<any> => {
     );
 
     if (!userDao) {
-      return Promise.reject(response.badRequest(error.userNotExist));
+      throw Promise.reject(response.badRequest(error.userNotExist));
     }
     if (!authenticate(password, userDao.password)) {
-      return Promise.reject(boom.unauthorized(error.invalidPassword));
+      throw Promise.reject(boom.unauthorized(error.invalidPassword));
     }
 
     // return jwt and user info
@@ -42,7 +42,7 @@ const validateLogin = async (loginCredentials: auth.ILogin): Promise<any> => {
       }
     });
   } catch (err) {
-    return Promise.reject(boom.internal("Internal Server Error"));
+    return err;
   }
 };
 

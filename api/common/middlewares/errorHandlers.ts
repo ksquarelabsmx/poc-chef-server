@@ -76,7 +76,7 @@ const errorHandler = (
     const dataFormatted = badRequestFormated(data);
 
     logger.error(dataFormatted);
-    return res.send(response.error(statusCode, source, dataFormatted));
+    return res.send({ statusCode, source, ...dataFormatted });
   }
 
   const dataFormatted = withErrorStack(payload, err.stack);
@@ -84,4 +84,18 @@ const errorHandler = (
   return res.send(response.error(statusCode, source, dataFormatted));
 };
 
-export { logErrors, wrapErrors, clientErrorHandler, errorHandler };
+const respError = (req: Request, err: any) => {
+  debug(`LogErrors: ${chalk.red(err.stack)}`);
+  const source: string = uriBuilder(req);
+  const {
+    output: {
+      payload: { statusCode, error, message }
+    }
+  } = err;
+  if (statusCode !== 401 && statusCode !== 404) {
+    return response.error(statusCode, source, JSON.parse(message), error);
+  }
+  return response.error(statusCode, source, message, error);
+};
+
+export { logErrors, wrapErrors, clientErrorHandler, errorHandler, respError };

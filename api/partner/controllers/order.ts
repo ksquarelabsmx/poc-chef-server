@@ -27,12 +27,18 @@ const handleAction = async (id: string, { action }): Promise<any> => {
     case "mark_as_not_paid": {
       return orderService.markAsNotPaid(id);
     }
+    case "mark_as_cancel": {
+      return orderService.markAsCancel(id);
+    }
+    case "mark_as_not_cancel": {
+      return orderService.markAsNotCancel(id);
+    }
     default: {
-      return response.error(
-        "Bad Request",
+      throw response.error(
         400,
         `http://localhost:${config.server.port}/v1/orders/actions`,
-        "That action does not exists"
+        "That action does not exists",
+        "Bad Request"
       );
     }
   }

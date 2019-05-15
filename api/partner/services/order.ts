@@ -24,39 +24,85 @@ export const OrderService = (ordersDataSource: IOrderRepository) => {
     }
   };
 
-  const markAsPaid = async (id: string): Promise<string> => {
+  const markAsPaid = async (id: string): Promise<IOrder> => {
     try {
       const [order]: IOrder[] = await ordersDataSource.find({ id });
       if (fp.isEmpty(order)) {
-        return Promise.reject(boom.notFound("Order Not Found"));
+        throw Promise.reject(boom.notFound("Order Not Found"));
+      }
+      if (order.cancelled) {
+        throw Promise.reject(response.badRequest(error.orderIsCancelled));
       }
       if (order.paid) {
-        return Promise.reject(response.badRequest(error.orderIsPaid));
+        throw Promise.reject(response.badRequest(error.orderIsPaid));
       }
 
       order.paid = true;
-      ordersDataSource.update(order);
-      return Promise.resolve(`order ${id} successfully modified`);
+      return Promise.resolve(ordersDataSource.update(order));
     } catch (err) {
-      return Promise.reject(boom.internal("Internal Server Error"));
+      return err;
     }
   };
 
-  const markAsNotPaid = async (id: string): Promise<string> => {
+  const markAsNotPaid = async (id: string): Promise<IOrder> => {
     try {
       const [order]: IOrder[] = await ordersDataSource.find({ id });
       if (fp.isEmpty(order)) {
-        return Promise.reject(boom.notFound("Order Not Found"));
+        throw Promise.reject(boom.notFound("Order Not Found"));
+      }
+      if (order.cancelled) {
+        throw Promise.reject(response.badRequest(error.orderIsCancelled));
       }
       if (!order.paid) {
-        return Promise.reject(response.badRequest(error.orderIsNotPaid));
+        throw Promise.reject(response.badRequest(error.orderIsNotPaid));
       }
 
       order.paid = false;
-      ordersDataSource.update(order);
-      return Promise.resolve(`order ${id} successfully modified`);
+      return Promise.resolve(ordersDataSource.update(order));
     } catch (err) {
-      return Promise.reject(boom.internal("Internal Server Error"));
+      return err;
+    }
+  };
+
+  const markAsCancel = async (id: string): Promise<IOrder> => {
+    try {
+      const [order]: IOrder[] = await ordersDataSource.find({ id });
+
+      if (fp.isEmpty(order)) {
+        throw Promise.reject(boom.notFound("Order Not Found"));
+      }
+      if (order.paid) {
+        throw Promise.reject(response.badRequest(error.orderIsPaid));
+      }
+      if (order.cancelled) {
+        throw Promise.reject(response.badRequest(error.orderIsCancelled));
+      }
+
+      order.cancelled = true;
+      return ordersDataSource.update(order);
+    } catch (err) {
+      return err;
+    }
+  };
+
+  const markAsNotCancel = async (id: string): Promise<IOrder> => {
+    try {
+      const [order]: IOrder[] = await ordersDataSource.find({ id });
+
+      if (fp.isEmpty(order)) {
+        throw Promise.reject(boom.notFound("Order Not Found"));
+      }
+      if (order.paid) {
+        throw Promise.reject(response.badRequest(error.orderIsPaid));
+      }
+      if (!order.cancelled) {
+        throw Promise.reject(response.badRequest(error.orderIsNotCancelled));
+      }
+
+      order.cancelled = false;
+      return ordersDataSource.update(order);
+    } catch (err) {
+      return err;
     }
   };
 
@@ -64,6 +110,8 @@ export const OrderService = (ordersDataSource: IOrderRepository) => {
     getOrders,
     getOrderById,
     markAsPaid,
-    markAsNotPaid
+    markAsNotPaid,
+    markAsCancel,
+    markAsNotCancel
   };
 };
