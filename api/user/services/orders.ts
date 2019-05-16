@@ -60,7 +60,7 @@ export const OrderService = (
       const order: IOrder[] = await ordersDataSource.find({ id });
 
       if (fp.isEmpty(order)) {
-        throw Promise.reject(boom.notFound("Not Found"));
+        throw Promise.reject(boom.notFound("Order Not Found"));
       }
 
       return Promise.resolve(fp.head(order));
@@ -76,7 +76,7 @@ export const OrderService = (
       });
 
       if (fp.isEmpty(eventFinded)) {
-        throw Promise.reject(response.badRequest(error.eventNotExist));
+        throw Promise.reject(boom.notFound("Event Not Found"));
       }
       if (isFinished(eventFinded)) {
         throw Promise.reject(response.badRequest(error.eventIsFinished));
@@ -121,7 +121,7 @@ export const OrderService = (
       });
 
       if (fp.isEmpty(eventFinded)) {
-        throw Promise.reject(response.badRequest(error.eventNotExist));
+        throw Promise.reject(boom.notFound("Event Not Found"));
       }
       if (isFinished(eventFinded)) {
         throw Promise.reject(response.badRequest(error.eventIsFinished));

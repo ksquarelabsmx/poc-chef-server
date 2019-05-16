@@ -11,18 +11,13 @@ const userNotExist: IDomainValidationError = {
   error: "invalid email"
 };
 
-const eventNotExist: IDomainValidationError = {
-  field: "event_id",
-  error: "event does not exist"
-};
-
 const productNotExist: IDomainValidationError = {
   field: "products",
   error: "product doesn't exist"
 };
 
 const eventIsFinished: IDomainValidationError = {
-  field: "cancelled",
+  field: "expiration_date_time",
   error: "Event has already finished"
 };
 
@@ -143,7 +138,6 @@ export const error = {
   userNotExist,
   invalidPassword,
   invalidAuthProvider,
-  eventNotExist,
   productNotExist,
   orderEventDifferent,
   eventIsFinished,

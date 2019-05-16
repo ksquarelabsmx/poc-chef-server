@@ -2,13 +2,11 @@ definitions:
   Event:
     required:
       - name
-      - expiration_date
-      - end_hour
+      - expiration_date_time
       - created_by
       - total
-      - products
       - orders
-      - marked_as_finished
+      - products
       - cancelled
       - created_at
       - updated_at
@@ -20,31 +18,25 @@ definitions:
       name:
         type: string
         example: Tortastic
-      expiration_date:
+      expiration_date_time:
         type: number
         example: 1548000000
-      end_hour:
-        type: number
-        example: 1200
       created_by:
         type: string
         example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
       total:
         type: number
         example: 100
-      products:
-        type: array
-        items:
-          type: object
-          $ref: "#/definitions/Product"
       orders:
         type: array
         items:
           type: object
           $ref: "#/definitions/OrderProduct"
-      marked_as_finished:
-        type: boolean
-        example: false
+      products:
+        type: array
+        items:
+          type: object
+          $ref: "#/definitions/Product"
       cancelled:
         type: boolean
         example: false
