@@ -1,9 +1,10 @@
 definitions:
   Order:
     required:
-      - user_id
+      - user_name
       - event_id
-      - price
+      - total
+      - order_folio
       - products
       - created_by
       - paid
@@ -17,15 +18,17 @@ definitions:
         example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
       user_id:
         type: string
-        format: UUID
-        example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
+        example: Samuel Salas
       event_id:
         type: string
         format: UUID
         example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
-      price:
+      total:
         type: number
         example: 100
+      order_folio:
+        type: string
+        example: e653
       products:
         type: array
         items:
@@ -33,6 +36,7 @@ definitions:
           $ref: "#/definitions/OrderProduct"
       created_by:
         type: string
+        format: UUID
         example: 6f4b2f3b-7585-4004-9f3c-ca5a29f2e653
       paid:
         type: boolean

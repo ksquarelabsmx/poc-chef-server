@@ -9,9 +9,8 @@ const orders: IOrder[] = [
     id: "fefcd99e-d7fb-4189-9e8f-c9395bea5fa7",
     userName: "6d623d08-113c-4565-81b2-e17c90331241",
     eventId: "8c9ae830-dd56-4828-8503-c70355253de9",
-    eventName: "Aún más tortas",
     total: 100,
-    orderNumber: 1,
+    orderFolio: "1",
     products: [
       {
         id: "faa65af2-ac6d-4404-9d9d-7423f04eb740",
@@ -42,9 +41,8 @@ const orders: IOrder[] = [
     id: "cd639768-37fc-4386-8fc8-f93c2327ebf1",
     userName: "6d623d08-113c-4565-81b2-e17c90331241",
     eventId: "92c483f9-87cb-4715-b563-093f91703f63",
-    eventName: "Más tortas",
     total: 50,
-    orderNumber: 2,
+    orderFolio: "2",
     products: [
       {
         id: "3",
@@ -66,9 +64,8 @@ const orders: IOrder[] = [
     id: "93d1d016-6a24-4680-ae80-a558176aba37",
     userName: "6d623d08-113c-4565-81b2-e17c90331241",
     eventId: "92c483f9-87cb-4715-b563-093f91703f63",
-    eventName: "Tortas para la oficina",
     total: 50,
-    orderNumber: 3,
+    orderFolio: "3",
     products: [
       {
         id: "4",

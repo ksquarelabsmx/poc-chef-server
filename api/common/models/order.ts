@@ -4,8 +4,7 @@ export interface IOrder {
   id?: string;
   userName: string;
   eventId: string;
-  eventName: string;
-  orderNumber: number;
+  orderFolio: string;
   products: IOrderProduct[];
   total: number;
   createdBy: string;
@@ -19,9 +18,8 @@ export interface IOrderDto {
   id?: string;
   user_name: string;
   event_id: string;
-  event_name: string;
   total: number;
-  order_number: number;
+  order_folio: string;
   products: IOrderProductDto[];
   created_by: string;
   created_at: number;

@@ -7,18 +7,15 @@ const order = {
   event_id: Joi.string()
     .uuid()
     .required(),
-  event_name: Joi.string().required(),
   total: Joi.number()
     .positive()
     .allow(0)
     .min(0)
     .required(),
-  order_number: Joi.number()
-    .positive()
-    .allow(0)
-    .min(0)
+  order_folio: Joi.string().required(),
+  products: Joi.array()
+    .items(Joi.object())
     .required(),
-  products: Joi.array().required(),
   created_by: Joi.string()
     .uuid()
     .required(),

@@ -9,7 +9,7 @@ const events: IEvent[] = [
     id: "c64b1314-64ab-4fcf-99a1-df9edd1307ce",
     name: "Tortas para la oficina 1",
     expirationDateTime: 1549000000, // epoch
-    createdBy: "90ec45da-452b-4c37-a5fc-482c8bc92895",
+    createdBy: "6d623d08-113c-4565-81b2-e17c90331241",
     total: 22,
     cancelled: false,
     createdAt: 1548000000,
@@ -28,8 +28,8 @@ const events: IEvent[] = [
   {
     id: "8022f792-40cf-43ef-b72d-ba42de2117d3",
     name: "Tortas para la oficina 2",
-    expirationDateTime: 1549500000, // epoch
-    createdBy: "a79639e6-3ed9-467c-b9c5-1e60908d812c",
+    expirationDateTime: 1586476800, // epoch
+    createdBy: "6d623d08-113c-4565-81b2-e17c90331241",
     total: 10,
     cancelled: true,
     createdAt: 1548000000,

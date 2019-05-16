@@ -93,7 +93,7 @@ ordersRouter.get(
 ordersRouter.get(
   "/:id",
   validateJWT("access"),
-  onlyOwner(orderMemoryRepository),
+  filterRoles(["partner"]),
   validation({ id: orderSchema.orderId }, "params"),
   async (req, res) => {
     try {
