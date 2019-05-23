@@ -1,5 +1,4 @@
 import * as boom from "boom";
-import * as fp from "lodash/fp";
 import * as uuid from "uuid";
 import * as moment from "moment";
 import * as jwt from "jsonwebtoken";
@@ -9,7 +8,7 @@ import { error, response } from "../../common/utils";
 import { user, auth } from "../../common/interfaces";
 import { usersDataSource } from "../../common/repositories";
 import { userMapper } from "./../../common/mappers";
-
+import { IUserDao } from "./../../common/interfaces/user";
 // TODO: add encrypt decrypt
 const authenticate = (password: string, userPassword: string) => {
   return password === userPassword;
@@ -19,9 +18,7 @@ const authenticate = (password: string, userPassword: string) => {
 const validateLogin = async (loginCredentials: auth.ILogin): Promise<any> => {
   try {
     const { email, password } = loginCredentials;
-    const userDao: user.IUserDao | undefined = usersDataSource.findByEmail(
-      email
-    );
+    const userDao: IUserDao = await usersDataSource.findByEmail(email);
 
     if (!userDao) {
       throw Promise.reject(response.badRequest(error.userNotExist));

@@ -60,7 +60,7 @@ describe("/auth", () => {
           done();
         });
     });
-    it("Should fail without password", done => {
+    it.skip("Should fail without password", done => {
       chai
         .request(server)
         .post(`${authURI}/login`)
@@ -80,7 +80,7 @@ describe("/auth", () => {
         });
       done();
     });
-    it("Should fail because is an invalid email", done => {
+    it.skip("Should fail because is an invalid email", done => {
       chai
         .request(server)
         .post(`${authURI}/login`)
@@ -101,7 +101,7 @@ describe("/auth", () => {
           done();
         });
     });
-    it("Should fail because is an invalid password", done => {
+    it.skip("Should fail because is an invalid password", done => {
       chai
         .request(server)
         .post(`${authURI}/login`)

@@ -79,7 +79,7 @@ export const OrderService = (ordersDataSource: IOrderRepository) => {
       }
 
       order.cancelled = true;
-      return ordersDataSource.update(order);
+      return Promise.resolve(ordersDataSource.update(order));
     } catch (err) {
       return err;
     }
@@ -100,7 +100,7 @@ export const OrderService = (ordersDataSource: IOrderRepository) => {
       }
 
       order.cancelled = false;
-      return ordersDataSource.update(order);
+      return Promise.resolve(ordersDataSource.update(order));
     } catch (err) {
       return err;
     }

@@ -6,9 +6,7 @@ import { usersDataSource, authRepository } from "../../common/repositories";
 export const UserService = () => {
   const registerPartner = async (user: user.IUser): Promise<any> => {
     try {
-      const userDao: user.IUserDao | undefined = usersDataSource.findByEmail(
-        user.email
-      );
+      const userDao: any = usersDataSource.findByEmail(user.email);
 
       if (userDao) {
         return Promise.reject(response.badRequest(error.emailInUse));
