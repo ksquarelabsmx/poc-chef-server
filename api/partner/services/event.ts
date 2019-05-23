@@ -41,7 +41,7 @@ export const EventService = (
   productMemoryRepository: IProductRepository
 ) => {
   const getEvents = async (): Promise<IEvent[]> => {
-    return eventsDataSource.find();
+    return Promise.resolve(eventsDataSource.find());
   };
 
   const getCurrentEvents = async (): Promise<IEvent[]> => {
@@ -137,7 +137,7 @@ export const EventService = (
       if (products.length !== data.products.length) {
         throw Promise.reject(boom.notFound("Product Not Found"));
       }
-      return eventsDataSource.update(data);
+      return Promise.resolve(eventsDataSource.update(data));
     } catch (err) {
       return err;
     }

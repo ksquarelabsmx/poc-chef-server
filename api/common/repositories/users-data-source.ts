@@ -1,30 +1,13 @@
-import * as fp from "lodash/fp";
 import * as moment from "moment";
 import { v4 as uuid } from "uuid";
 
+import { db } from "./../../../db";
 import { IUser, IUserDao } from "../interfaces/user";
 
-const users: IUserDao[] = [
-  {
-    id: "6d623d08-113c-4565-81b2-e17c90331241",
-    name: "Maik",
-    email: "maik@fakegmail.com",
-    password: "plainpassword",
-    role: "partner",
-    authProviderId: uuid(),
-    createdAt: moment()
-      .utc()
-      .unix(),
-    updatedAt: moment()
-      .utc()
-      .unix()
-  }
-];
-
-const save = (user: IUser): IUserDao => {
+const save = (user: IUser): Promise<IUserDao> => {
   const userDao: IUserDao = {
-    id: uuid(),
     ...user,
+    id: uuid(),
     createdAt: moment()
       .utc()
       .unix(),
@@ -33,11 +16,25 @@ const save = (user: IUser): IUserDao => {
       .unix()
   };
 
-  users.push(userDao);
-  return userDao;
+  return new Promise((resolve, reject) => {
+    db.getDB()
+      .collection("user")
+      .insertOne({ ...userDao }, (err: any, result: any) => {
+        err ? reject(err) : resolve(result.ops[0]);
+      });
+  });
 };
 
-const findByEmail = (email: string): IUserDao | undefined =>
-  fp.find((user: IUserDao) => user.email === email, users);
-
+const findByEmail = async (email: string): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    db.getDB()
+      .collection("user")
+      .find({ email })
+      .toArray(
+        (err: any, data: any): any => {
+          err ? reject(err) : resolve(data[0]);
+        }
+      );
+  });
+};
 export const usersDataSource = { save, findByEmail };

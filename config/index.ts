@@ -74,6 +74,7 @@ const configurations: any = {
       database: process.env.DB_NAME || "poc_chef",
       username: process.env.DB_USER || "ksquare",
       password: process.env.DB_PASS || "ksquare",
+      port: process.env.DB_PORT || "27017",
       host: process.env.DB_HOST || "localhost",
       dialect: "postgres",
       logging: (s: any) => debug(s),

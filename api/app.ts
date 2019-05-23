@@ -16,14 +16,14 @@ import {
   clientErrorHandler,
   errorHandler
 } from "./common/middlewares";
-import { requestLogStream } from "./libraries/log";
+import { db } from "./../db";
 import { user } from "./user/app";
 import { partner } from "./partner/app";
+import { requestLogStream } from "./libraries/log";
 
 const debug = Debug("chef:orders:app");
 
 debug(`app loading...`);
-
 // express application
 const app = express();
 
@@ -108,6 +108,12 @@ app.use((req: Request, res: Response) => {
   res.status(statusCode).json(payload);
 });
 
+db.connect((err: any) => {
+  if (err) {
+    process.exit(1);
+    throw err;
+  }
+});
 // handling errors
 app.use(logErrors);
 app.use(wrapErrors);
